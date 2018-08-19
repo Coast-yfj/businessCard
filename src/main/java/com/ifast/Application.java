@@ -21,7 +21,7 @@ import com.ifast.common.utils.SpringContextHolder;
  */
 @EnableTransactionManagement
 @ServletComponentScan
-@MapperScan("com.ifast.*.dao")
+@MapperScan({"com.ifast.*.dao","com.ifast.dao"})
 @SpringBootApplication
 public class Application {
 	
