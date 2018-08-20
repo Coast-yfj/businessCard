@@ -20,6 +20,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
+import java.io.IOException;
+
 /**
  * <pre>
  *  基于jwt实现的API测试类
@@ -34,18 +36,14 @@ public class ApiUserController{
     @Autowired
     private UserService userService;
 
-//    @PostMapping("login")
-//////    @Log("api测试-登录")
-////    @ApiOperation("api测试-登录")
-////    public Result<?> token(@RequestBody final UserLoginDTO loginDTO) {
-////        TokenVO token = userService.getToken(loginDTO.getUname(), loginDTO.getPasswd());
-////        return Result.ok(token);
-////    }
     @PostMapping("login")
-    @ApiOperation("api登录")
-    public Result<?> login(String code){
-        return Result.ok();
+//    @Log("api测试-登录")
+    @ApiOperation("api测试-登录")
+    public Result<?> token(@RequestBody final UserLoginDTO loginDTO) {
+        TokenVO token = userService.getToken(loginDTO.getUname(), loginDTO.getPasswd());
+        return Result.ok(token);
     }
+
     
     @PostMapping("refresh")
 //    @Log("api测试-刷新token")

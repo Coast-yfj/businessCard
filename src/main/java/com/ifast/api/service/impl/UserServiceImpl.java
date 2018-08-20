@@ -1,5 +1,7 @@
 package com.ifast.api.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -22,6 +24,7 @@ import com.ifast.common.type.EnumErrorCode;
 import com.ifast.common.utils.SpringContextHolder;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * <pre>
@@ -55,14 +58,16 @@ public class UserServiceImpl extends CoreServiceImpl<AppUserDao, AppUserDO> impl
 		String url="https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code";
 		Request request = new Request.Builder().url(url).build();
 		Response response = client.newCall(request).execute();
+		JSONObject jsonObject=new JSONObject();
+		Map map;
 		if (response.isSuccessful()) {
-			 response.body().string();
+			map= JSONObject.parseObject( response.body().string(),new TypeReference<Map<String,String>>(){});
 		} else {
 			throw new IOException("Unexpected code " + response);
 		}
 		TokenVO vo = new TokenVO();
 		vo.setToken(JWTUtil.sign(  "",  "", Holder.jwt.getExpireTime()));
-		return null;
+		return vo;
 	}
 
 	@Override

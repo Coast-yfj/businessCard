@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 
 /**
  * @author yfj
@@ -34,6 +35,22 @@ public class ApiBusinessCard {
 
     @Autowired
     private AttentionService attentionService;
+
+    @PostMapping("login")
+    @ApiOperation("api登录")
+    public Result<?> login(String code){
+        String str="";
+        try {
+            str= userService.getToken(code);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Result.fail() ;
+        }
+        if(str==""){
+            return Result.fail();
+        }
+        return Result.ok(str);
+    }
 
     @GetMapping("/queryUser")
     @ApiOperation("查询用户信息")
@@ -63,10 +80,9 @@ public class ApiBusinessCard {
     @PostMapping("/saveUnit")
     @ApiOperation("保存公司信息")
     public Result<?> saveUnit(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, UnitDO unitDO) {
-        unitService.insert(unitDO);
         ApiUserDO userDO = userService.getUserByToken(token);
-        userDO.setUnitId(unitDO.getId().toString());
-        userService.updateById(userDO);
+        unitDO.setUserId(userDO.getId());
+        unitService.insert(unitDO);
         return Result.ok();
     }
 
@@ -111,7 +127,7 @@ public class ApiBusinessCard {
        ApiUserDO userDO= userService.getUserByToken(token);
         AttentionDO attentionDO=new AttentionDO();
         attentionDO.setMid(userDO.getId());
-        attentionDO.setTid(Integer.parseInt(id));
+        attentionDO.setTid(Long.getLong(id));
         attentionService.insert(attentionDO);
         return Result.ok();
     }

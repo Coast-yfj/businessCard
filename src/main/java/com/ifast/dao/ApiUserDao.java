@@ -12,4 +12,6 @@ import com.ifast.common.base.BaseDao;
  */
 public interface ApiUserDao extends BaseDao<ApiUserDO> {
 
+    ApiUserDO queryById(String id);
+
 }

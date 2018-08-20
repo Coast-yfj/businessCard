@@ -2,5 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ifast.dao.ProductDao">
+<resultMap id="productResult" type="com.ifast.domain.ProductDO">
+    <id property="id" column="productId" />
+    <result property="name" column="productName" />
+    <result property="item" column="item" />
+    <result property="path" column="path" />
+    <result property="unitId" column="unitId" />
 
+</resultMap>
 </mapper>

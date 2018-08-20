@@ -1,5 +1,6 @@
 package com.ifast.service.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.ifast.api.util.JWTUtil;
 import com.ifast.domain.ApiUserDO;
 import com.ifast.service.UserService;
@@ -40,6 +41,6 @@ public class UnitServiceImpl extends CoreServiceImpl<UnitDao, UnitDO> implements
             return null;
         }
        ApiUserDO userDO = userService.selectById(userId);
-        return this.selectById(userDO.getUnitId());
+        return this.selectOne(new EntityWrapper<>(new UnitDO(userDO.getId())));
     }
 }

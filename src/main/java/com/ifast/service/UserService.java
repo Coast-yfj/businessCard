@@ -1,7 +1,10 @@
 package com.ifast.service;
 
+import com.ifast.api.pojo.vo.TokenVO;
 import com.ifast.domain.ApiUserDO;
 import com.ifast.common.base.CoreService;
+
+import java.io.IOException;
 
 /**
  * 
@@ -17,5 +20,28 @@ public interface UserService extends CoreService<ApiUserDO> {
       * @return
       */
      ApiUserDO getUserByToken(String token);
-    
+
+     /**
+      * 登陆token
+      * @param code
+      * @return
+      * @throws IOException
+      */
+     String getToken (String code) throws IOException;
+
+     /**
+      * 验证token
+      * @param token
+      * @return
+      */
+     boolean verifyToken(String token);
+
+     /**
+      * 关联查询
+      * @param id
+      * @return
+      */
+     ApiUserDO queryById(String id);
+
+
 }

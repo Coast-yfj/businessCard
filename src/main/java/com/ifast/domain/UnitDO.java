@@ -2,6 +2,7 @@ package com.ifast.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -18,43 +19,60 @@ import com.baomidou.mybatisplus.annotations.TableName;
  */
  @TableName("tb_unit")
 public class UnitDO implements Serializable {
+    public UnitDO() {
+
+    }
+
+    public UnitDO(Long userId) {
+        this.userId = userId;
+    }
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
     
     /** 主键 */
     @TableId
-    private Integer id;
+    private Long id;
     /** 名称 */
     private String name;
     /** 规模 */
     private String scale;
     /** 简介 */
     private String introduction;
-    /**
-     * 用户id
-     */
-    @TableField(value = "userId")
-    private String userId;
+    /**用户id*/
+    private Long userId;
+
+    @TableField(exist = false)
+    private List<ProductDO> productDOList;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public List<ProductDO> getProductDOList() {
+        return productDOList;
+    }
+
+    public void setProductDOList(List<ProductDO> productDOList) {
+        this.productDOList = productDOList;
+    }
 
     /**
      * 设置：主键
      */
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     /**
      * 获取：主键
      */
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
     /**

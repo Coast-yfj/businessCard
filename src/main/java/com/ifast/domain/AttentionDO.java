@@ -23,46 +23,46 @@ public class AttentionDO implements Serializable {
     
     /**  */
     @TableId
-    private Integer id;
+    private Long id;
     /** 用户id */
-    private Integer mid;
+    private Long mid;
     /** 关注人id */
-    private Integer tid;
+    private Long tid;
 
     /**
      * 设置：
      */
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
     /**
      * 获取：
      */
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
     /**
      * 设置：用户id
      */
-    public void setMid(Integer mid) {
+    public void setMid(Long mid) {
         this.mid = mid;
     }
     /**
      * 获取：用户id
      */
-    public Integer getMid() {
+    public Long getMid() {
         return mid;
     }
     /**
      * 设置：关注人id
      */
-    public void setTid(Integer tid) {
+    public void setTid(Long tid) {
         this.tid = tid;
     }
     /**
      * 获取：关注人id
      */
-    public Integer getTid() {
+    public Long getTid() {
         return tid;
     }
 }

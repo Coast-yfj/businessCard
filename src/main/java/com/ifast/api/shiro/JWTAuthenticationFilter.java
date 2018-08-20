@@ -3,6 +3,7 @@ package com.ifast.api.shiro;
 import com.ifast.api.exception.IFastApiException;
 import com.ifast.common.utils.JSONUtils;
 import com.ifast.common.utils.Result;
+import com.ifast.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import java.io.PrintWriter;
 
@@ -19,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.ifast.api.service.UserService;
 import com.ifast.common.utils.SpringContextHolder;
 
 /**
@@ -56,7 +56,7 @@ public class JWTAuthenticationFilter extends BasicHttpAuthenticationFilter {
             try {
             	HttpServletRequest httpServletRequest = (HttpServletRequest) request;
                 String authorization = httpServletRequest.getHeader("Authorization");
-                if(!SpringContextHolder.getBean(UserService.class).verifyToken(authorization, false)) {
+                if(!SpringContextHolder.getBean(UserService.class).verifyToken(authorization)) {
                 	getSubject(request, response).logout();
                 }else {
 	                JWTAuthenticationTokenToken token = new JWTAuthenticationTokenToken(authorization);

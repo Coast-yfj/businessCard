@@ -40,9 +40,9 @@ public class ProductServiceImpl extends CoreServiceImpl<ProductDao, ProductDO> i
         if (userId == null || "".equals(userId)) {
             return null;
         }
-        ApiUserDO userDO = userService.selectById(userId);
+        ApiUserDO userDO = userService.queryById(userId);
         ProductDO productDO = new ProductDO();
-        productDO.setUnitId(Integer.parseInt(userDO.getUnitId()));
+        productDO.setUnitId(userDO.getUnitDO().getId());
         return this.selectOne(new EntityWrapper<>(productDO));
     }
 

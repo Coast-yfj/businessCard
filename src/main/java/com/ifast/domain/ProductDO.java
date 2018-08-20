@@ -23,7 +23,7 @@ public class ProductDO implements Serializable {
     
     /** 主键 */
     @TableId
-    private Integer id;
+    private Long id;
     /** 名称 */
     private String name;
     /** 详情 */
@@ -31,18 +31,18 @@ public class ProductDO implements Serializable {
     /** 图片路径 */
     private String path;
     /** 公司id */
-    private Integer unitId;
+    private Long unitId;
 
     /**
      * 设置：主键
      */
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
     /**
      * 获取：主键
      */
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
     /**
@@ -84,13 +84,13 @@ public class ProductDO implements Serializable {
     /**
      * 设置：公司id
      */
-    public void setUnitId(Integer unitId) {
+    public void setUnitId(Long unitId) {
         this.unitId = unitId;
     }
     /**
      * 获取：公司id
      */
-    public Integer getUnitId() {
+    public Long getUnitId() {
         return unitId;
     }
 }
