@@ -1,5 +1,8 @@
 package com.ifast.api.service.impl;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.cache.Cache;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,8 @@ import com.ifast.common.config.IFastConfig;
 import com.ifast.common.type.EnumErrorCode;
 import com.ifast.common.utils.SpringContextHolder;
 
+import java.io.IOException;
+
 /**
  * <pre>
  * </pre>
@@ -26,6 +31,7 @@ import com.ifast.common.utils.SpringContextHolder;
  */
 @Service
 public class UserServiceImpl extends CoreServiceImpl<AppUserDao, AppUserDO> implements UserService {
+	OkHttpClient client = new OkHttpClient();
 	/** Holder for lazy-init */
 	private static class Holder {
 		static final JWTConfig jwt = SpringContextHolder.getBean(IFastConfig.class).getJwt();
@@ -44,7 +50,22 @@ public class UserServiceImpl extends CoreServiceImpl<AppUserDao, AppUserDO> impl
         return createToken(user);
     }
 
-    @Override
+	@Override
+	public TokenVO getToken(String code) throws IOException {
+		String url="https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code";
+		Request request = new Request.Builder().url(url).build();
+		Response response = client.newCall(request).execute();
+		if (response.isSuccessful()) {
+			 response.body().string();
+		} else {
+			throw new IOException("Unexpected code " + response);
+		}
+		TokenVO vo = new TokenVO();
+		vo.setToken(JWTUtil.sign(  "",  "", Holder.jwt.getExpireTime()));
+		return null;
+	}
+
+	@Override
 	public boolean verifyToken(String token, boolean refresh) {
     	String userId = null; AppUserDO user = null;
     	return StringUtils.isNotBlank(token)

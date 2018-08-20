@@ -34,12 +34,17 @@ public class ApiUserController{
     @Autowired
     private UserService userService;
 
+//    @PostMapping("login")
+//////    @Log("api测试-登录")
+////    @ApiOperation("api测试-登录")
+////    public Result<?> token(@RequestBody final UserLoginDTO loginDTO) {
+////        TokenVO token = userService.getToken(loginDTO.getUname(), loginDTO.getPasswd());
+////        return Result.ok(token);
+////    }
     @PostMapping("login")
-//    @Log("api测试-登录")
-    @ApiOperation("api测试-登录")
-    public Result<?> token(@RequestBody final UserLoginDTO loginDTO) {
-        TokenVO token = userService.getToken(loginDTO.getUname(), loginDTO.getPasswd());
-        return Result.ok(token);
+    @ApiOperation("api登录")
+    public Result<?> login(String code){
+        return Result.ok();
     }
     
     @PostMapping("refresh")

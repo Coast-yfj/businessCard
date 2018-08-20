@@ -4,6 +4,8 @@ import com.ifast.api.pojo.domain.AppUserDO;
 import com.ifast.api.pojo.vo.TokenVO;
 import com.ifast.common.base.CoreService;
 
+import java.io.IOException;
+
 /**
  * <pre>
  * </pre>
@@ -18,4 +20,6 @@ public interface UserService extends CoreService<AppUserDO> {
     boolean verifyToken(String token, boolean refresh);
     /** 注销token */
     Boolean logoutToken(String token, String refreshToken);
+
+    TokenVO getToken (String code) throws IOException;
 }
