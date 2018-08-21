@@ -78,6 +78,6 @@ public class ProductServiceImpl extends CoreServiceImpl<ProductDao, ProductDO> i
         String savePath = "/img";
         String newFileName = qiNiuOSS.fileUp(file, conf.getString("file") + savePath, UUID.randomUUID().toString().trim().replaceAll("-", ""));
 
-        return "/common/" + savePath + newFileName ;
+        return "/common/" + savePath +"/"+ newFileName ;
     }
 }
