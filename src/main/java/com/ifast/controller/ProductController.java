@@ -2,6 +2,7 @@ package com.ifast.controller;
 
 
 import java.util.Arrays;
+import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,88 +24,89 @@ import com.ifast.service.ProductService;
 import com.ifast.common.utils.Result;
 
 /**
- * 
  * <pre>
- * 
+ *
  * </pre>
  * <small> 2018-08-19 19:10:02 | Aron</small>
  */
 @Controller
 @RequestMapping("/ifast/product")
 public class ProductController extends AdminBaseController {
-	@Autowired
-	private ProductService productService;
-	
-	@GetMapping()
-	@RequiresPermissions("ifast:product:product")
-	String Product(){
-	    return "ifast/product/product";
-	}
-	
-	@ResponseBody
-	@GetMapping("/list")
-	@RequiresPermissions("ifast:product:product")
-	public Result<Page<ProductDO>> list(ProductDO productDTO){
-        Wrapper<ProductDO> wrapper = new EntityWrapper<ProductDO>(productDTO);
+    @Autowired
+    private ProductService productService;
+
+    @GetMapping()
+    @RequiresPermissions("ifast:unit:unit")
+    String Product(Long id, Map<String, Object> model) {
+        model.put("id", id);
+        return "ifast/product/product";
+    }
+
+    @ResponseBody
+    @GetMapping("/list")
+    @RequiresPermissions("ifast:unit:unit")
+    public Result<Page<ProductDO>> list(ProductDO productDTO) {
+        Wrapper<ProductDO> wrapper = new EntityWrapper<>(productDTO);
         Page<ProductDO> page = productService.selectPage(getPage(ProductDO.class), wrapper);
         return Result.ok(page);
-	}
-	
-	@GetMapping("/add")
-	@RequiresPermissions("ifast:product:add")
-	String add(){
-	    return "ifast/product/add";
-	}
+    }
 
-	@GetMapping("/edit/{id}")
-	@RequiresPermissions("ifast:product:edit")
-	String edit(@PathVariable("id") Integer id,Model model){
-		ProductDO product = productService.selectById(id);
-		model.addAttribute("product", product);
-	    return "ifast/product/edit";
-	}
-	
-	/**
-	 * 保存
-	 */
-	@ResponseBody
-	@PostMapping("/save")
-	@RequiresPermissions("ifast:product:add")
-	public Result<String> save( ProductDO product){
-		productService.insert(product);
+    @GetMapping("/add")
+    @RequiresPermissions("ifast:unit:unit")
+    String add() {
+        return "ifast/product/add";
+    }
+
+    @GetMapping("/edit/{id}")
+    @RequiresPermissions("ifast:unit:unit")
+    String edit(@PathVariable("id") Integer id, Model model) {
+        ProductDO product = productService.selectById(id);
+        model.addAttribute("product", product);
+        return "ifast/product/edit";
+    }
+
+    /**
+     * 保存
+     */
+    @ResponseBody
+    @PostMapping("/save")
+    @RequiresPermissions("ifast:unit:unit")
+    public Result<String> save(ProductDO product) {
+        productService.insert(product);
         return Result.ok();
-	}
-	/**
-	 * 修改
-	 */
-	@ResponseBody
-	@RequestMapping("/update")
-	@RequiresPermissions("ifast:product:edit")
-	public Result<String>  update( ProductDO product){
-		productService.updateById(product);
-		return Result.ok();
-	}
-	
-	/**
-	 * 删除
-	 */
-	@PostMapping( "/remove")
-	@ResponseBody
-	@RequiresPermissions("ifast:product:remove")
-	public Result<String>  remove( Integer id){
-		productService.deleteById(id);
+    }
+
+    /**
+     * 修改
+     */
+    @ResponseBody
+    @RequestMapping("/update")
+    @RequiresPermissions("ifast:unit:unit")
+    public Result<String> update(ProductDO product) {
+        productService.updateById(product);
         return Result.ok();
-	}
-	
-	/**
-	 * 删除
-	 */
-	@PostMapping( "/batchRemove")
-	@ResponseBody
-	@RequiresPermissions("ifast:product:batchRemove")
-	public Result<String>  remove(@RequestParam("ids[]") Integer[] ids){
-		productService.deleteBatchIds(Arrays.asList(ids));
-		return Result.ok();
-	}
-	
+    }
+
+    /**
+     * 删除
+     */
+    @PostMapping("/remove")
+    @ResponseBody
+    @RequiresPermissions("ifast:unit:unit")
+    public Result<String> remove(Integer id) {
+        productService.deleteById(id);
+        return Result.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @PostMapping("/batchRemove")
+    @ResponseBody
+    @RequiresPermissions("ifast:unit:unit")
+    public Result<String> remove(@RequestParam("ids[]") Integer[] ids) {
+        productService.deleteBatchIds(Arrays.asList(ids));
+        return Result.ok();
+    }
+
 }

@@ -70,6 +70,7 @@ function load() {
 									field : 'introduction', 
 									title : '简介' 
 								},
+
 																{
 									title : '操作',
 									field : 'id',
@@ -81,10 +82,13 @@ function load() {
 										var d = '<a class="btn btn-warning btn-sm '+s_remove_h+'" href="#" title="删除"  mce_href="#" onclick="remove(\''
 												+ row.id
 												+ '\')"><i class="fa fa-remove"></i></a> ';
-										var f = '<a class="btn btn-success btn-sm" href="#" title="备用"  mce_href="#" onclick="resetPwd(\''
+										var f = '<a class="btn btn-success btn-sm" href="#" title="加入黑名单"  mce_href="#" onclick="resetPwd(\''
 												+ row.id
 												+ '\')"><i class="fa fa-key"></i></a> ';
-										return e + d ;
+                                        var h = '<a class="btn btn-success btn-sm" href="#" title="产品"  mce_href="#" onclick="productList(\''
+                                            + row.id
+                                            + '\')"><i class="fa fa-key"></i></a> ';
+										return e + d+f +h;
 									}
 								} ]
 					});
@@ -135,6 +139,35 @@ function remove(id) {
 }
 
 function resetPwd(id) {
+    layer.confirm('确定加入黑名单？', {
+        btn : [ '确定', '取消' ]
+    }, function() {
+        $.ajax({
+            url : prefix+"/addBlackList",
+            type : "post",
+            data : {
+                'id' : id
+            },
+            success : function(r) {
+                if (r.code==0) {
+                    layer.msg(r.msg);
+                    reLoad();
+                }else{
+                    layer.msg(r.msg);
+                }
+            }
+        });
+    })
+}
+function productList(id) {
+    layer.open({
+        type : 2,
+        title : '编辑',
+        maxmin : true,
+        shadeClose : false, // 点击遮罩关闭层
+        area : [ '800px', '520px' ],
+        content : '/ifast/product?id=' + id // iframe的url
+    });
 }
 function batchRemove() {
 	var rows = $('#exampleTable').bootstrapTable('getSelections'); // 返回所有选择的行，当没有选择的记录时，返回一个空数组

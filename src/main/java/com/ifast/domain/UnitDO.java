@@ -41,9 +41,21 @@ public class UnitDO implements Serializable {
     private String introduction;
     /**用户id*/
     private Long userId;
+    /**
+     * 类型
+     */
+    private String type;
 
     @TableField(exist = false)
     private List<ProductDO> productDOList;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public Long getUserId() {
         return userId;

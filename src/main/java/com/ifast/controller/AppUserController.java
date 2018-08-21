@@ -42,14 +42,30 @@ public class AppUserController extends AdminBaseController {
 	String User(){
 	    return "ifast/user/user";
 	}
+
+	@GetMapping("/black")
+	@RequiresPermissions("ifast:user:user")
+	public String black(){
+		return "ifast/user/black";
+	}
 	
 	@ResponseBody
 	@GetMapping("/list")
 	@RequiresPermissions("ifast:user:user")
 	public Result<Page<ApiUserDO>> list(ApiUserDO userDTO){
-        Wrapper<ApiUserDO> wrapper = new EntityWrapper<ApiUserDO>(userDTO);
-        Page<ApiUserDO> page = userService.selectPage(getPage(ApiUserDO.class), wrapper);
+		userDTO.setType("0");
+        Wrapper<ApiUserDO> wrapper = new EntityWrapper<>(userDTO);
+        Page<ApiUserDO> page = userService.selectPage(getPage(ApiUserDO.class), wrapper.orderBy("CreateTime"));
         return Result.ok(page);
+	}
+	@ResponseBody
+	@GetMapping("/blacklist")
+	@RequiresPermissions("ifast:user:user")
+	public Result<Page<ApiUserDO>> blacklist(ApiUserDO userDTO){
+		userDTO.setType("1");
+		Wrapper<ApiUserDO> wrapper = new EntityWrapper<>(userDTO);
+		Page<ApiUserDO> page = userService.selectPage(getPage(ApiUserDO.class), wrapper.orderBy("CreateTime"));
+		return Result.ok(page);
 	}
 	
 	@GetMapping("/add")
@@ -60,7 +76,7 @@ public class AppUserController extends AdminBaseController {
 
 	@GetMapping("/edit/{id}")
 	@RequiresPermissions("ifast:user:edit")
-	String edit(@PathVariable("id") Integer id,Model model){
+	String edit(@PathVariable("id") Long id,Model model){
 		ApiUserDO user = userService.selectById(id);
 		model.addAttribute("user", user);
 	    return "ifast/user/edit";
@@ -93,7 +109,7 @@ public class AppUserController extends AdminBaseController {
 	@PostMapping( "/remove")
 	@ResponseBody
 	@RequiresPermissions("ifast:user:remove")
-	public Result<String>  remove( Integer id){
+	public Result<String>  remove( Long id){
 		userService.deleteById(id);
         return Result.ok();
 	}
@@ -104,8 +120,33 @@ public class AppUserController extends AdminBaseController {
 	@PostMapping( "/batchRemove")
 	@ResponseBody
 	@RequiresPermissions("ifast:user:batchRemove")
-	public Result<String>  remove(@RequestParam("ids[]") Integer[] ids){
+	public Result<String>  remove(@RequestParam("ids[]") Long[] ids){
 		userService.deleteBatchIds(Arrays.asList(ids));
+		return Result.ok();
+	}
+
+	/**
+	 * 加入黑名单
+	 */
+	@PostMapping( "/addBlackList")
+	@ResponseBody
+	public Result<String>  addBlackList( Long id){
+		ApiUserDO userDO=new ApiUserDO();
+		userDO.setType("1");
+		userDO.setId(id);
+		userService.updateById(userDO);
+		return Result.ok();
+	}
+	/**
+	 * 加入黑名单
+	 */
+	@PostMapping( "/removeBlackList")
+	@ResponseBody
+	public Result<String>  removeBlackList( Long id){
+		ApiUserDO userDO=new ApiUserDO();
+		userDO.setType("0");
+		userDO.setId(id);
+		userService.updateById(userDO);
 		return Result.ok();
 	}
 	

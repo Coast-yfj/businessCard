@@ -12,6 +12,9 @@ import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
@@ -178,6 +181,16 @@ public class GenUtils {
         Map<String, String> config = new HashMap<>();
         list.stream().forEach(kv -> config.put(kv.getK(), kv.getV()));
         return config;
+    }
+    /**
+     * 获取配置信息
+     */
+    public static Configuration getConfigFile() {
+        try {
+            return new PropertiesConfiguration("generator.properties");
+        } catch (ConfigurationException e) {
+            throw new IFastException(EnumErrorCode.genReadConfigError.getCodeStr());
+        }
     }
 
     /**

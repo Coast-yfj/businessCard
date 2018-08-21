@@ -9,7 +9,7 @@ function load() {
 			.bootstrapTable(
 					{
 						method : 'get', // 服务器数据的请求方式 get or post
-						url : prefix + "/list", // 服务器数据的加载地址
+						url : prefix + "/blacklist", // 服务器数据的加载地址
 					//	showRefresh : true,
 					//	showToggle : true,
 					//	showColumns : true,
@@ -56,14 +56,17 @@ function load() {
 								},
 																{
 									field : 'id', 
-									title : '主键' 
+									title : '主键' ,
+                                    formatter:function(value,row,index){
+										return index+1;
+                                                                    }
 								},
 																{
 									field : 'name', 
 									title : '姓名' 
 								},
 																{
-									field : 'unitId', 
+									field : 'unionid', 
 									title : '公司id' 
 								},
 																{
@@ -90,6 +93,7 @@ function load() {
 									field : 'address', 
 									title : '地址' 
 								},
+
 																{
 									title : '操作',
 									field : 'id',
@@ -101,10 +105,10 @@ function load() {
 										var d = '<a class="btn btn-warning btn-sm '+s_remove_h+'" href="#" title="删除"  mce_href="#" onclick="remove(\''
 												+ row.id
 												+ '\')"><i class="fa fa-remove"></i></a> ';
-										var f = '<a class="btn btn-success btn-sm" href="#" title="备用"  mce_href="#" onclick="resetPwd(\''
+										var f = '<a class="btn btn-success btn-sm" href="#" title="移除黑名单"  mce_href="#" onclick="removeBlackList(\''
 												+ row.id
 												+ '\')"><i class="fa fa-key"></i></a> ';
-										return e + d ;
+										return f;
 									}
 								} ]
 					});
@@ -154,7 +158,26 @@ function remove(id) {
 	})
 }
 
-function resetPwd(id) {
+function removeBlackList(id) {
+    layer.confirm('确定移除黑名单？', {
+        btn : [ '确定', '取消' ]
+    }, function() {
+        $.ajax({
+            url : prefix+"/removeBlackList",
+            type : "post",
+            data : {
+                'id' : id
+            },
+            success : function(r) {
+                if (r.code==0) {
+                    layer.msg(r.msg);
+                    reLoad();
+                }else{
+                    layer.msg(r.msg);
+                }
+            }
+        });
+    })
 }
 function batchRemove() {
 	var rows = $('#exampleTable').bootstrapTable('getSelections'); // 返回所有选择的行，当没有选择的记录时，返回一个空数组

@@ -68,10 +68,35 @@ public class ApiUserDO implements Serializable {
      */
     private String unionid;
     /**
+     * 类型
+     */
+    private String type;
+
+    /**
+     * 创建时间
+     */
+    private String createTime;
+    /**
      * 公司信息
      */
     @TableField(exist = false)
     private UnitDO unitDO;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
 
     public String getOpenid() {
         return openid;
