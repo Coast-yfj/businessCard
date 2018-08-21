@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -88,7 +89,9 @@ public class ApiBusinessCard {
 
     @PostMapping("/saveProduct")
     @ApiOperation("保存产品信息")
-    public Result<?> saveProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, ProductDO productDO) {
+    public Result<?> saveProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, @RequestParam ("poster") MultipartFile file,ProductDO productDO) {
+        String url=productService.upload(file);
+        productDO.setPath(url);
         productService.insert(productDO);
         return Result.ok();
     }
@@ -109,7 +112,7 @@ public class ApiBusinessCard {
 
     @PostMapping("/updateProduct")
     @ApiOperation("更新产品信息")
-    public Result<?> updateProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, ProductDO productDO) {
+    public Result<?> updateProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,  ProductDO productDO) {
         productService.updateById(productDO);
         return Result.ok();
     }
