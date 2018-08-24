@@ -67,7 +67,14 @@ function load() {
 								},
 																{
 									field : 'unionid', 
-									title : '公司id' 
+									title : '公司名称' ,
+                                     formatter: function (value, row, index) {
+										if(row.unitDO!=null){
+                                            return row.unitDO.name;
+                                        }else {
+											return "";
+										}
+                                      }
 								},
 																{
 									field : 'position', 
