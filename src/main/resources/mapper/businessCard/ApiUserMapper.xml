@@ -61,7 +61,10 @@
         </where>
     </select>
 
-    <select id="queid">
-            SELECT * FROM tb_user t WHERE EXISTS(SELECT * FROM tb_attention a WHERE a.`tid`=t.`id` AND a.`mid`='1031433511060631553');
+    <select id="queryByIds" parameterType="string" resultMap="userByUnit">
+            SELECT * FROM tb_user t
+            WHERE EXISTS(
+            SELECT * FROM tb_attention a WHERE a.`tid`=t.`id` AND a.`mid`=#{id}
+            )
     </select>
 </mapper>
