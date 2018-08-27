@@ -29,4 +29,11 @@ public interface ApiUserDao extends BaseDao<ApiUserDO> {
      * @return
      */
     List<ApiUserDO> queryByUserDo(Pagination page, ApiUserDO apiUserDO);
+
+    /**
+     * 查询名片夹
+     * @param id
+     * @return
+     */
+    List<ApiUserDO> queryByIds(String id);
 }
