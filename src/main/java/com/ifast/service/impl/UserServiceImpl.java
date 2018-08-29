@@ -2,11 +2,9 @@ package com.ifast.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.ifast.api.config.JWTConfig;
 import com.ifast.api.exception.IFastApiException;
-import com.ifast.api.pojo.domain.AppUserDO;
-import com.ifast.api.pojo.vo.TokenVO;
 import com.ifast.api.util.JWTUtil;
 import com.ifast.common.config.CacheConfiguration;
 import com.ifast.common.config.IFastConfig;
@@ -126,5 +124,17 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
     @Override
     public ApiUserDO queryById(String id) {
         return this.baseMapper.queryById(id);
+    }
+
+    /**
+     * 分页查询用户信息
+     *
+     * @param page
+     * @param userDO
+     * @return
+     */
+    @Override
+    public Page<ApiUserDO> queryUserPage(Page page, ApiUserDO userDO) {
+        return page.setRecords(baseMapper.queryByUserDo(page,userDO));
     }
 }

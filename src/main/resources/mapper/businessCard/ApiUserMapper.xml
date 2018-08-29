@@ -29,9 +29,42 @@
   a.`scale`,
   a.`userid`,
   a.`name` AS unitName
-    FROM tb_user t LEFT JOIN tb_unit a ON t.`id`=a.`useid`
+    FROM tb_user t LEFT JOIN tb_unit a ON t.`id`=a.`userid`
     <where>
         id=#{id}
     </where>
+    </select>
+    <select id="queryByUserDo" resultMap="userByUnit">
+        SELECT
+  t.`address`,
+  t.`id`,
+  t.`email`,
+  t.`name`,
+  t.`phone`,
+  t.`position`,
+  t.`qq`,
+  t.`WeChat`,
+  a.`id` AS unitId,
+  a.`Introduction`,
+  a.`scale`,
+  a.`userid`,
+  a.`name` AS unitName
+    FROM tb_user t LEFT JOIN tb_unit a ON t.`id`=a.`userid`
+        <where>
+           <if test="id!=null and id!=''">
+               and t.`id`=#{id}
+           </if>
+            <if test="name!=null and name!=''">
+              and  t.`name`=#{name}
+            </if>
+
+        </where>
+    </select>
+
+    <select id="queryByIds" parameterType="string" resultMap="userByUnit">
+            SELECT * FROM tb_user t
+            WHERE EXISTS(
+            SELECT * FROM tb_attention a WHERE a.`tid`=t.`id` AND a.`mid`=#{id}
+            )
     </select>
 </mapper>

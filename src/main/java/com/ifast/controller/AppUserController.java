@@ -54,8 +54,7 @@ public class AppUserController extends AdminBaseController {
 	@RequiresPermissions("ifast:user:user")
 	public Result<Page<ApiUserDO>> list(ApiUserDO userDTO){
 		userDTO.setType("0");
-        Wrapper<ApiUserDO> wrapper = new EntityWrapper<>(userDTO);
-        Page<ApiUserDO> page = userService.selectPage(getPage(ApiUserDO.class), wrapper.orderBy("CreateTime"));
+        Page<ApiUserDO> page = userService.queryUserPage(getPage(ApiUserDO.class),userDTO);
         return Result.ok(page);
 	}
 	@ResponseBody
