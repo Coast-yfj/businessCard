@@ -1,8 +1,10 @@
 package com.ifast.api.dao;
 
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.ifast.api.pojo.domain.ActiveDO;
-import com.ifast.api.pojo.domain.AppUserDO;
 import com.ifast.common.base.BaseDao;
+
+import java.util.List;
 
 /**
  * <pre>
@@ -11,4 +13,5 @@ import com.ifast.common.base.BaseDao;
  */
 public interface ActiveDao extends BaseDao<ActiveDO> {
 
+    List<ActiveDO>  active(Pagination page, ActiveDO activeDO);
 }

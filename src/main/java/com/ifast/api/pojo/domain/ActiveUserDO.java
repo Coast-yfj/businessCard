@@ -21,8 +21,8 @@ public class ActiveUserDO implements Serializable {
     @TableId
     private Long id;
     private Date createTime;
-    private String activeId;
-    private String userId;
+    private Long activeId;
+    private Long userId;
 
     public Long getId() {
         return id;
@@ -40,19 +40,19 @@ public class ActiveUserDO implements Serializable {
         this.createTime = createTime;
     }
 
-    public String getActiveId() {
+    public Long getActiveId() {
         return activeId;
     }
 
-    public void setActiveId(String activeId) {
+    public void setActiveId(Long activeId) {
         this.activeId = activeId;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 }

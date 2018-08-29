@@ -11,4 +11,5 @@ import com.ifast.common.base.BaseDao;
  */
 public interface ImgDao extends BaseDao<ImgDO> {
 
+    void addImg(ImgDO imgDO);
 }

@@ -24,18 +24,28 @@ public class ActiveDO implements Serializable {
     private String startTime;
     private String endTime;
     private Date createTime;
-    private String createUserId;
+    private Long createUserId;
     private String title;
+    //sheng
     private String province;
+    //市
     private String city;
+    //县
     private String county;
+//    类型
     private String type;
+    private String address;
     //经度
     private String longitude;
     //weidu
     private String latitude;
-
+    //详细内容
     private String content;
+    //0：未暂停，1：已暂停
+    private int stop;
+
+    @TableField(exist = false)
+    private List<Long> imgIds;
 
     @TableField(exist = false)
     private List<ImgDO> imgs;
@@ -45,6 +55,15 @@ public class ActiveDO implements Serializable {
 
     @TableField(exist = false)
     private int userTotal;
+
+    @TableField(exist = false)
+    private int pageSize = 10;
+    @TableField(exist = false)
+    private  int pageNo = 1;
+
+    //当前时间
+    @TableField(exist = false)
+    private String day;
 
     public Long getId() {
         return id;
@@ -76,14 +95,6 @@ public class ActiveDO implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
-    }
-
-    public String getCreateUserId() {
-        return createUserId;
-    }
-
-    public void setCreateUserId(String createUserId) {
-        this.createUserId = createUserId;
     }
 
     public String getTitle() {
@@ -172,5 +183,61 @@ public class ActiveDO implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public int getPageNo() {
+        return pageNo;
+    }
+
+    public void setPageNo(int pageNo) {
+        this.pageNo = pageNo;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public Long getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public List<Long> getImgIds() {
+        return imgIds;
+    }
+
+    public void setImgIds(List<Long> imgIds) {
+        this.imgIds = imgIds;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public int getStop() {
+        return stop;
+    }
+
+    public void setStop(int stop) {
+        this.stop = stop;
     }
 }

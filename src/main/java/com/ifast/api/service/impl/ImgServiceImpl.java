@@ -17,5 +17,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ImgServiceImpl extends CoreServiceImpl<ImgDao, ImgDO> implements ImgService {
-
+    @Override
+    public void addImg(ImgDO imgDO) {
+        this.baseMapper.addImg(imgDO);
+    }
 }

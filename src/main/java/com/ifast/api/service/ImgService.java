@@ -12,4 +12,5 @@ import com.ifast.common.base.CoreService;
  */
 public interface ImgService extends CoreService<ImgDO> {
 
+    void addImg(ImgDO imgDO);
 }

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ifast.api.dao.ActiveDao">
+    <resultMap id="active" type="com.ifast.api.pojo.domain.ActiveDO">
+        <id property="id" column="id" />
+        <result property="city" column="city" />
+        <result property="title" column="title" />
+        <result property="startTtime" column="startTtime" />
+        <result property="endTime" column="endTime" />
+        <result property="province" column="province" />
+        <result property="county" column="county" />
+        <result property="type" column="type" />
+        <result property="userTotal" column="userTotal" />
+        <collection property="imgs" javaType="ArrayList" column="id" ofType="com.ifast.api.pojo.domain.ImgDO" select="queryImgs"/>
+    </resultMap>
+
+    <select id="queryActive" resultMap="active">
+        SELECT
+        m.*,x.userTotal
+        FROM
+        (
+        SELECT
+            t.id,
+            t.city,
+            t.title,
+            t.startTtime,
+            t.endTime,
+            t.province,
+            t.county,
+            t.type
+            FROM
+            app_active t
+            WHERE
+            t.startTtime &lt;= DAY AND t.endTime &gt;= DAY
+            AND t.createUserId = #{createUserId}
+            ORDER BY
+            t.startTtime UNION
+            SELECT
+            t.id,
+            t.city,
+            t.title,
+            t.startTtime,
+            t.endTime,
+            t.province,
+            t.county,
+            t.type
+            FROM
+            app_active t
+            WHERE
+            t.startTtime &lt;= #{day} AND t.endTime &gt;= #{day}
+            AND t.createUserId != #{createUserId}
+            ORDER BY
+            t.startTtime
+            ) m
+            LEFT JOIN ( SELECT n.activeId, count( 1 ) userTotal FROM app_active_user n GROUP BY n.activeId ) x ON m.id = x.activeId
+            WHERE
+              1=1
+        <if test="title!=null and title !=''">
+            and m.title LIKE CONCAT( '%',#{title}, '%' )
+        </if>
+            OR (
+                1=1
+            <if test="city!=null and city !=''">
+               and  m.city = #{city}
+            </if>
+            <if test="county!=null and county!=''">
+                AND m.county = #{county}
+            </if>
+            <if test="province !=null and province !=''">
+                AND m.province =#{province}
+            </if>
+               )
+        <if test="type!=null and type !=''">
+            OR m.type = #{type}
+        </if>
+    </select>
+
+    <select id="queryImgs" resultType="com.ifast.api.pojo.domain.ImgDO">
+        select p.id, p.url
+              from app_image p where p.parentId = #{id}
+    </select>
+
+
+
+</mapper>

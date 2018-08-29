@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ifast.api.dao.ImgDao">
+
+    <sql id="img_cloumn">
+        "url",
+        "parentId"
+    </sql>
+    <sql id="img_proporties">
+        #{url},
+        #{parentId}
+    </sql>
+
+    <!--keyColumn="id"这条属性可以不加，只是为了防止自增属性不是第一个字段而设置的 keyProperty="id"当这个属性存在时，返回当前递增的ID useGeneratedKeys="true"-->
+    <insert id="addImg" parameterType="com.ifast.api.pojo.domain.ImgDO" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO app_image (<include refid="img_cloumn"/>)
+        VALUES (<include refid="img_proporties"/>)
+    </insert>
+
+
+</mapper>

@@ -21,7 +21,7 @@ public class ImgDO implements Serializable {
     @TableId
     private Long id;
     private String url;
-    private String parentId;
+    private Long parentId;
 
     public Long getId() {
         return id;
@@ -39,11 +39,12 @@ public class ImgDO implements Serializable {
         this.url = url;
     }
 
-    public String getParentId() {
+
+    public Long getParentId() {
         return parentId;
     }
 
-    public void setParentId(String parentId) {
+    public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
 }

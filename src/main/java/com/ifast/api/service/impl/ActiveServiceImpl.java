@@ -3,6 +3,7 @@ package com.ifast.api.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.ifast.api.config.JWTConfig;
 import com.ifast.api.dao.ActiveDao;
 import com.ifast.api.dao.AppUserDao;
@@ -36,5 +37,9 @@ import java.util.Map;
  */
 @Service
 public class ActiveServiceImpl extends CoreServiceImpl<ActiveDao, ActiveDO> implements ActiveService {
-
+    @Override
+    public Page<ActiveDO> active(ActiveDO activeDO) {
+        Page<ActiveDO> page = new Page<>(activeDO.getPageNo(),activeDO.getPageSize());
+        return page.setRecords(this.baseMapper.active(page, activeDO));
+    }
 }
