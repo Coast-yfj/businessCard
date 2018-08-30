@@ -7,17 +7,12 @@ import com.google.common.collect.Lists;
 import com.ifast.api.pojo.domain.ActiveDO;
 import com.ifast.api.pojo.domain.ActiveUserDO;
 import com.ifast.api.pojo.domain.ImgDO;
-import com.ifast.api.service.ActiveService;
+import com.ifast.api.service.ApiActiveService;
 import com.ifast.api.service.ActiveUserService;
 import com.ifast.api.service.ImgService;
 import com.ifast.common.utils.Result;
 import com.ifast.domain.ApiUserDO;
-import com.ifast.domain.AttentionDO;
-import com.ifast.domain.ProductDO;
-import com.ifast.domain.UnitDO;
-import com.ifast.service.AttentionService;
 import com.ifast.service.ProductService;
-import com.ifast.service.UnitService;
 import com.ifast.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -27,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +33,7 @@ import java.util.List;
 public class ApiActiveController {
 
     @Autowired
-    private ActiveService activeService;
+    private ApiActiveService apiActiveService;
 
     @Autowired
     private ActiveUserService activeUserService;
@@ -59,7 +53,7 @@ public class ApiActiveController {
             , @ApiParam(name = "Active")ActiveDO activeDO) {
         ApiUserDO userDO = userService.getUserByToken(token);
         activeDO.setCreateUserId(userDO.getId());
-        Page<ActiveDO> page = this.activeService.active(activeDO);
+        Page<ActiveDO> page = this.apiActiveService.active(activeDO);
         return Result.ok(page);
     }
 
@@ -95,7 +89,7 @@ public class ApiActiveController {
     @Transactional
     public Result<?> createActive(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
             , @ApiParam(name = "activeDO")ActiveDO activeDO) {
-        this.activeService.insert(activeDO);
+        this.apiActiveService.insert(activeDO);
         Long parentId = activeDO.getId();
         List<Long> imgids = activeDO.getImgIds();
         List<ImgDO> imgs = Lists.newArrayList();

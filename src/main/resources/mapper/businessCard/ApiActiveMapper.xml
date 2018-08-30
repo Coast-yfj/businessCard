@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.ifast.api.dao.ActiveDao">
+<mapper namespace="com.ifast.api.dao.ApiActiveDao">
     <resultMap id="active" type="com.ifast.api.pojo.domain.ActiveDO">
         <id property="id" column="id" />
         <result property="city" column="city" />

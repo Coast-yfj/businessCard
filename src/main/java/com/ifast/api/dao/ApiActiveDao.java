@@ -11,7 +11,7 @@ import java.util.List;
  * </pre>
  * <small> 2018年4月28日 | Aron</small>
  */
-public interface ActiveDao extends BaseDao<ActiveDO> {
+public interface ApiActiveDao extends BaseDao<ActiveDO> {
 
     List<ActiveDO>  active(Pagination page, ActiveDO activeDO);
 }

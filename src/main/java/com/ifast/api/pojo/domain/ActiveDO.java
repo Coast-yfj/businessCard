@@ -21,7 +21,7 @@ public class ActiveDO implements Serializable {
 
     @TableId
     private Long id;
-    private String startTime;
+    private String startTtime;
     private String endTime;
     private Date createTime;
     private Long createUserId;
@@ -73,13 +73,6 @@ public class ActiveDO implements Serializable {
         this.id = id;
     }
 
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
 
     public String getEndTime() {
         return endTime;
@@ -239,5 +232,13 @@ public class ActiveDO implements Serializable {
 
     public void setStop(int stop) {
         this.stop = stop;
+    }
+
+    public String getStartTtime() {
+        return startTtime;
+    }
+
+    public void setStartTtime(String startTtime) {
+        this.startTtime = startTtime;
     }
 }
