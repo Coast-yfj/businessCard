@@ -41,3 +41,5 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
     cache-enabled: false
+appid: 111111111
+secret: sdsssss

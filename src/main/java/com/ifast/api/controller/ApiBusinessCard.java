@@ -39,11 +39,11 @@ public class ApiBusinessCard {
 
     @PostMapping("login")
     @ApiOperation("api登录")
-    public Result<?> login(String code){
+    public Result<?> login(String code,String iv,String encryptedData){
         String str="";
         try {
-            str= userService.getToken(code);
-        } catch (IOException e) {
+            str= userService.getToken(code,iv,encryptedData);
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.fail() ;
         }

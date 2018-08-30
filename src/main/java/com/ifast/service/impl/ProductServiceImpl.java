@@ -55,6 +55,9 @@ public class ProductServiceImpl extends CoreServiceImpl<ProductDao, ProductDO> i
             return null;
         }
         ApiUserDO userDO = userService.queryById(userId);
+        if(userDO.getUnitDO()==null){
+            return new ProductDO();
+        }
         ProductDO productDO = new ProductDO();
         productDO.setUnitId(userDO.getUnitDO().getId());
         return this.selectOne(new EntityWrapper<>(productDO));

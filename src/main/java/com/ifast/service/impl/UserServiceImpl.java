@@ -2,6 +2,7 @@ package com.ifast.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ifast.api.config.JWTConfig;
 import com.ifast.api.exception.IFastApiException;
@@ -16,13 +17,21 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.xerces.impl.dv.util.Base64;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.stereotype.Service;
 
 import com.ifast.service.UserService;
 import com.ifast.common.base.CoreServiceImpl;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
+import java.security.*;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -36,13 +45,19 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
 
     OkHttpClient client = new OkHttpClient();
 
+    @Value("${appid}")
+    private String appid;
+
+    @Value("${secret}")
+    private String secret;
+
+
     private static class Holder {
         static final JWTConfig jwt = SpringContextHolder.getBean(IFastConfig.class).getJwt();
         static final Cache logoutTokens = CacheConfiguration.dynaConfigCache("tokenExpires", 0, jwt.getRefreshTokenExpire(), 1000);
 
         static {
             JWTUtil.mykey = jwt.getUserPrimaryKey();
-            String appid = jwt.getUserPrimaryKey();
         }
     }
 
@@ -55,7 +70,10 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
         if (userId == null || "".equals(userId)) {
             return null;
         }
-        return this.selectById(userId);
+        ApiUserDO apiUserDO=new ApiUserDO();
+        apiUserDO.setId(Long.parseLong(userId));
+        apiUserDO.setType("0");
+        return this.selectOne(new EntityWrapper<>());
     }
 
     /**
@@ -66,8 +84,8 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
      * @throws IOException
      */
     @Override
-    public String getToken(String code) throws IOException {
-        String url = "https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code";
+    public String getToken(String code, String iv, String encryptedData) throws Exception {
+        String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" + appid + "&secret=" + secret + "&js_code=" + code + "&grant_type=authorization_code";
         Request request = new Request.Builder().url(url).build();
         Response response = client.newCall(request).execute();
         Map<String, String> map;
@@ -84,11 +102,20 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
             return "";
         }
         ApiUserDO apiUserDO = new ApiUserDO();
-        apiUserDO.setUnionid(map.get("unionid"));
         apiUserDO.setOpenid(map.get("openid"));
+        apiUserDO=this.selectOne(new EntityWrapper<>(apiUserDO));
+        apiUserDO.setUnionid(map.get("unionid"));
         apiUserDO.setSession_key(map.get("session_key"));
-        this.insert(apiUserDO);
-        return JWTUtil.sign(apiUserDO.getId().toString(), apiUserDO.getOpenid() + apiUserDO.getSession_key(), Holder.jwt.getExpireTime());
+//        Map<String, String> userInfo = getUserInfo(encryptedData, apiUserDO.getSession_key(), iv);
+//        apiUserDO.setAvatarUrl(userInfo.get("avatarUrl"));
+//        apiUserDO.setCity(userInfo.get("city"));
+//        apiUserDO.setProvince(userInfo.get("province"));
+//        apiUserDO.setCountry(userInfo.get("country"));
+//        apiUserDO.setNickName(userInfo.get("nickName"));
+//        apiUserDO.setGender(userInfo.get("gender"));
+        this.insertOrUpdate(apiUserDO);
+        return Base64.encode(apiUserDO.getId().toString().getBytes());
+//    return JWTUtil.sign(apiUserDO.getId().toString(), apiUserDO.getOpenid() + apiUserDO.getSession_key(), Holder.jwt.getExpireTime());
     }
 
     /**
@@ -101,11 +128,15 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
     public boolean verifyToken(String token) {
         String userId = null;
         ApiUserDO user = null;
-        return org.apache.commons.lang.StringUtils.isNotBlank(token)
-                && (userId = JWTUtil.getUserId(token)) != null
-                && notLogout(token)
-                && (user = selectById(Long.parseLong(userId))) != null
-                && (JWTUtil.verify(token, userId, user.getOpenid() + user.getSession_key()));
+//        return org.apache.commons.lang.StringUtils.isNotBlank(token)
+//                && (userId = JWTUtil.getUserId(token)) != null
+//                && notLogout(token)
+//                && (user = selectById(Long.parseLong(userId))) != null
+//                && (JWTUtil.verify(token, userId, user.getOpenid() + user.getSession_key()));
+       return org.apache.commons.lang.StringUtils.isNotBlank(token)
+               &&  (userId = new String(Base64.decode(token))) != null
+               &&  (user = selectById(Long.parseLong(userId))) != null;
+
     }
 
     private boolean notLogout(String token) {
@@ -135,6 +166,48 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
      */
     @Override
     public Page<ApiUserDO> queryUserPage(Page page, ApiUserDO userDO) {
-        return page.setRecords(baseMapper.queryByUserDo(page,userDO));
+        return page.setRecords(baseMapper.queryByUserDo(page, userDO));
     }
+
+    /**
+     * 解密用户敏感数据获取用户信息
+     *
+     * @param sessionKey    数据进行加密签名的密钥
+     * @param encryptedData 包括敏感数据在内的完整用户信息的加密数据
+     * @param iv            加密算法的初始向量
+     */
+    public Map<String, String> getUserInfo(String encryptedData, String sessionKey, String iv) throws Exception {
+        // 被加密的数据
+        byte[] dataByte = Base64.decode(encryptedData);
+        // 加密秘钥
+        byte[] keyByte = Base64.decode(sessionKey);
+        // 偏移量
+        byte[] ivByte = Base64.decode(iv);
+        // 如果密钥不足16位，那么就补足.  这个if 中的内容很重要
+        int base = 16;
+        if (keyByte.length % base != 0) {
+            int groups = keyByte.length / base + (keyByte.length % base != 0 ? 1 : 0);
+            byte[] temp = new byte[groups * base];
+            Arrays.fill(temp, (byte) 0);
+            System.arraycopy(keyByte, 0, temp, 0, keyByte.length);
+            keyByte = temp;
+        }
+        // 初始化
+        Security.addProvider(new BouncyCastleProvider());
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding", "BC");
+        SecretKeySpec spec = new SecretKeySpec(keyByte, "AES");
+        AlgorithmParameters parameters = AlgorithmParameters.getInstance("AES");
+        parameters.init(new IvParameterSpec(ivByte));
+        // 初始化
+        cipher.init(Cipher.DECRYPT_MODE, spec, parameters);
+        byte[] resultByte = cipher.doFinal(dataByte);
+        if (null != resultByte && resultByte.length > 0) {
+            String result = new String(resultByte, "UTF-8");
+
+            return JSONObject.parseObject(result, new TypeReference<Map<String, String>>() {
+            });
+        }
+        return null;
+    }
+
 }
