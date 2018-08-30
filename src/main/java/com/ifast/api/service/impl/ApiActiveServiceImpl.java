@@ -18,6 +18,6 @@ public class ApiActiveServiceImpl extends CoreServiceImpl<ApiActiveDao, ActiveDO
     @Override
     public Page<ActiveDO> active(ActiveDO activeDO) {
         Page<ActiveDO> page = new Page<>(activeDO.getPageNo(),activeDO.getPageSize());
-        return page.setRecords(this.baseMapper.active(page, activeDO));
+        return page.setRecords(this.baseMapper.queryActive(page, activeDO));
     }
 }

@@ -13,5 +13,5 @@ import java.util.List;
  */
 public interface ApiActiveDao extends BaseDao<ActiveDO> {
 
-    List<ActiveDO>  active(Pagination page, ActiveDO activeDO);
+    List<ActiveDO>  queryActive(Pagination page, ActiveDO activeDO);
 }
