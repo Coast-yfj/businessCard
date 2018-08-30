@@ -50,7 +50,7 @@ public class ApiActiveController {
     @PostMapping("/activeListPage")
     @ApiOperation("查询活动信息")
     public Result<?> updateUser(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
-            , @ApiParam(name = "Active")ActiveDO activeDO) {
+            , ActiveDO activeDO) {
         ApiUserDO userDO = userService.getUserByToken(token);
         activeDO.setCreateUserId(userDO.getId());
         Page<ActiveDO> page = this.apiActiveService.active(activeDO);
