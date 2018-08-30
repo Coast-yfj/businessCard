@@ -20,7 +20,7 @@
         m.*,x.userTotal
         FROM
         (
-        SELECT
+        ( SELECT
             t.id,
             t.city,
             t.title,
@@ -35,10 +35,9 @@
             t.stop = '0' and
             t.startTtime &lt;= #{day} AND t.endTime &gt;= #{day}
             AND t.createUserId = #{createUserId}
-            ORDER BY
-            t.startTtime
+        ORDER BY    t.startTtime)
         UNION
-            SELECT
+        (SELECT
             t.id,
             t.city,
             t.title,
@@ -53,8 +52,7 @@
         t.stop = '0' and
         t.startTtime &lt;= #{day} AND t.endTime &gt;= #{day}
             AND t.createUserId != #{createUserId}
-            ORDER BY
-            t.startTtime
+        ORDER BY    t.startTtime)
             ) m
             LEFT JOIN ( SELECT n.activeId, count( 1 ) userTotal FROM app_active_user n GROUP BY n.activeId ) x ON m.id = x.activeId
             WHERE
