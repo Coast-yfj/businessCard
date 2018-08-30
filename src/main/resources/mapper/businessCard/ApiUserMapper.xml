@@ -31,7 +31,7 @@
   a.`name` AS unitName
     FROM tb_user t LEFT JOIN tb_unit a ON t.`id`=a.`userid`
     <where>
-        id=#{id}
+        t.id=#{id}
     </where>
     </select>
     <select id="queryByUserDo" resultMap="userByUnit">

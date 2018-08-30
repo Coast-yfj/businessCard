@@ -28,7 +28,7 @@ public interface UserService extends CoreService<ApiUserDO> {
      * @return
      * @throws IOException
      */
-    String getToken(String code) throws IOException;
+    String getToken(String code,String iv,String encryptedData) throws Exception;
 
     /**
      * 验证token

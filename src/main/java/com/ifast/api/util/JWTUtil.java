@@ -1,6 +1,7 @@
 package com.ifast.api.util;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.Date;
 
 import org.apache.shiro.authc.AuthenticationException;
@@ -67,12 +68,13 @@ public class JWTUtil {
      * @return
      */
     public static String getUserId(String token) {
-        try {
-            DecodedJWT jwt = JWT.decode(token);
-            return jwt.getClaim(mykey).asString();
-        } catch (JWTDecodeException e) {
-            return null;
-        }
+//        try {
+//            DecodedJWT jwt = JWT.decode(token);
+//            return jwt.getClaim(mykey).asString();
+//        } catch (JWTDecodeException e) {
+//            return null;
+//        }
+        return new String(Base64.getDecoder().decode(token));
     }
 
     /**
