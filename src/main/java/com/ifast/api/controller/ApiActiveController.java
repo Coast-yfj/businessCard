@@ -60,7 +60,7 @@ public class ApiActiveController {
     @PostMapping("/joinActive")
     @ApiOperation("加入活动")
     public Result<?> joinActive(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
-            , @ApiParam(name = "activeId")Long activeId) {
+            , Long activeId) {
         ApiUserDO userDO = userService.getUserByToken(token);
         ActiveUserDO  activeUserDO = new ActiveUserDO();
         activeUserDO.setUserId(userDO.getId());
@@ -72,7 +72,7 @@ public class ApiActiveController {
     @PostMapping("/activeUserList")
     @ApiOperation("查询参加活动人员列表")
     public Result<?> activeUserList(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
-            , @ApiParam(name = "activeId")Long activeId) {
+            , Long activeId) {
         Wrapper<ActiveUserDO> wrapper = new EntityWrapper<>();
         wrapper.eq("activeId", activeId);
         List<ActiveUserDO> list = this.activeUserService.selectList(wrapper);
@@ -88,7 +88,7 @@ public class ApiActiveController {
     @ApiOperation("创建活动")
     @Transactional
     public Result<?> createActive(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
-            , @ApiParam(name = "activeDO")ActiveDO activeDO) {
+            , ActiveDO activeDO) {
         this.apiActiveService.insert(activeDO);
         Long parentId = activeDO.getId();
         activeDO.setStop("0");
