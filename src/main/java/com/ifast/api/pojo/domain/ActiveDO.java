@@ -42,7 +42,7 @@ public class ActiveDO implements Serializable {
     //详细内容
     private String content;
     //0：未暂停，1：已暂停
-    private int stop;
+    private String stop;
 
     @TableField(exist = false)
     private List<Long> imgIds;
@@ -226,13 +226,7 @@ public class ActiveDO implements Serializable {
         this.address = address;
     }
 
-    public int getStop() {
-        return stop;
-    }
 
-    public void setStop(int stop) {
-        this.stop = stop;
-    }
 
     public String getStartTtime() {
         return startTtime;
@@ -240,5 +234,13 @@ public class ActiveDO implements Serializable {
 
     public void setStartTtime(String startTtime) {
         this.startTtime = startTtime;
+    }
+
+    public String getStop() {
+        return stop;
+    }
+
+    public void setStop(String stop) {
+        this.stop = stop;
     }
 }

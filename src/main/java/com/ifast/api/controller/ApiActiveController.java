@@ -91,6 +91,7 @@ public class ApiActiveController {
             , @ApiParam(name = "activeDO")ActiveDO activeDO) {
         this.apiActiveService.insert(activeDO);
         Long parentId = activeDO.getId();
+        activeDO.setStop("0");
         List<Long> imgids = activeDO.getImgIds();
         List<ImgDO> imgs = Lists.newArrayList();
         for (Long id : imgids) {

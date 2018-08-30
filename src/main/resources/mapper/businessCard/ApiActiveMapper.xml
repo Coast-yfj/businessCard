@@ -32,10 +32,12 @@
             FROM
             app_active t
             WHERE
-            t.startTtime &lt;= DAY AND t.endTime &gt;= DAY
+            t.stop = '0' and
+            t.startTtime &lt;= #{day} AND t.endTime &gt;= #{day}
             AND t.createUserId = #{createUserId}
             ORDER BY
-            t.startTtime UNION
+            t.startTtime
+        UNION
             SELECT
             t.id,
             t.city,
@@ -48,7 +50,8 @@
             FROM
             app_active t
             WHERE
-            t.startTtime &lt;= #{day} AND t.endTime &gt;= #{day}
+        t.stop = '0' and
+        t.startTtime &lt;= #{day} AND t.endTime &gt;= #{day}
             AND t.createUserId != #{createUserId}
             ORDER BY
             t.startTtime

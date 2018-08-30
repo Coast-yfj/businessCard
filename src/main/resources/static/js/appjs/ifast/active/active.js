@@ -54,72 +54,84 @@ function load() {
 								{
 									checkbox : true
 								},
-																{
+										/*						{
 									field : 'id', 
 									title : '' 
-								},
+								},*/
 																{
 									field : 'startttime', 
-									title : '' 
+									title : '开始时间'
 								},
 																{
 									field : 'endtime', 
-									title : '' 
+									title : '结束时间'
 								},
-																{
+								/*								{
 									field : 'createuserid', 
 									title : '' 
-								},
+								},*/
 																{
 									field : 'title', 
-									title : '' 
+									title : '标题'
 								},
 																{
 									field : 'province', 
-									title : '' 
+									title : '省'
 								},
 																{
 									field : 'city', 
-									title : '' 
+									title : '市'
 								},
 																{
 									field : 'county', 
-									title : '' 
+									title : '区'
 								},
 																{
 									field : 'type', 
-									title : '' 
+									title : '类型'
 								},
 																{
 									field : 'content', 
-									title : '' 
+									title : '内容'
 								},
 																{
 									field : 'createtime', 
-									title : '' 
+									title : '创建时间'
 								},
 																{
 									field : 'longitude', 
-									title : '' 
+									title : '经度'
 								},
 																{
 									field : 'latitude', 
-									title : '' 
+									title : '纬度'
 								},
 																{
 									field : 'address', 
-									title : '' 
+									title : '详细地址'
 								},
 																{
 									field : 'stop', 
-									title : '' 
+									title : '状态',
+									formatter:function (value, row, index) {
+                                        if(row.stop==0){
+                                            return  "开启";
+                                        }else{
+                                           return  "关闭";
+                                        }
+                                    }
 								},
 																{
 									title : '操作',
 									field : 'id',
 									align : 'center',
 									formatter : function(value, row, index) {
-										var e = '<a class="btn btn-primary btn-sm '+s_edit_h+'" href="#" mce_href="#" title="编辑" onclick="edit(\''
+                                        if(row.stop==0){
+                                        	vtitle = "关闭";
+										}else{
+                                        	vtitle = "开启";
+										}
+										var e = '<a class="btn btn-primary btn-sm '+s_edit_h+'" href="#" mce_href="#" title="'+vtitle+'" onclick="update(\''
 												+ row.id
 												+ '\')"><i class="fa fa-edit"></i></a> ';
 										var d = '<a class="btn btn-warning btn-sm '+s_remove_h+'" href="#" title="删除"  mce_href="#" onclick="remove(\''
@@ -128,7 +140,7 @@ function load() {
 										var f = '<a class="btn btn-success btn-sm" href="#" title="备用"  mce_href="#" onclick="resetPwd(\''
 												+ row.id
 												+ '\')"><i class="fa fa-key"></i></a> ';
-										return e + d ;
+										return e  ;
 									}
 								} ]
 					});
@@ -146,7 +158,30 @@ function add() {
 		content : prefix + '/add' // iframe的url
 	});
 }
-function edit(id) {
+function update(id) {
+    $.ajax({
+        cache : true,
+        type : "POST",
+        url : "/ifast/active/update",
+        data : {id,id},// 你的formid
+        async : false,
+        error : function(request) {
+            layer.alert("Connection error");
+        },
+        success : function(data) {
+            if (data.code == 0) {
+                layer.msg("操作成功");
+                reLoad();
+
+            } else {
+                layer.alert(data.msg)
+            }
+
+        }
+    });
+
+}
+/*function edit(id) {
 	layer.open({
 		type : 2,
 		title : '编辑',
@@ -155,7 +190,7 @@ function edit(id) {
 		area : [ '800px', '520px' ],
 		content : prefix + '/edit/' + id // iframe的url
 	});
-}
+}*/
 function remove(id) {
 	layer.confirm('确定要删除选中的记录？', {
 		btn : [ '确定', '取消' ]

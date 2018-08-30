@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * 
@@ -74,8 +75,14 @@ public class ActiveController extends AdminBaseController {
 	@ResponseBody
 	@RequestMapping("/update")
 	@RequiresPermissions("ifast:active:edit")
-	public Result<String>  update( ActiveDO active){
-		activeService.updateById(active);
+	public Result<String>  update( Long id){
+		ActiveDO activeDO =activeService.selectById(id);
+		if (Objects.equals(activeDO.getStop(), "0")) {
+			activeDO.setStop("1");
+		}else {
+			activeDO.setStop("0");
+		}
+		activeService.updateById(activeDO );
 		return Result.ok();
 	}
 	
