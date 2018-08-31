@@ -8,6 +8,7 @@ import com.ifast.api.pojo.domain.ActiveDO;
 import com.ifast.common.base.AdminBaseController;
 import com.ifast.common.utils.Result;
 import com.ifast.service.ActiveService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,6 +42,12 @@ public class ActiveController extends AdminBaseController {
 	@RequiresPermissions("ifast:active:active")
 	public Result<Page<ActiveDO>> list(ActiveDO activeDTO){
         Wrapper<ActiveDO> wrapper = new EntityWrapper<ActiveDO>(activeDTO);
+        if(StringUtils.isNotBlank(activeDTO.getTitle())){
+			wrapper.like("title", activeDTO.getTitle());
+			activeDTO.setTitle(null);
+		}else {
+        	activeDTO.setTitle(null);
+		}
         Page<ActiveDO> page = activeService.selectPage(getPage(ActiveDO.class), wrapper);
         return Result.ok(page);
 	}
