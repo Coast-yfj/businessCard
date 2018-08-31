@@ -1,5 +1,6 @@
 package com.ifast.api.controller;
 
+import com.ifast.api.util.JWTUtil;
 import com.ifast.common.utils.Result;
 import com.ifast.domain.ApiUserDO;
 import com.ifast.domain.AttentionDO;
@@ -55,26 +56,28 @@ public class ApiBusinessCard {
 
     @GetMapping("/queryUser")
     @ApiOperation("查询用户信息")
-    public ApiUserDO queryUser(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token) {
-        return userService.getUserByToken(token);
+    public Result<?> queryUser(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token) {
+        return Result.ok(userService.getUserByToken(token));
     }
 
     @GetMapping("/queryUnit")
     @ApiOperation("查询公司信息")
-    public UnitDO queryUnit(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token) {
-        return unitService.getUnitByToken(token);
+    public Result<?> queryUnit(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token) {
+        return Result.ok(unitService.getUnitByToken(token));
     }
 
     @GetMapping("/queryProduct")
     @ApiOperation("查询产品")
-    public ProductDO queryProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token) {
-        return productService.getProductByToken(token);
+    public Result<?> queryProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token) {
+        return Result.ok(productService.getProductByToken(token));
     }
 
     @PostMapping("saveUser")
     @ApiOperation("保存个人信息")
     public Result<?> saveUser(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, ApiUserDO apiUserDO) {
-        userService.insert(apiUserDO);
+       String userId= JWTUtil.getUserId(token);
+       apiUserDO.setId(Long.parseLong(userId));
+        userService.insertOrUpdate(apiUserDO);
         return Result.ok();
     }
 
@@ -99,6 +102,8 @@ public class ApiBusinessCard {
     @PostMapping("/updateUser")
     @ApiOperation("更新用户信息")
     public Result<?> updateUser(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, ApiUserDO apiUserDO) {
+        String userId= JWTUtil.getUserId(token);
+        apiUserDO.setId(Long.parseLong(userId));
         userService.updateById(apiUserDO);
         return Result.ok();
     }
@@ -125,7 +130,7 @@ public class ApiBusinessCard {
     }
 
     @PostMapping("/attention")
-    @ApiOperation("关注产品信息")
+    @ApiOperation("关注名片信息")
     public Result<?> attention(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, String id){
        ApiUserDO userDO= userService.getUserByToken(token);
         AttentionDO attentionDO=new AttentionDO();
@@ -133,5 +138,11 @@ public class ApiBusinessCard {
         attentionDO.setTid(Long.getLong(id));
         attentionService.insert(attentionDO);
         return Result.ok();
+    }
+    @GetMapping("/queryCardHolder")
+    @ApiOperation("查询名片夹信息")
+    public Result<?> queryCardHolder(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token){
+        String userId=JWTUtil.getUserId(token);
+        return Result.ok(userService.queryByIds(userId));
     }
 }

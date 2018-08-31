@@ -5,6 +5,7 @@ import com.ifast.domain.ApiUserDO;
 import com.ifast.common.base.CoreService;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * <pre>
@@ -25,8 +26,10 @@ public interface UserService extends CoreService<ApiUserDO> {
      * 登陆token
      *
      * @param code
+     * @param encryptedData
+     * @param iv
      * @return
-     * @throws IOException
+     * @throws Exception
      */
     String getToken(String code,String iv,String encryptedData) throws Exception;
 
@@ -54,6 +57,13 @@ public interface UserService extends CoreService<ApiUserDO> {
      * @return
      */
     Page<ApiUserDO> queryUserPage(Page page, ApiUserDO userDO);
+
+    /**
+     * 查询名片夹
+     * @param id
+     * @return
+     */
+    List<ApiUserDO> queryByIds(String id);
 
 
 }

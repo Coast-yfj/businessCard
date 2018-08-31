@@ -10,10 +10,12 @@ import com.ifast.api.pojo.domain.ImgDO;
 import com.ifast.api.service.ApiActiveService;
 import com.ifast.api.service.ActiveUserService;
 import com.ifast.api.service.ImgService;
+import com.ifast.api.util.JWTUtil;
 import com.ifast.common.utils.Result;
 import com.ifast.domain.ApiUserDO;
 import com.ifast.service.ProductService;
 import com.ifast.service.UserService;
+import io.jsonwebtoken.Jwt;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +63,9 @@ public class ApiActiveController {
     @ApiOperation("加入活动")
     public Result<?> joinActive(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
             , Long activeId) {
-        ApiUserDO userDO = userService.getUserByToken(token);
+        String userId=JWTUtil.getUserId(token);
         ActiveUserDO  activeUserDO = new ActiveUserDO();
-        activeUserDO.setUserId(userDO.getId());
+        activeUserDO.setUserId(Long.parseLong(userId));
         activeUserDO.setActiveId(activeId);
         this.activeUserService.insert(activeUserDO);
         return Result.ok();

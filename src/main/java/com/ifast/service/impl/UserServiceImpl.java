@@ -32,6 +32,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.security.*;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -72,8 +73,7 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
         }
         ApiUserDO apiUserDO=new ApiUserDO();
         apiUserDO.setId(Long.parseLong(userId));
-        apiUserDO.setType("0");
-        return this.selectOne(new EntityWrapper<>());
+        return this.queryById(userId);
     }
 
     /**
@@ -210,4 +210,14 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
         return null;
     }
 
+    /**
+     * 查询名片夹
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public List<ApiUserDO> queryByIds(String id) {
+        return baseMapper.queryByIds(id);
+    }
 }
