@@ -6,6 +6,8 @@ import com.ifast.dao.ActiveDao;
 import com.ifast.service.ActiveService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 
  * <pre>
@@ -16,4 +18,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class ActiveServiceImpl extends CoreServiceImpl<ActiveDao, ActiveDO> implements ActiveService {
 
+    @Override
+    public List<String> sheng( ) {
+        return this.baseMapper.sheng();
+    }
+
+    @Override
+    public List<String> shi( ) {
+        return baseMapper.shi();
+    }
+
+    @Override
+    public List<String> qu( ) {
+        return baseMapper.qu();
+    }
 }

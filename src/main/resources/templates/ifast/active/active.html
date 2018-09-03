@@ -24,6 +24,30 @@
 							<input id="searchName" type="text" class="form-control"
 								placeholder="">
 						</div>
+						<div class="columns pull-right col-md-2 nopadding">
+							<select id="province" name="province"  class="form-control">
+								<option value="">省</option>
+								<th:block th:each="item:${sheng}">
+									<option th:value="${item}" th:text="${item}"></option>
+								</th:block>
+							</select>
+						</div>
+						<div class="columns pull-right col-md-2 nopadding">
+							<select id="city" name="city"  class="form-control">
+								<option value="">市</option>
+								<th:block th:each="item:${shi}">
+									<option th:value="${item}" th:text="${item}"></option>
+								</th:block>
+							</select>
+						</div>
+						<div class="columns pull-right col-md-2 nopadding">
+							<select id="county" name="county"  class="form-control">
+								<option value="">区县</option>
+								<th:block th:each="item:${qu}">
+									<option th:value="${item}" th:text="${item}"></option>
+								</th:block>
+							</select>
+						</div>
 					</div>
 					<table id="exampleTable" data-mobile-responsive="true">
 					</table>

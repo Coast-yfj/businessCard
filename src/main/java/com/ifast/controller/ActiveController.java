@@ -14,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -33,8 +35,16 @@ public class ActiveController extends AdminBaseController {
 	
 	@GetMapping()
 	@RequiresPermissions("ifast:active:active")
-	String Active(){
-	    return "ifast/active/active";
+	ModelAndView Active(){
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("ifast/active/active");
+		List<String> sheng = this.activeService.sheng();
+		List<String> shi = this.activeService.shi();
+		List<String> qu = this.activeService.qu();
+		modelAndView.addObject("sheng", sheng);
+		modelAndView.addObject("shi", shi);
+		modelAndView.addObject("qu", qu);
+		return modelAndView;
 	}
 	
 	@ResponseBody
@@ -47,6 +57,15 @@ public class ActiveController extends AdminBaseController {
 			activeDTO.setTitle(null);
 		}else {
         	activeDTO.setTitle(null);
+		}
+		if (StringUtils.isBlank(activeDTO.getProvince())){
+        	activeDTO.setProvince(null);
+		}
+		if (StringUtils.isBlank(activeDTO.getCity())){
+        	activeDTO.setCity(null);
+		}
+		if (StringUtils.isBlank(activeDTO.getCounty())){
+        	activeDTO.setCounty(null);
 		}
         Page<ActiveDO> page = activeService.selectPage(getPage(ActiveDO.class), wrapper);
         return Result.ok(page);

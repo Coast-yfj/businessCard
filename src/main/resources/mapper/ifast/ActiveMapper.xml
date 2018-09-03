@@ -3,4 +3,14 @@
 
 <mapper namespace="com.ifast.dao.ActiveDao">
 
+    <select id="sheng" resultType="String" >
+        select distinct province FROM  app_active t order by t.province asc
+    </select>
+    <select id="shi" resultType="String" >
+        select distinct city FROM  app_active t order by t.city asc
+    </select>
+    <select id="qu" resultType="String" >
+        select distinct county FROM  app_active t order by t.county asc
+    </select>
+
 </mapper>
