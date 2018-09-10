@@ -1,15 +1,10 @@
 package com.ifast.api.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.ifast.api.util.JWTUtil;
 import com.ifast.common.utils.Result;
-import com.ifast.domain.ApiUserDO;
-import com.ifast.domain.AttentionDO;
-import com.ifast.domain.ProductDO;
-import com.ifast.domain.UnitDO;
-import com.ifast.service.AttentionService;
-import com.ifast.service.ProductService;
-import com.ifast.service.UnitService;
-import com.ifast.service.UserService;
+import com.ifast.domain.*;
+import com.ifast.service.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +32,9 @@ public class ApiBusinessCard {
 
     @Autowired
     private AttentionService attentionService;
+
+    @Autowired
+    private AboutService aboutService;
 
     @PostMapping("login")
     @ApiOperation("api登录")
@@ -144,5 +142,11 @@ public class ApiBusinessCard {
     public Result<?> queryCardHolder(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token){
         String userId=JWTUtil.getUserId(token);
         return Result.ok(userService.queryByIds(userId));
+    }
+    @GetMapping("/queryAbout")
+    @ApiOperation("关于我们信息")
+    public Result<?> queryAbout(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token){
+
+        return Result.ok(aboutService.selectOne(new EntityWrapper<>(new AboutDO())));
     }
 }

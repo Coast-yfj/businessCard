@@ -32,6 +32,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.security.*;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -88,13 +89,13 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" + appid + "&secret=" + secret + "&js_code=" + code + "&grant_type=authorization_code";
         Request request = new Request.Builder().url(url).build();
         Response response = client.newCall(request).execute();
-        Map<String, String> map;
+        Map<String, String> map=new HashMap<>(12);
         if (response.isSuccessful()) {
             map = JSONObject.parseObject(response.body().string(), new TypeReference<Map<String, String>>() {
             });
-            map.put("openid", "df");
-            map.put("session_key", "dd");
-            map.put("unionid", "33");
+//            map.put("openid", "df");
+//            map.put("session_key", "dd");
+//            map.put("unionid", "33");
         } else {
             throw new IOException("Unexpected code " + response);
         }
@@ -106,13 +107,13 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
         apiUserDO=this.selectOne(new EntityWrapper<>(apiUserDO));
         apiUserDO.setUnionid(map.get("unionid"));
         apiUserDO.setSession_key(map.get("session_key"));
-//        Map<String, String> userInfo = getUserInfo(encryptedData, apiUserDO.getSession_key(), iv);
-//        apiUserDO.setAvatarUrl(userInfo.get("avatarUrl"));
-//        apiUserDO.setCity(userInfo.get("city"));
-//        apiUserDO.setProvince(userInfo.get("province"));
-//        apiUserDO.setCountry(userInfo.get("country"));
-//        apiUserDO.setNickName(userInfo.get("nickName"));
-//        apiUserDO.setGender(userInfo.get("gender"));
+        Map<String, String> userInfo = getUserInfo(encryptedData, apiUserDO.getSession_key(), iv);
+        apiUserDO.setAvatarUrl(userInfo.get("avatarUrl"));
+        apiUserDO.setCity(userInfo.get("city"));
+        apiUserDO.setProvince(userInfo.get("province"));
+        apiUserDO.setCountry(userInfo.get("country"));
+        apiUserDO.setNickName(userInfo.get("nickName"));
+        apiUserDO.setGender(userInfo.get("gender"));
         this.insertOrUpdate(apiUserDO);
         return Base64.encode(apiUserDO.getId().toString().getBytes());
 //    return JWTUtil.sign(apiUserDO.getId().toString(), apiUserDO.getOpenid() + apiUserDO.getSession_key(), Holder.jwt.getExpireTime());
