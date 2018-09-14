@@ -41,6 +41,16 @@ public class UnitDO implements Serializable {
     private String introduction;
     /**用户id*/
     private Long userId;
+
+    /**
+     * 固定电话
+     */
+    private String fixedTel;
+
+    /**
+     * 网址
+     */
+    private String url;
     /**
      * 类型
      */
@@ -71,6 +81,22 @@ public class UnitDO implements Serializable {
 
     public void setProductDOList(List<ProductDO> productDOList) {
         this.productDOList = productDOList;
+    }
+
+    public String getFixedTel() {
+        return fixedTel;
+    }
+
+    public void setFixedTel(String fixedTel) {
+        this.fixedTel = fixedTel;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     /**

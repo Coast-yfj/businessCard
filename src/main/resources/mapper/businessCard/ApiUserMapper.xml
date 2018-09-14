@@ -21,6 +21,11 @@
   t.`email`,
   t.`name`,
   t.`phone`,
+  t.`avatarUrl`,
+  t.`country`,
+  t.`gender`,
+  t.`nickName`,
+  t.`province`,
   t.`position`,
   t.`qq`,
   t.`WeChat`,
@@ -28,6 +33,8 @@
   a.`Introduction`,
   a.`scale`,
   a.`userid`,
+  a. `url`,
+  a.`fixedTel`,
   a.`name` AS unitName
     FROM tb_user t LEFT JOIN tb_unit a ON t.`id`=a.`userid`
     <where>

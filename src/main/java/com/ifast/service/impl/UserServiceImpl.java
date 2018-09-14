@@ -32,7 +32,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.security.*;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -72,7 +71,7 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
         if (userId == null || "".equals(userId)) {
             return null;
         }
-        ApiUserDO apiUserDO=new ApiUserDO();
+        ApiUserDO apiUserDO = new ApiUserDO();
         apiUserDO.setId(Long.parseLong(userId));
         return this.queryById(userId);
     }
@@ -89,13 +88,10 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" + appid + "&secret=" + secret + "&js_code=" + code + "&grant_type=authorization_code";
         Request request = new Request.Builder().url(url).build();
         Response response = client.newCall(request).execute();
-        Map<String, String> map=new HashMap<>(12);
+        Map<String, String> map;
         if (response.isSuccessful()) {
             map = JSONObject.parseObject(response.body().string(), new TypeReference<Map<String, String>>() {
             });
-//            map.put("openid", "df");
-//            map.put("session_key", "dd");
-//            map.put("unionid", "33");
         } else {
             throw new IOException("Unexpected code " + response);
         }
@@ -104,8 +100,11 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
         }
         ApiUserDO apiUserDO = new ApiUserDO();
         apiUserDO.setOpenid(map.get("openid"));
-        apiUserDO=this.selectOne(new EntityWrapper<>(apiUserDO));
-        apiUserDO.setUnionid(map.get("unionid"));
+        ApiUserDO userDO = this.selectOne(new EntityWrapper<>(apiUserDO));
+        if (userDO != null) {
+            apiUserDO = userDO;
+        }
+        // apiUserDO.setUnionid(map.get("unionid")==null?"":map.get("unionid"));
         apiUserDO.setSession_key(map.get("session_key"));
         Map<String, String> userInfo = getUserInfo(encryptedData, apiUserDO.getSession_key(), iv);
         apiUserDO.setAvatarUrl(userInfo.get("avatarUrl"));
@@ -134,9 +133,9 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
 //                && notLogout(token)
 //                && (user = selectById(Long.parseLong(userId))) != null
 //                && (JWTUtil.verify(token, userId, user.getOpenid() + user.getSession_key()));
-       return org.apache.commons.lang.StringUtils.isNotBlank(token)
-               &&  (userId = new String(Base64.decode(token))) != null
-               &&  (user = selectById(Long.parseLong(userId))) != null;
+        return org.apache.commons.lang.StringUtils.isNotBlank(token)
+                && (userId = new String(Base64.decode(token))) != null
+                && (user = selectById(Long.parseLong(userId))) != null;
 
     }
 
@@ -204,7 +203,6 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
         byte[] resultByte = cipher.doFinal(dataByte);
         if (null != resultByte && resultByte.length > 0) {
             String result = new String(resultByte, "UTF-8");
-
             return JSONObject.parseObject(result, new TypeReference<Map<String, String>>() {
             });
         }

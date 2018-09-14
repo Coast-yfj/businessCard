@@ -7,8 +7,12 @@ server:
   tomcat:
     max-threads: 1000
     min-spare-threads: 30
-  port: 8088
+  port: 443
   uri-encoding: utf-8
+  ssl:
+    key-store: classpath:mingpian.jks
+    key-store-password: 1537593576855
+    key-password: 1537593576855
 security:
   basic:
     enabled: false
@@ -41,5 +45,8 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
     cache-enabled: false
-appid: 111111111
-secret: sdsssss
+appid: wxb38247846e8fda09
+secret: cf093c360c18218433c21fca258ef2b4
+logging:
+  level:
+    com.ifast.dao: debug

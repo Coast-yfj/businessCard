@@ -1,6 +1,6 @@
 ifast:
   projectName: ifast
-  projectRootURL: http://127.0.0.1:8088/
+  projectRootURL: http://127.0.0.1:443/
   demoMode: false
   jwt:
     userPrimaryKey: userId
@@ -13,7 +13,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/card?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://127.0.0.1:3306/ifast?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
     username: root
     password: root
     initialSize: 1

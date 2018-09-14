@@ -111,6 +111,7 @@ public class ApiUserDO implements Serializable {
      * 创建时间
      */
     private String createTime;
+
     /**
      * 公司信息
      */

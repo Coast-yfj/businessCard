@@ -37,10 +37,10 @@ public class HttpsConfiguration {
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setScheme("http");
         //表示用8080端口来供http访问
-        connector.setPort(8080);
+        connector.setPort(8090);
         connector.setSecure(false);
         //自动重定向到8443端口
-        connector.setRedirectPort(8443);
+        connector.setRedirectPort(443);
         return connector;
     }
 }

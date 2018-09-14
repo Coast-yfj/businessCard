@@ -7,6 +7,8 @@
         <result property="name" column="unitName" />
         <result property="scale" column="scale" />
         <result property="introduction" column="introduction" />
+        <result property="fixedTel" column="fixedTel"/>
+        <result property="url" column="url"/>
         <result property="userId" column="userId" />
     </resultMap>
 </mapper>

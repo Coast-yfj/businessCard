@@ -109,7 +109,9 @@ public class ApiBusinessCard {
     @PostMapping("/updateUnit")
     @ApiOperation("更新公司信息")
     public Result<?> updateUnit(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, UnitDO unitDO) {
-        unitService.updateById(unitDO);
+        ApiUserDO userDO = userService.getUserByToken(token);
+        unitDO.setUserId(userDO.getId());
+        unitService.insertOrUpdate(unitDO);
         return Result.ok();
     }
 
