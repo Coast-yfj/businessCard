@@ -41,6 +41,10 @@ public class UnitDO implements Serializable {
     private String introduction;
     /**用户id*/
     private Long userId;
+    /**
+     * 公司logo
+     */
+    private String logo;
 
     /**
      * 固定电话
@@ -58,6 +62,14 @@ public class UnitDO implements Serializable {
 
     @TableField(exist = false)
     private List<ProductDO> productDOList;
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
 
     public String getType() {
         return type;

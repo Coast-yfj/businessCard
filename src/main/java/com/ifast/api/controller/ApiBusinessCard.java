@@ -81,11 +81,13 @@ public class ApiBusinessCard {
 
     @PostMapping("/saveUnit")
     @ApiOperation("保存公司信息")
-    public Result<?> saveUnit(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, UnitDO unitDO) {
+    public Result<?> saveUnit(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,@RequestParam ("logo") MultipartFile file, UnitDO unitDO) {
         ApiUserDO userDO = userService.getUserByToken(token);
         unitDO.setUserId(userDO.getId());
+        String url=productService.upload(file);
+        unitDO.setLogo(url);
         unitService.insert(unitDO);
-        return Result.ok();
+        return Result.ok(unitDO);
     }
 
     @PostMapping("/saveProduct")
@@ -94,7 +96,7 @@ public class ApiBusinessCard {
         String url=productService.upload(file);
         productDO.setPath(url);
         productService.insert(productDO);
-        return Result.ok();
+        return Result.ok(productDO);
     }
 
     @PostMapping("/updateUser")
@@ -112,7 +114,7 @@ public class ApiBusinessCard {
         ApiUserDO userDO = userService.getUserByToken(token);
         unitDO.setUserId(userDO.getId());
         unitService.insertOrUpdate(unitDO);
-        return Result.ok();
+        return Result.ok(unitDO);
     }
 
     @PostMapping("/updateProduct")
