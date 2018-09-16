@@ -32,8 +32,11 @@
             FROM
             app_active t
             WHERE
-            t.stop = '0' and
+            t.stop = '0'
+        <if test="day!=null and day !=''">
+              and
             t.startTtime &lt;= #{day} AND t.endTime &gt;= #{day}
+        </if>
             AND t.createUserId = #{createUserId}
         ORDER BY    t.startTtime)
         UNION
@@ -49,8 +52,11 @@
             FROM
             app_active t
             WHERE
-        t.stop = '0' and
-        t.startTtime &lt;= #{day} AND t.endTime &gt;= #{day}
+        t.stop = '0'
+        <if test="day!=null and day !=''">
+            and
+            t.startTtime &lt;= #{day} AND t.endTime &gt;= #{day}
+        </if>
             AND t.createUserId != #{createUserId}
         ORDER BY    t.startTtime)
             ) m
@@ -60,10 +66,11 @@
         <if test="title!=null and title !=''">
             and m.title LIKE CONCAT( '%',#{title}, '%' )
         </if>
+        <if test="city!=null and city !='' or county!=null and county!='' or province !=null and province !='' ">
             OR (
-                1=1
+            1=1
             <if test="city!=null and city !=''">
-               and  m.city = #{city}
+                and  m.city = #{city}
             </if>
             <if test="county!=null and county!=''">
                 AND m.county = #{county}
@@ -71,7 +78,9 @@
             <if test="province !=null and province !=''">
                 AND m.province =#{province}
             </if>
-               )
+            )
+        </if>
+
         <if test="type!=null and type !=''">
             OR m.type = #{type}
         </if>

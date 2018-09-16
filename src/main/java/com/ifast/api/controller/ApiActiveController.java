@@ -91,18 +91,27 @@ public class ApiActiveController {
     @Transactional
     public Result<?> createActive(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
             , ActiveDO activeDO) {
-        this.apiActiveService.insert(activeDO);
+        activeDO.setStop("0");
+        activeDO.setCreateUserId(Long.parseLong(JWTUtil.getUserId(token)));
+        if(activeDO.getId()!=null){
+            this.apiActiveService.updateById(activeDO);
+        }else{
+            this.apiActiveService.insert(activeDO);
+        }
         Long parentId = activeDO.getId();
         activeDO.setStop("0");
         List<Long> imgids = activeDO.getImgIds();
         List<ImgDO> imgs = Lists.newArrayList();
-        for (Long id : imgids) {
-            ImgDO imgDO= new ImgDO();
-            imgDO.setId(id);
-            imgDO.setParentId(parentId);
-            imgs.add(imgDO);
+        if(imgids!=null&&imgids.size()>0){
+            for (Long id : imgids) {
+                ImgDO imgDO= new ImgDO();
+                imgDO.setId(id);
+                imgDO.setParentId(parentId);
+                imgs.add(imgDO);
+            }
+            this.imgService.updateBatchById(imgs);
         }
-        this.imgService.updateBatchById(imgs);
+
         return Result.ok();
     }
 

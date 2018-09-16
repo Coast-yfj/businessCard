@@ -5,8 +5,10 @@ import com.ifast.api.util.JWTUtil;
 import com.ifast.common.utils.Result;
 import com.ifast.domain.*;
 import com.ifast.service.*;
+import com.ifast.sys.domain.UserDO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,7 +56,17 @@ public class ApiBusinessCard {
 
     @GetMapping("/queryUser")
     @ApiOperation("查询用户信息")
-    public Result<?> queryUser(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token) {
+    public Result<?> queryUser(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,String userId) {
+        if(StringUtils.isNotBlank(userId)){
+            ApiUserDO userDO = userService.queryById(userId);
+            if (userDO == null) {
+                Result result = new Result();
+                result.setMsg("未查到此人信息");
+                result.setCode(-1);
+                return result;
+            }
+           return Result.ok(userDO);
+        }
         return Result.ok(userService.getUserByToken(token));
     }
 
