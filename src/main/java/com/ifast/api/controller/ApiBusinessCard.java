@@ -2,6 +2,7 @@ package com.ifast.api.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.ifast.api.util.JWTUtil;
+import com.ifast.api.util.SignUtil;
 import com.ifast.common.utils.Result;
 import com.ifast.domain.*;
 import com.ifast.service.*;
@@ -164,5 +165,17 @@ public class ApiBusinessCard {
     public Result<?> queryAbout(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token){
 
         return Result.ok(aboutService.selectOne(new EntityWrapper<>(new AboutDO())));
+    }
+
+    @PostMapping("/sign")
+    @ApiOperation("签名")
+    Result<?> sign(long appId, String secretId, String secretKey, String bucketName,
+                   long expired){
+        try {
+            return Result.ok(SignUtil.appSign(appId, secretId, secretKey, bucketName, expired));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.fail();
+        }
     }
 }

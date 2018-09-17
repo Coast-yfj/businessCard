@@ -18,6 +18,7 @@ import com.ifast.service.UserService;
 import io.jsonwebtoken.Jwt;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -126,6 +127,46 @@ public class ApiActiveController {
 //        Long id = imgDO.getId();
         imgService.insert(imgDO);
         return Result.ok(imgDO);
+    }
+
+    @PostMapping("/activeDetail")
+    @ApiOperation("活动详情")
+    public Result<?> aciveDetail(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,Long activeId){
+        ActiveDO activeDO = this.apiActiveService.selectById(activeId);
+        if (activeDO != null) {
+            List<ImgDO> imgs = new ArrayList<>();
+            Wrapper<ImgDO> wrapper = new EntityWrapper<>();
+            wrapper.eq("parentId", activeId);
+            imgs = this.imgService.selectList(wrapper);
+            activeDO.setImgs(imgs);
+            return Result.ok(activeDO);
+        }
+        Result result = new Result();
+        result.setCode(-1);
+        result.setMsg("查不到数据");
+        return result;
+    }
+
+    @PostMapping("/delDetail")
+    @ApiOperation("删除活动")
+    @Transactional
+    public Result<?> delDetail(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,Long activeId){
+        ActiveDO activeDO = this.apiActiveService.selectById(activeId);
+        if (activeDO != null) {
+            this.apiActiveService.deleteById(activeId);
+            Wrapper<ImgDO> wrapper = new EntityWrapper<>();
+            wrapper.eq("parentId", activeId);
+            List<ImgDO> imgs = this.imgService.selectList(wrapper);
+            List<Long> ids = new ArrayList<>();
+
+            for (ImgDO imgDO : imgs) {
+                ids.add(imgDO.getId());
+            }
+            this.imgService.deleteBatchIds(ids);
+            return Result.ok();
+        }
+
+        return Result.fail();
     }
 
 

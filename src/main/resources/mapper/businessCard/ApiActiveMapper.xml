@@ -66,9 +66,6 @@
         <if test="title!=null and title !=''">
             and m.title LIKE CONCAT( '%',#{title}, '%' )
         </if>
-        <if test="city!=null and city !='' or county!=null and county!='' or province !=null and province !='' ">
-            OR (
-            1=1
             <if test="city!=null and city !=''">
                 and  m.city = #{city}
             </if>
@@ -78,11 +75,8 @@
             <if test="province !=null and province !=''">
                 AND m.province =#{province}
             </if>
-            )
-        </if>
-
         <if test="type!=null and type !=''">
-            OR m.type = #{type}
+            and  m.type = #{type}
         </if>
     </select>
 
