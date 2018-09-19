@@ -1,6 +1,7 @@
 package com.ifast.api.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.ifast.api.util.JWTUtil;
 import com.ifast.api.util.SignUtil;
 import com.ifast.common.utils.Result;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * @author yfj
@@ -144,16 +146,44 @@ public class ApiBusinessCard {
         return Result.ok();
     }
 
-    @PostMapping("/attention")
-    @ApiOperation("关注名片信息")
-    public Result<?> attention(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, String id){
+    @PostMapping("/joinCard")
+    @ApiOperation("加入名片夹")
+    public Result<?> joinCard(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, String id){
        ApiUserDO userDO= userService.getUserByToken(token);
-        AttentionDO attentionDO=new AttentionDO();
+        Wrapper<AttentionDO> wrapper = new EntityWrapper<>();
+        wrapper.eq("mid", userDO.getId()).eq("tid", id);
+        AttentionDO attentionDO = this.attentionService.selectOne(wrapper);
+        if (attentionDO != null) {
+            return Result.ok();
+        }
+         attentionDO=new AttentionDO();
         attentionDO.setMid(userDO.getId());
         attentionDO.setTid(Long.getLong(id));
+        attentionDO.setAttention("0");
         attentionService.insert(attentionDO);
         return Result.ok();
     }
+
+
+    @PostMapping("/attention")
+    @ApiOperation("关注")
+    public Result<?> attention(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, String id){
+        ApiUserDO userDO= userService.getUserByToken(token);
+        Wrapper<AttentionDO> wrapper = new EntityWrapper<>();
+        wrapper.eq("mid", userDO.getId()).eq("tid", id);
+        AttentionDO attentionDO = this.attentionService.selectOne(wrapper);
+        if (attentionDO == null) {
+            return Result.fail();
+        }
+        if(Objects.equals(attentionDO.getAttention(), "0")){
+            attentionDO.setAttention("1");
+        }else {
+            attentionDO.setAttention("0");
+        }
+        attentionService.updateById(attentionDO);
+        return Result.ok();
+    }
+
     @GetMapping("/queryCardHolder")
     @ApiOperation("查询名片夹信息")
     public Result<?> queryCardHolder(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token){

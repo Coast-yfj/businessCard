@@ -69,9 +69,11 @@
     </select>
 
     <select id="queryByIds" parameterType="string" resultMap="userByUnit">
-            SELECT * FROM tb_user t
-            WHERE EXISTS(
-            SELECT * FROM tb_attention a WHERE a.`tid`=t.`id` AND a.`mid`=#{id}
-            )
+            SELECT t.*,b.attention FROM tb_user t
+              left join tb_attention b on t.id = b.tid AND a.`mid`=#{id}
+                    WHERE EXISTS(
+                    SELECT * FROM tb_attention a WHERE a.`tid`=t.`id` AND a.`mid`=#{id}
+                    )
+                    order by b.attention desc , t.`name` asc
     </select>
 </mapper>

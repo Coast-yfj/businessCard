@@ -28,6 +28,8 @@ public class AttentionDO implements Serializable {
     private Long mid;
     /** 关注人id */
     private Long tid;
+    //是否关注，0未关注。1：关注
+    private String attention;
 
     /**
      * 设置：
@@ -64,5 +66,13 @@ public class AttentionDO implements Serializable {
      */
     public Long getTid() {
         return tid;
+    }
+
+    public String getAttention() {
+        return attention;
+    }
+
+    public void setAttention(String attention) {
+        this.attention = attention;
     }
 }
