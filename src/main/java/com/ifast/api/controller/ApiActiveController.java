@@ -79,12 +79,15 @@ public class ApiActiveController {
         Wrapper<ActiveUserDO> wrapper = new EntityWrapper<>();
         wrapper.eq("activeId", activeId);
         List<ActiveUserDO> list = this.activeUserService.selectList(wrapper);
-        List<Long> params = new ArrayList<>();
-        for (ActiveUserDO activeUserDO : list) {
-            params.add(activeUserDO.getUserId());
+        if (list != null && list.size() > 0) {
+            List<Long> params = new ArrayList<>();
+            for (ActiveUserDO activeUserDO : list) {
+                params.add(activeUserDO.getUserId());
+            }
+            List<ApiUserDO> users = this.userService.selectBatchIds(params);
+            return Result.ok(users);
         }
-        List<ApiUserDO> users = this.userService.selectBatchIds(params);
-        return Result.ok(users);
+        return Result.ok();
     }
 
     @PostMapping("createActive")
