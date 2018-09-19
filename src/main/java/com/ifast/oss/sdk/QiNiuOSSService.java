@@ -70,6 +70,7 @@ public class QiNiuOSSService {
             copyFile(file.getInputStream(), filePath, fileName+extName).replaceAll("-", "");
         } catch (IOException e) {
             System.out.println(e);
+            e.printStackTrace();
         }
         return fileName+extName;
     }

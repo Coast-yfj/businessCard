@@ -79,8 +79,8 @@ public class ProductServiceImpl extends CoreServiceImpl<ProductDao, ProductDO> i
     public String upload(MultipartFile file) {
         Configuration conf = GenUtils.getConfigFile();
         String savePath = "/img";
-        String newFileName = qiNiuOSS.fileUp(file, conf.getString("file") + savePath, UUID.randomUUID().toString().trim().replaceAll("-", ""));
+        String newFileName = qiNiuOSS.fileUp(file, conf.getString("file") , UUID.randomUUID().toString().trim().replaceAll("-", ""));
 
-        return "/common/" + savePath +"/"+ newFileName ;
+        return "/common"  +"/"+ newFileName ;
     }
 }
