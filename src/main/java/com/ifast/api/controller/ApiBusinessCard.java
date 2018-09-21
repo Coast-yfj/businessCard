@@ -2,6 +2,11 @@ package com.ifast.api.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.google.common.collect.Lists;
+import com.ifast.api.pojo.domain.ApiSuijishuDO;
+import com.ifast.api.pojo.domain.ImgDO;
+import com.ifast.api.service.ApiSuijishuService;
+import com.ifast.api.service.ImgService;
 import com.ifast.api.util.JWTUtil;
 import com.ifast.api.util.SignUtil;
 import com.ifast.common.utils.Result;
@@ -12,11 +17,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -29,6 +36,10 @@ public class ApiBusinessCard {
     @Resource(name = "apiService")
     private UserService userService;
 
+    @Autowired
+    private ImgService imgService;
+    @Autowired
+    private ApiSuijishuService apiSuijishuService;
     @Autowired
     private UnitService unitService;
 
@@ -79,70 +90,119 @@ public class ApiBusinessCard {
         return Result.ok(unitService.getUnitByToken(token));
     }
 
-    @GetMapping("/queryProduct")
+    @RequestMapping("/queryProduct")
     @ApiOperation("查询产品")
-    public Result<?> queryProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token) {
-        return Result.ok(productService.getProductByToken(token));
-    }
+        public Result<?> queryProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,String userId) {
+            return Result.ok(productService.getProductByToken(token,userId));
+        }
 
-    @PostMapping("saveUser")
-    @ApiOperation("保存个人信息")
-    public Result<?> saveUser(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, ApiUserDO apiUserDO) {
-       String userId= JWTUtil.getUserId(token);
-       apiUserDO.setId(Long.parseLong(userId));
-        userService.insertOrUpdate(apiUserDO);
-        return Result.ok();
-    }
+        @PostMapping("/productDetail")
+        @ApiOperation("查询产品详情")
+        public Result<?> detailProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
+                ,String id) {
+            ProductDO productDO = this.productService.selectById(id);
+            return Result.ok(productDO);
 
-    @PostMapping("/saveUnit")
-    @ApiOperation("保存公司信息")
-    public Result<?> saveUnit(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,@RequestParam ("logo") MultipartFile file, UnitDO unitDO) {
-        ApiUserDO userDO = userService.getUserByToken(token);
-        unitDO.setUserId(userDO.getId());
-        String url=productService.upload(file);
-        unitDO.setLogo(url);
-        unitService.insert(unitDO);
-        return Result.ok(unitDO);
-    }
+        }
 
-    @PostMapping("/saveProduct")
-    @ApiOperation("保存产品信息")
-    public Result<?> saveProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, @RequestParam ("poster") MultipartFile file,ProductDO productDO) {
-        String url=productService.upload(file);
-        productDO.setPath(url);
-        productService.insert(productDO);
-        return Result.ok(productDO);
-    }
+        @PostMapping("saveUser")
+        @ApiOperation("保存个人信息")
+        public Result<?> saveUser(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, ApiUserDO apiUserDO) {
+            String userId= JWTUtil.getUserId(token);
+            apiUserDO.setId(Long.parseLong(userId));
+            userService.insertOrUpdate(apiUserDO);
+            return Result.ok();
+        }
 
-    @PostMapping("/updateUser")
-    @ApiOperation("更新用户信息")
-    public Result<?> updateUser(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, ApiUserDO apiUserDO) {
-        String userId= JWTUtil.getUserId(token);
-        apiUserDO.setId(Long.parseLong(userId));
-        userService.updateById(apiUserDO);
-        return Result.ok();
-    }
+        @PostMapping("/saveUnit")
+        @ApiOperation("保存公司信息")
+        public Result<?> saveUnit(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,@RequestParam ("logo") MultipartFile file, UnitDO unitDO) {
+            ApiUserDO userDO = userService.getUserByToken(token);
+            unitDO.setUserId(userDO.getId());
+            String url=productService.upload(file);
+            unitDO.setLogo(url);
+            unitService.insert(unitDO);
+            return Result.ok(unitDO);
+        }
 
-    @PostMapping("/updateUnit")
-    @ApiOperation("更新公司信息")
-    public Result<?> updateUnit(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, UnitDO unitDO) {
-        ApiUserDO userDO = userService.getUserByToken(token);
-        unitDO.setUserId(userDO.getId());
-        unitService.insertOrUpdate(unitDO);
-        return Result.ok(unitDO);
-    }
+        @PostMapping("/saveProduct")
+        @ApiOperation("保存产品信息")
+        @Transactional
+        public Result<?> saveProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,  ProductDO productDO) {
+        /*String url=productService.upload(file);
+        productDO.setPath(url);*/
 
-    @PostMapping("/updateProduct")
-    @ApiOperation("更新产品信息")
-    public Result<?> updateProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,  ProductDO productDO) {
-        productService.updateById(productDO);
+            //前端要求根据用户id
+            UnitDO unitDO = this.unitService.getUnitByToken(token);
+            if (unitDO == null) {
+                return  Result.build(1, "用户信息为空");
+            }
+            productDO.setUnitId(unitDO.getId());
+            productService.insert(productDO);
+            Long parentId = productDO.getId();
+            List<Long> imgids = productDO.getImgIds();
+            List<ImgDO> imgs = Lists.newArrayList();
+            if(imgids!=null&&imgids.size()>0){
+                for (Long id : imgids) {
+                    ImgDO imgDO= new ImgDO();
+                    imgDO.setId(id);
+                    imgDO.setParentId(parentId);
+                    imgs.add(imgDO);
+                }
+                this.imgService.updateBatchById(imgs);
+            }
+            return Result.ok(productDO);
+        }
+
+        @PostMapping("/updateUser")
+        @ApiOperation("更新用户信息")
+        public Result<?> updateUser(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, ApiUserDO apiUserDO) {
+            String userId= JWTUtil.getUserId(token);
+            apiUserDO.setId(Long.parseLong(userId));
+            userService.updateById(apiUserDO);
+            return Result.ok();
+        }
+
+        @PostMapping("/updateUnit")
+        @ApiOperation("更新公司信息")
+        public Result<?> updateUnit(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, UnitDO unitDO) {
+            ApiUserDO userDO = userService.getUserByToken(token);
+            unitDO.setUserId(userDO.getId());
+            unitService.insertOrUpdate(unitDO);
+            return Result.ok(unitDO);
+        }
+
+        @PostMapping("/updateProduct")
+        @ApiOperation("更新产品信息")
+        @Transactional
+        public Result<?> updateProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,  ProductDO productDO) {
+            productService.updateById(productDO);
+//        Wrapper<ImgDO> wrapper = new EntityWrapper<>();
+//        wrapper.eq("parentId", productDO.getId());
+//        this.imgService.delete(wrapper);
+            Long parentId = productDO.getId();
+            List<Long> imgids = productDO.getImgIds();
+            List<ImgDO> imgs = Lists.newArrayList();
+            if(imgids!=null&&imgids.size()>0){
+                for (Long id : imgids) {
+                    ImgDO imgDO= new ImgDO();
+                    imgDO.setId(id);
+                    imgDO.setParentId(parentId);
+                    imgs.add(imgDO);
+                }
+                this.imgService.updateBatchById(imgs);
+            }
         return Result.ok();
     }
 
     @PostMapping("/delProduct")
     @ApiOperation("删除产品信息")
+    @Transactional
     public Result<?> delProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, String id) {
         productService.deleteById(id);
+        Wrapper<ImgDO> wrapper = new EntityWrapper<>();
+        wrapper.eq("parentId", id);
+        this.imgService.delete(wrapper);
         return Result.ok();
     }
 
@@ -207,5 +267,23 @@ public class ApiBusinessCard {
             e.printStackTrace();
             return Result.fail();
         }
+    }
+
+    @PostMapping("/saveSuijishu")
+    @ApiOperation("保存随机数")
+    Result<?> saveSuijishu(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,
+                           String suijishu){
+        if (StringUtils.isBlank(suijishu)) {
+            Result result = new Result();
+            result.setCode(1);
+            result.setMsg("随机数不能为空");
+            return result;
+        }
+        String userId=JWTUtil.getUserId(token);
+        ApiSuijishuDO suijishuDO = new ApiSuijishuDO();
+        suijishuDO.setSuijishu(suijishu);
+        suijishuDO.setUserId(Long.getLong(userId));
+        this.apiSuijishuService.insert(suijishuDO);
+        return Result.ok();
     }
 }

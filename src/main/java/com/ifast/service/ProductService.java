@@ -4,6 +4,8 @@ import com.ifast.domain.ProductDO;
 import com.ifast.common.base.CoreService;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  * 
  * <pre>
@@ -18,7 +20,7 @@ public interface ProductService extends CoreService<ProductDO> {
      * @param token
      * @return
      */
-    ProductDO getProductByToken(String token);
+    List<ProductDO> getProductByToken(String token,String userId);
     /**
      * <pre>
      * 上传文件，默认路径为
