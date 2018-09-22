@@ -79,6 +79,16 @@ public class ApiBusinessCard {
                 result.setCode(-1);
                 return result;
             }
+            String tid = JWTUtil.getUserId(token);
+            Wrapper<AttentionDO> wrapper = new EntityWrapper<>();
+            wrapper.eq("mid", userId);
+            wrapper.eq("tid", tid);
+            AttentionDO attentionDO = this.attentionService.selectOne(wrapper);
+            if (attentionDO != null) {
+                userDO.setAttention(attentionDO.getAttention());
+            } else {
+                userDO.setAttention("0");
+            }
            return Result.ok(userDO);
         }
         return Result.ok(userService.getUserByToken(token));
@@ -101,6 +111,10 @@ public class ApiBusinessCard {
         public Result<?> detailProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
                 ,String id) {
             ProductDO productDO = this.productService.selectById(id);
+            Wrapper<ImgDO> wrapper = new EntityWrapper<>();
+            wrapper.eq("parentId", productDO.getId());
+            List<ImgDO> list = this.imgService.selectList(wrapper);
+            productDO.setImgs(list);
             return Result.ok(productDO);
 
         }
@@ -244,11 +258,11 @@ public class ApiBusinessCard {
         return Result.ok();
     }
 
-    @GetMapping("/queryCardHolder")
+    @RequestMapping("/queryCardHolder")
     @ApiOperation("查询名片夹信息")
-    public Result<?> queryCardHolder(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token){
+    public Result<?> queryCardHolder(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,String attention){
         String userId=JWTUtil.getUserId(token);
-        return Result.ok(userService.queryByIds(userId));
+        return Result.ok(userService.queryByIds(userId,attention));
     }
     @GetMapping("/queryAbout")
     @ApiOperation("关于我们信息")
@@ -286,4 +300,17 @@ public class ApiBusinessCard {
         this.apiSuijishuService.insert(suijishuDO);
         return Result.ok();
     }
+
+    @PostMapping("isInCard")
+    @ApiOperation("查询是否在列表中")
+    Result<?> isInCard(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
+            ,String userId){
+        String tid = JWTUtil.getUserId(token);
+        Wrapper<AttentionDO> wrapper = new EntityWrapper<>();
+        wrapper.eq("mid", userId);
+        wrapper.eq("tid", tid);
+        AttentionDO attentionDO = this.attentionService.selectOne(wrapper);
+        return Result.ok(attentionDO);
+    }
+
 }

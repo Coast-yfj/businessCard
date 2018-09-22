@@ -12,6 +12,12 @@
         <result property="email" column="email" />
         <result property="address" column="address" />
         <result property="avatarUrl" column="avatarUrl" />
+        <result property="city" column="city" />
+        <result property="province" column="province" />
+        <result property="country" column="country" />
+        <result property="language" column="language" />
+        <result property="nickName" column="nickName" />
+        <result property="gender" column="gender" />
         <collection property="unitDO" ofType="com.ifast.domain.UnitDO" resultMap="com.ifast.dao.UnitDao.unitResult" />
     </resultMap>
 
@@ -25,6 +31,8 @@
   t.`avatarUrl`,
   t.`country`,
   t.`gender`,
+        t.city,
+        t.language,
   t.`nickName`,
   t.`province`,
   t.`position`,
@@ -69,12 +77,36 @@
         </where>
     </select>
 
-    <select id="queryByIds" parameterType="string" resultMap="userByUnit">
-            SELECT t.*,b.attention FROM tb_user t
+    <resultMap id="userByUnit1" type="com.ifast.domain.ApiUserDO">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="position" column="position" />
+        <result property="phone" column="phone" />
+        <result property="wechat" column="wechat" />
+        <result property="qq" column  ="qq" />
+        <result property="dName" column="dName" />
+        <result property="email" column="email" />
+        <result property="address" column="address" />
+        <result property="avatarUrl" column="avatarUrl" />
+        <result property="city" column="city" />
+        <result property="province" column="province" />
+        <result property="country" column="country" />
+        <result property="language" column="language" />
+        <result property="nickName" column="nickName" />
+        <result property="gender" column="gender" />
+        <result property="attention" column="attention" />
+        <collection property="unitDO" ofType="com.ifast.domain.UnitDO" resultMap="com.ifast.dao.UnitDao.unitResult" />
+    </resultMap>
+    <select id="queryByIds" parameterType="string" resultMap="userByUnit1">
+            SELECT l.name dName,t.*,b.attention FROM tb_user t
+            left join tb_unit l on l.userId = t.id
               left join tb_attention b on t.id = b.tid AND b.`mid`=#{id}
                     WHERE EXISTS(
                     SELECT * FROM tb_attention a WHERE a.`tid`=t.`id` AND a.`mid`=#{id}
                     )
+            <if test="attention!=null and attention!=''">
+                and  b.attention = #{attention}
+            </if>
                     order by b.attention desc , t.`name` asc
     </select>
 </mapper>

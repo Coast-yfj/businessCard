@@ -63,7 +63,7 @@ public interface UserService extends CoreService<ApiUserDO> {
      * @param id
      * @return
      */
-    List<ApiUserDO> queryByIds(String id);
+    List<ApiUserDO> queryByIds(String id,String attention);
 
 
 }

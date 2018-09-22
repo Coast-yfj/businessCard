@@ -216,7 +216,7 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
      * @return
      */
     @Override
-    public List<ApiUserDO> queryByIds(String id) {
-        return baseMapper.queryByIds(id);
+    public List<ApiUserDO> queryByIds(String id,String attention) {
+        return baseMapper.queryByIds(id,attention);
     }
 }

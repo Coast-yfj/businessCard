@@ -112,6 +112,12 @@ public class ApiUserDO implements Serializable {
      */
     private String createTime;
 
+    @TableField(exist = false)
+    private String attention;
+
+    @TableField(exist = false)
+    private String dName;
+
     /**
      * 公司信息
      */
@@ -333,5 +339,21 @@ public class ApiUserDO implements Serializable {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getAttention() {
+        return attention;
+    }
+
+    public void setAttention(String attention) {
+        this.attention = attention;
+    }
+
+    public String getdName() {
+        return dName;
+    }
+
+    public void setdName(String dName) {
+        this.dName = dName;
     }
 }
