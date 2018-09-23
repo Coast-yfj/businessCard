@@ -75,7 +75,7 @@ public class UnitController extends AdminBaseController {
 
 	@GetMapping("/edit/{id}")
 	@RequiresPermissions("ifast:unit:edit")
-	String edit(@PathVariable("id") Integer id,Model model){
+	String edit(@PathVariable("id") Long id,Model model){
 		UnitDO unit = unitService.selectById(id);
 		model.addAttribute("unit", unit);
 	    return "ifast/unit/edit";
