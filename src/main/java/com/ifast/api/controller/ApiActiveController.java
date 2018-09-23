@@ -136,7 +136,10 @@ public class ApiActiveController {
     @ApiOperation("删除图片")
     public Result<?> delFile(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
             , String imgId) {
-        this.imgService.deleteById(imgId);
+        Wrapper<ImgDO> wrapper = new EntityWrapper<>();
+        wrapper.eq("id", imgId);
+        this.imgService.delete(wrapper);
+
         return Result.ok();
     }
 
