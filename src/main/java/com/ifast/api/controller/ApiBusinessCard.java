@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -96,8 +97,8 @@ public class ApiBusinessCard {
 
     @GetMapping("/queryUnit")
     @ApiOperation("查询公司信息")
-    public Result<?> queryUnit(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token) {
-        return Result.ok(unitService.getUnitByToken(token));
+    public Result<?> queryUnit(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,String userId) {
+        return Result.ok(unitService.getUnitByToken(token,userId));
     }
 
     @RequestMapping("/queryProduct")
@@ -147,12 +148,12 @@ public class ApiBusinessCard {
         productDO.setPath(url);*/
 
             //前端要求根据用户id
-            UnitDO unitDO = this.unitService.getUnitByToken(token);
+            UnitDO unitDO = this.unitService.getUnitByToken(token,null);
             if (unitDO == null) {
                 return  Result.build(1, "用户信息为空");
             }
             productDO.setUnitId(unitDO.getId());
-            productService.insert(productDO);
+            productService.insertOrUpdate(productDO);
             Long parentId = productDO.getId();
             List<Long> imgids = productDO.getImgIds();
             List<ImgDO> imgs = Lists.newArrayList();
@@ -167,6 +168,7 @@ public class ApiBusinessCard {
             }
             return Result.ok(productDO);
         }
+
 
         @PostMapping("/updateUser")
         @ApiOperation("更新用户信息")
@@ -301,7 +303,7 @@ public class ApiBusinessCard {
         return Result.ok();
     }
 
-    @PostMapping("isInCard")
+    @PostMapping("/isInCard")
     @ApiOperation("查询是否在列表中")
     Result<?> isInCard(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
             ,String userId){
@@ -312,5 +314,25 @@ public class ApiBusinessCard {
         AttentionDO attentionDO = this.attentionService.selectOne(wrapper);
         return Result.ok(attentionDO);
     }
+
+    @PostMapping("/joinQun")
+    @ApiOperation("加入群")
+    Result<?> joinQun(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
+            ,String suijishu , String iv ,String encryptedData) throws Exception {
+        String userId = JWTUtil.getUserId(token);
+        ApiUserDO userDO = this.userService.selectById(userId);
+        Map<String, String> userInfo = this.userService.getUserInfo(encryptedData, userDO.getSession_key(), iv);
+        return null;
+    }
+
+    @PostMapping("/queryQun")
+    @ApiOperation("查询群成员")
+    Result<?> queryQun(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
+            ,String openGId ){
+
+
+        return null;
+    }
+
 
 }

@@ -32,13 +32,15 @@ public class UnitServiceImpl extends CoreServiceImpl<UnitDao, UnitDO> implements
      * @return
      */
     @Override
-    public UnitDO getUnitByToken(String token) {
+    public UnitDO getUnitByToken(String token,String userId) {
         if (StringUtils.isBlank(token)) {
             return null;
         }
-        String userId = JWTUtil.getUserId(token);
-        if (userId == null || "".equals(userId)) {
-            return null;
+        if (StringUtils.isBlank(userId)){
+            userId = JWTUtil.getUserId(token);
+            if (userId == null || "".equals(userId)) {
+                return null;
+            }
         }
        ApiUserDO userDO = userService.selectById(userId);
         return this.selectOne(new EntityWrapper<>(new UnitDO(userDO.getId())));

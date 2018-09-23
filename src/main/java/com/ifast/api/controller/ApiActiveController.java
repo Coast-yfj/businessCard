@@ -132,6 +132,14 @@ public class ApiActiveController {
         return Result.ok(imgDO);
     }
 
+    @PostMapping("/delFile")
+    @ApiOperation("删除图片")
+    public Result<?> delFile(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
+            , String imgId) {
+        this.imgService.deleteById(imgId);
+        return Result.ok();
+    }
+
     @PostMapping("/activeDetail")
     @ApiOperation("活动详情")
     public Result<?> aciveDetail(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,Long activeId){

@@ -16,6 +16,6 @@ public interface UnitService extends CoreService<UnitDO> {
      * @param token
      * @return
      */
-    UnitDO getUnitByToken(String token);
+    UnitDO getUnitByToken(String token,String userId);
     
 }

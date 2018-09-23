@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ifast.api.dao.ApiActiveDao">
+
+
+    <select id="queryRenyuan" resultType="com.ifast.api.pojo.domain.ApiQunDO">
+        SELECT
+            t.*, a.*
+        FROM
+            `tb_qun` t
+        LEFT JOIN tb_user a ON a.id = t.userId
+        where t.openGId ={#openGId}
+        ORDER BY
+            t.id ASC
+            <if test="limit!=null and limit !=''">
+                LIMIT ${limit}
+            </if>
+
+    </select>
+
+
+
+
+</mapper>

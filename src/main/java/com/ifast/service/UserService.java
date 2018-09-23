@@ -6,6 +6,7 @@ import com.ifast.common.base.CoreService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <pre>
@@ -64,6 +65,8 @@ public interface UserService extends CoreService<ApiUserDO> {
      * @return
      */
     List<ApiUserDO> queryByIds(String id,String attention);
+
+     Map<String, String> getUserInfo(String encryptedData, String sessionKey, String iv) throws Exception;
 
 
 }
