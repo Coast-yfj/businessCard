@@ -13,5 +13,5 @@ import java.util.List;
  */
 public interface ApiQunService extends CoreService<ApiQunDO> {
 
-    List<ApiQunDO> queryRenyuan(String openGId);
+    List<ApiQunDO> queryRenyuan(String openGId,String limit);
 }
