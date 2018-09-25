@@ -64,7 +64,7 @@ public interface UserService extends CoreService<ApiUserDO> {
      * @param id
      * @return
      */
-    List<ApiUserDO> queryByIds(String id,String attention);
+    List<ApiUserDO> queryByIds(String id,String attention,String name);
 
      Map<String, String> getUserInfo(String encryptedData, String sessionKey, String iv) throws Exception;
 

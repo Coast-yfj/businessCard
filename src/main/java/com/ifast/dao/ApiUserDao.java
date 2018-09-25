@@ -37,5 +37,5 @@ public interface ApiUserDao extends BaseDao<ApiUserDO> {
      * @param id
      * @return
      */
-    List<ApiUserDO> queryByIds(@Param("id") String id,@Param("attention") String attention);
+    List<ApiUserDO> queryByIds(@Param("id") String id,@Param("attention") String attention,@Param("name")String name);
 }

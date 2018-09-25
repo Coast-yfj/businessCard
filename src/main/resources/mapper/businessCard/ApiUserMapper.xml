@@ -18,8 +18,18 @@
         <result property="language" column="language" />
         <result property="nickName" column="nickName" />
         <result property="gender" column="gender" />
-        <collection property="unitDO" ofType="com.ifast.domain.UnitDO" resultMap="com.ifast.dao.UnitDao.unitResult" />
+        <collection property="unitDO" ofType="com.ifast.domain.UnitDO"  >
+            <result property="id" column="unitId" />
+            <result property="introduction" column="Introduction" />
+            <result property="scale" column="scale" />
+            <result property="userId" column="userid" />
+            <result property="url" column="url" />
+            <result property="fixedTel" column="fixedTel" />
+            <result property="name" column="unitName" />
+            <result property="logo" column="logo" />
+        </collection>
     </resultMap>
+
 
     <select id="queryById" parameterType="string" resultMap="userByUnit">
    SELECT
@@ -44,7 +54,8 @@
   a.`userid`,
   a. `url`,
   a.`fixedTel`,
-  a.`name` AS unitName
+  a.`name` AS unitName,
+        a.logo
     FROM tb_user t LEFT JOIN tb_unit a ON t.`id`=a.`userid`
     <where>
         t.id=#{id}
@@ -107,6 +118,9 @@
             <if test="attention!=null and attention!=''">
                 and  b.attention = #{attention}
             </if>
+        <if test="name!=null and name !=''">
+            and t.name like concat('%',concat(#{name},'%'))
+        </if>
                     order by b.attention desc , t.`name` asc
     </select>
 </mapper>

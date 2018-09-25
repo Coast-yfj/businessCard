@@ -153,6 +153,10 @@ public class ApiActiveController {
             wrapper.eq("parentId", activeId);
             imgs = this.imgService.selectList(wrapper);
             activeDO.setImgs(imgs);
+            Wrapper<ActiveUserDO> activeUserDOWrapper = new EntityWrapper<>();
+            activeUserDOWrapper.eq("activeId", activeDO.getId());
+            int total =this.activeUserService.selectCount(activeUserDOWrapper);
+            activeDO.setUserTotal(total);
             return Result.ok(activeDO);
         }
         Result result = new Result();

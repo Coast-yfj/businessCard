@@ -117,6 +117,8 @@ public class ApiUserDO implements Serializable {
 
     @TableField(exist = false)
     private String dName;
+    @TableField(exist = false)
+    private String inCard;
 
     /**
      * 公司信息
@@ -355,5 +357,13 @@ public class ApiUserDO implements Serializable {
 
     public void setdName(String dName) {
         this.dName = dName;
+    }
+
+    public String getInCard() {
+        return inCard;
+    }
+
+    public void setInCard(String inCard) {
+        this.inCard = inCard;
     }
 }

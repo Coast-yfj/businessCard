@@ -87,12 +87,15 @@ public class ApiBusinessCard {
             }
             String tid = JWTUtil.getUserId(token);
             Wrapper<AttentionDO> wrapper = new EntityWrapper<>();
-            wrapper.eq("mid", userId);
-            wrapper.eq("tid", tid);
+            wrapper.eq("mid", tid);
+            wrapper.eq("tid", userId);
             AttentionDO attentionDO = this.attentionService.selectOne(wrapper);
             if (attentionDO != null) {
                 userDO.setAttention(attentionDO.getAttention());
+                userDO.setInCard("1");
             } else {
+                //0：未关注，0：未在名片夹
+                userDO.setInCard("0");
                 userDO.setAttention("0");
             }
             return Result.ok(userDO);
@@ -242,8 +245,10 @@ public class ApiBusinessCard {
         wrapper.eq("mid", userDO.getId()).eq("tid", id);
         AttentionDO attentionDO = this.attentionService.selectOne(wrapper);
         if (attentionDO != null) {
+            this.attentionService.delete(wrapper);
             return Result.ok();
         }
+
         attentionDO = new AttentionDO();
         attentionDO.setMid(userDO.getId());
         attentionDO.setTid(Long.getLong(id));
@@ -274,9 +279,10 @@ public class ApiBusinessCard {
 
     @RequestMapping("/queryCardHolder")
     @ApiOperation("查询名片夹信息")
-    public Result<?> queryCardHolder(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, String attention) {
+    public Result<?> queryCardHolder(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
+            , String attention,String name) {
         String userId = JWTUtil.getUserId(token);
-        return Result.ok(userService.queryByIds(userId, attention));
+        return Result.ok(userService.queryByIds(userId, attention,name));
     }
 
     @GetMapping("/queryAbout")
