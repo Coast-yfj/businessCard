@@ -21,7 +21,7 @@ public class MyWebAppConfiguration extends WebMvcConfigurerAdapter {
          *
          */
         org.apache.commons.configuration.Configuration conf= GenUtils.getConfigFile();
-        registry.addResourceHandler("/common/**").addResourceLocations("file:/imgs/");
+        registry.addResourceHandler("/common/**").addResourceLocations("file:"+conf.getString("file")+"/");
         super.addResourceHandlers(registry);
     }
 }

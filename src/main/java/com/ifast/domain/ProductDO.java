@@ -44,7 +44,7 @@ public class ProductDO implements Serializable {
     private Long unitId;
 
     @TableField(exist = false)
-    private List<Long> imgIds;
+    private List<String> imgIds;
     @TableField(exist = false)
     private List<ImgDO> imgs;
 
@@ -118,11 +118,11 @@ public class ProductDO implements Serializable {
         return unitId;
     }
 
-    public List<Long> getImgIds() {
+    public List<String> getImgIds() {
         return imgIds;
     }
 
-    public void setImgIds(List<Long> imgIds) {
+    public void setImgIds(List<String> imgIds) {
         this.imgIds = imgIds;
     }
 

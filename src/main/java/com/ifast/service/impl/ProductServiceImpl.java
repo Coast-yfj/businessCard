@@ -9,7 +9,9 @@ import com.ifast.common.config.IFastConfig;
 import com.ifast.common.utils.DateUtils;
 import com.ifast.common.utils.GenUtils;
 import com.ifast.domain.ApiUserDO;
+import com.ifast.domain.UnitDO;
 import com.ifast.oss.sdk.QiNiuOSSService;
+import com.ifast.service.UnitService;
 import com.ifast.service.UserService;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +23,7 @@ import com.ifast.domain.ProductDO;
 import com.ifast.service.ProductService;
 import com.ifast.common.base.CoreServiceImpl;
 import org.springframework.web.multipart.MultipartFile;
+import sun.tools.jconsole.Plotter;
 
 import java.util.Date;
 import java.util.List;
@@ -46,6 +49,9 @@ public class ProductServiceImpl extends CoreServiceImpl<ProductDao, ProductDO> i
     @Autowired
     private QiNiuOSSService qiNiuOSS;
 
+    @Autowired
+    private UnitService unitService;
+
     /**
      * 查询产品
      *
@@ -63,13 +69,16 @@ public class ProductServiceImpl extends CoreServiceImpl<ProductDao, ProductDO> i
                 return null;
             }
         }
-
-        ApiUserDO userDO = userService.queryById(userId);
-        if(userDO.getUnitDO()==null){
-            return null;
-        }
+//
+//        ApiUserDO userDO = userService.queryById(userId);
+//        if(userDO.getUnitDO()==null){
+//            return null;
+//        }
+        UnitDO unitDO=new UnitDO();
+        unitDO.setUserId(Long.parseLong(userId));
+        unitDO= unitService.selectOne(new EntityWrapper<>(unitDO));
         ProductDO productDO = new ProductDO();
-        productDO.setUnitId(userDO.getUnitDO().getId());
+        productDO.setUnitId(unitDO.getId());
         List<ProductDO> list = this.selectList(new EntityWrapper<>(productDO));
         for (ProductDO productDO1 : list) {
             Wrapper<ImgDO> wrapper = new EntityWrapper<>();
