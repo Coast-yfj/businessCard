@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 public class ApiQunServiceImpl extends CoreServiceImpl<ApiQunDao, ApiQunDO> implements ApiQunService {
     @Override
-    public List<ApiQunDO> queryRenyuan(String openGId) {
-        return this.baseMapper.queryRenyuan(openGId);
+    public List<ApiQunDO> queryRenyuan(String openGId,String limit) {
+        return this.baseMapper.queryRenyuan(openGId,limit);
     }
 }

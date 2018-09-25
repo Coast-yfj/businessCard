@@ -3,8 +3,10 @@ package com.ifast.api.controller;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.google.common.collect.Lists;
+import com.ifast.api.pojo.domain.ApiQunDO;
 import com.ifast.api.pojo.domain.ApiSuijishuDO;
 import com.ifast.api.pojo.domain.ImgDO;
+import com.ifast.api.service.ApiQunService;
 import com.ifast.api.service.ApiSuijishuService;
 import com.ifast.api.service.ImgService;
 import com.ifast.api.util.JWTUtil;
@@ -23,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -53,6 +54,8 @@ public class ApiBusinessCard {
 
     @Autowired
     private AboutService aboutService;
+    @Autowired
+    private ApiQunService apiQunService;
 
     @PostMapping("login")
     @ApiOperation("api登录")
@@ -331,16 +334,29 @@ public class ApiBusinessCard {
         String userId = JWTUtil.getUserId(token);
         ApiUserDO userDO = this.userService.selectById(userId);
         Map<String, String> userInfo = this.userService.getUserInfo(encryptedData, userDO.getSession_key(), iv);
-        return null;
+        if(userInfo.keySet().contains("openGId")){
+            String openGId = userInfo.get("openGId");
+            Wrapper<ApiSuijishuDO> wrapper = new EntityWrapper<>();
+            wrapper.eq("suijiashu", suijishu);
+            ApiSuijishuDO suijishuDO = this.apiSuijishuService.selectOne(wrapper);
+            ApiQunDO qunDO = new ApiQunDO();
+            qunDO.setOpenGId(openGId);
+            qunDO.setUserId(Long.getLong(userId));
+            this.apiQunService.insert(qunDO);
+            qunDO = new ApiQunDO();
+            qunDO.setUserId(suijishuDO.getUserId());
+            qunDO.setOpenGId(openGId);
+            this.apiQunService.insert(qunDO);
+            return Result.ok();
+        }
+        return Result.fail();
     }
 
     @PostMapping("/queryQun")
     @ApiOperation("查询群成员")
     Result<?> queryQun(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
-            , String openGId) {
-
-
-        return null;
+            ,String openGId ,String limit ){
+        return Result.ok(this.apiQunService.queryRenyuan(openGId,limit));
     }
 
 
