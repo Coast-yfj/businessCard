@@ -294,7 +294,7 @@ public class ApiBusinessCard {
 
     @PostMapping("/sign")
     @ApiOperation("签名")
-    Result<?> sign(long appId, String secretId, String secretKey, String bucketName,
+    Result<?> sign(Long appId, String secretId, String secretKey, String bucketName,
                    long expired) {
         try {
             return Result.ok(SignUtil.appSign(appId, secretId, secretKey, bucketName, expired));

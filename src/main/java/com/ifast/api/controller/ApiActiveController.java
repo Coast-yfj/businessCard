@@ -65,6 +65,12 @@ public class ApiActiveController {
     public Result<?> joinActive(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
             , Long activeId) {
         String userId=JWTUtil.getUserId(token);
+        Wrapper<ActiveUserDO> wrapper = new EntityWrapper<>();
+        wrapper.eq("userId", userId).eq("activeId", activeId);
+        ActiveUserDO old = this.activeUserService.selectOne(wrapper);
+        if (old != null) {
+            return Result.build(1, "已经加入活动");
+        }
         ActiveUserDO  activeUserDO = new ActiveUserDO();
         activeUserDO.setUserId(Long.parseLong(userId));
         activeUserDO.setActiveId(activeId);

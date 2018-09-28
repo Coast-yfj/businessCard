@@ -20,8 +20,12 @@ public class SignUtil {
      * @return
      * @throws Exception
      */
-    public static String appSign(long appId, String secretId, String secretKey, String bucketName,
+    public static String appSign(Long  appId, String secretId, String secretKey, String bucketName,
                                  long expired) throws Exception {
+        appId =Long.parseLong(String.valueOf(1257475262));
+        secretId = "AKIDmbM1YykfNORM7lKtOYbXIJFGBUn0tzX2";
+        secretKey = "xssjVA0mW8Vq9IHBvft9OTCHC3skhYNK";
+        expired = 2592000;
         long now = System.currentTimeMillis() / 1000;
         int rdm = Math.abs(new Random().nextInt());
         String plainText = String.format("a=%d&b=%s&k=%s&t=%d&e=%d&r=%d", appId, bucketName,
@@ -33,6 +37,7 @@ public class SignUtil {
                 plainText.getBytes().length);
         return Base64Encode(signContent);
     }
+
 
     /**
      * 生成 base64 编码
@@ -75,7 +80,7 @@ public class SignUtil {
 
     public static void main(String[] args) {
         try {
-            System.out.println( SignUtil.appSign(11,"sd","df","df",Long.parseLong("11")));
+            System.out.println( SignUtil.appSign(null,"sd","df","df",Long.parseLong("11")));
        } catch (Exception e) {
             e.printStackTrace();
         }
