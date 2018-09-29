@@ -1,5 +1,7 @@
 package com.ifast.api.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.google.common.collect.Lists;
@@ -11,24 +13,40 @@ import com.ifast.api.service.ApiSuijishuService;
 import com.ifast.api.service.ImgService;
 import com.ifast.api.util.JWTUtil;
 import com.ifast.api.util.SignUtil;
+import com.ifast.common.utils.GenUtils;
 import com.ifast.common.utils.Result;
 import com.ifast.domain.*;
 import com.ifast.service.*;
 import com.ifast.sys.domain.UserDO;
+import com.sun.deploy.net.HttpUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * @author yfj
@@ -57,6 +75,7 @@ public class ApiBusinessCard {
     private AboutService aboutService;
     @Autowired
     private ApiQunService apiQunService;
+
 
     @PostMapping("login")
     @ApiOperation("api登录")
@@ -239,7 +258,8 @@ public class ApiBusinessCard {
 
     @PostMapping("/joinCard")
     @ApiOperation("加入名片夹")
-    public Result<?> joinCard(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, String id) {
+    public Result<?> joinCard(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
+            , String id) {
         ApiUserDO userDO = userService.getUserByToken(token);
         Wrapper<AttentionDO> wrapper = new EntityWrapper<>();
         wrapper.eq("mid", userDO.getId()).eq("tid", id);
@@ -251,7 +271,7 @@ public class ApiBusinessCard {
 
         attentionDO = new AttentionDO();
         attentionDO.setMid(userDO.getId());
-        attentionDO.setTid(Long.getLong(id));
+        attentionDO.setTid(Long.parseLong(id));
         attentionDO.setAttention("0");
         attentionService.insert(attentionDO);
         return Result.ok();
@@ -364,6 +384,131 @@ public class ApiBusinessCard {
     Result<?> queryQun(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
             ,String openGId ,String limit ){
         return Result.ok(this.apiQunService.queryRenyuan(openGId,limit));
+    }
+
+    @PostMapping("/qun")
+    @ApiOperation("查询群")
+    Result<?> qun(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
+            ){
+        String userId = String.valueOf(this.userService.getUserByToken(token).getId());
+        Wrapper<ApiQunDO> wrapper = new EntityWrapper<>();
+        wrapper.eq("userId", userId);
+        List<ApiQunDO> apiQunDOList = this.apiQunService.selectList(wrapper);
+        List<String> list = new ArrayList<>();
+        for (ApiQunDO qunDO : apiQunDOList) {
+            list.add(qunDO.getOpenGId());
+        }
+        return Result.ok(list);
+    }
+
+    /*
+     * 获取二维码
+     * 这里的 post 方法 为 json post【重点】
+     */
+    @RequestMapping("/getCode")
+    @ApiOperation("图片")
+    public  Result getCodeM(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
+            ,String scene ) throws Exception {
+
+        String userId = String.valueOf(this.userService.getUserByToken(token).getId());
+        String imei ="867186032552993";
+        String page="page/msg_waist/msg_waist";
+        String access_token = getToken();   // 得到token
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("scene", scene);  //参数
+        params.put("page", "pages/carddetails/carddetails?uid="+userId); //位置
+        params.put("width", 430);
+
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+
+        HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token="+access_token);  // 接口
+        httpPost.addHeader(HTTP.CONTENT_TYPE, "application/json");
+        String body = JSON.toJSONString(params);           //必须是json模式的 post
+        StringEntity entity;
+        entity = new StringEntity(body);
+        entity.setContentType("image/png");
+
+        httpPost.setEntity(entity);
+        HttpResponse response;
+
+        response = httpClient.execute(httpPost);
+        InputStream inputStream = response.getEntity().getContent();
+        String name = UUID.randomUUID().toString().trim().replaceAll("-", "")+".png";
+        Configuration conf = GenUtils.getConfigFile();
+        saveToImgByInputStream(inputStream,conf.getString("file"),name);  //保存图片
+        return Result.ok("/common/"+name);
+    }
+
+    /*
+     * 获取 token
+     * 普通的 get 可获 token
+     */
+    public  String getToken() {
+        try {
+            HttpGet httpGet = new HttpGet(
+                    "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="
+                            + "wxb38247846e8fda09" + "&secret="
+                            + "7057ec8449d6c9eaad85c11fb01e18d1" );
+            HttpClient httpClient = HttpClients.createDefault();
+            HttpResponse res = httpClient.execute(httpGet);
+            HttpEntity entity = res.getEntity();
+            String result = EntityUtils.toString(entity, "UTF-8");
+            System.out.println(result);
+            JSONObject json = JSONObject.parseObject(result);
+
+            if (json.getString("access_token") != null || json.getString("access_token") != "") {
+                return json.getString("access_token");
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+//            log.error("# 获取 token 出错... e:" + e);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println();
+        try {
+//            getCodeM();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 将二进制转换成文件保存
+     * @param instreams 二进制流
+     * @param imgPath 图片的保存路径
+     * @param imgName 图片的名称
+     * @return
+     *      1：保存正常
+     *      0：保存失败
+     */
+    public static int saveToImgByInputStream(InputStream instreams,String imgPath,String imgName){
+        int stateInt = 1;
+        if(instreams != null){
+            try {
+                File file=new File(imgPath,imgName);//可以是任何图片格式.jpg,.png等
+                FileOutputStream fos=new FileOutputStream(file);
+                byte[] b = new byte[1024];
+                int nRead = 0;
+                while ((nRead = instreams.read(b)) != -1) {
+                    fos.write(b, 0, nRead);
+                }
+                fos.flush();
+                fos.close();
+            } catch (Exception e) {
+                stateInt = 0;
+                e.printStackTrace();
+            } finally {
+            }
+        }
+        return stateInt;
     }
 
 
