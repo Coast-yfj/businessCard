@@ -17,8 +17,6 @@ import com.ifast.common.utils.GenUtils;
 import com.ifast.common.utils.Result;
 import com.ifast.domain.*;
 import com.ifast.service.*;
-import com.ifast.sys.domain.UserDO;
-import com.sun.deploy.net.HttpUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.configuration.Configuration;
@@ -35,16 +33,12 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
