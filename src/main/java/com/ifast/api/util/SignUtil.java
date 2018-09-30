@@ -25,7 +25,7 @@ public class SignUtil {
         appId =Long.parseLong(String.valueOf(1257475262));
         secretId = "AKIDmbM1YykfNORM7lKtOYbXIJFGBUn0tzX2";
         secretKey = "xssjVA0mW8Vq9IHBvft9OTCHC3skhYNK";
-        expired = 2592000;
+        expired = Long.parseLong(String.valueOf(2592000));
         long now = System.currentTimeMillis() / 1000;
         int rdm = Math.abs(new Random().nextInt());
         String plainText = String.format("a=%d&b=%s&k=%s&t=%d&e=%d&r=%d", appId, bucketName,

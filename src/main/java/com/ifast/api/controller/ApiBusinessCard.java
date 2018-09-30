@@ -308,10 +308,9 @@ public class ApiBusinessCard {
 
     @PostMapping("/sign")
     @ApiOperation("签名")
-    Result<?> sign(Long appId, String secretId, String secretKey, String bucketName,
-                   long expired) {
+    Result<?> sign() {
         try {
-            return Result.ok(SignUtil.appSign(appId, secretId, secretKey, bucketName, expired));
+            return Result.ok(SignUtil.appSign(null,null,null,null,111111111));
         } catch (Exception e) {
             e.printStackTrace();
             return Result.fail();
@@ -351,14 +350,30 @@ public class ApiBusinessCard {
     @PostMapping("/joinQun")
     @ApiOperation("加入群")
     Result<?> joinQun(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
-            , String suijishu, String iv, String encryptedData) throws Exception {
+            , String suijishu, String iv, String encryptedData,String code) throws Exception {
+        System.out.println("***************************************");
+        System.out.println(iv);
+        System.out.println(encryptedData);
+        System.out.println(suijishu);
+        System.out.println(token);
+        System.out.println("***************************************");
         String userId = JWTUtil.getUserId(token);
+        try {
+            String str = userService.getToken(code, iv, encryptedData);
+            userId= str;
+        } catch (Exception e) {
+            e.printStackTrace();
+//            return Result.fail();
+        }
         ApiUserDO userDO = this.userService.selectById(userId);
         Map<String, String> userInfo = this.userService.getUserInfo(encryptedData, userDO.getSession_key(), iv);
+        for (String string : userInfo.keySet()) {
+            System.out.println(string);
+        }
         if(userInfo.keySet().contains("openGId")){
             String openGId = userInfo.get("openGId");
             Wrapper<ApiSuijishuDO> wrapper = new EntityWrapper<>();
-            wrapper.eq("suijiashu", suijishu);
+            wrapper.eq("suijishu", suijishu);
             ApiSuijishuDO suijishuDO = this.apiSuijishuService.selectOne(wrapper);
             ApiQunDO qunDO = new ApiQunDO();
             qunDO.setOpenGId(openGId);
@@ -428,6 +443,7 @@ public class ApiBusinessCard {
 
         response = httpClient.execute(httpPost);
         InputStream inputStream = response.getEntity().getContent();
+        System.out.println(inputStream.available());
         String name = UUID.randomUUID().toString().trim().replaceAll("-", "")+".png";
         Configuration conf = GenUtils.getConfigFile();
         saveToImgByInputStream(inputStream,conf.getString("file"),name);  //保存图片
