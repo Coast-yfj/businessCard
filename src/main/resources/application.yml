@@ -46,7 +46,7 @@ mybatis-plus:
     map-underscore-to-camel-case: false
     cache-enabled: false
 appid: wxb38247846e8fda09
-secret: cf093c360c18218433c21fca258ef2b4
+secret: 7057ec8449d6c9eaad85c11fb01e18d1
 logging:
   level:
     com.ifast.dao: debug
