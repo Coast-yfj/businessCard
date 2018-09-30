@@ -411,7 +411,7 @@ public class ApiBusinessCard {
 
         Map<String, Object> params = new HashMap<>();
         params.put("scene", scene);  //参数
-        params.put("page", "pages/carddetails/carddetails?uid="+userId); //位置
+      //  params.put("page", "pages/carddetails/carddetails?uid="+userId); //位置
         params.put("width", 430);
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
