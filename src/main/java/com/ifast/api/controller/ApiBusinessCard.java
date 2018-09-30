@@ -358,27 +358,29 @@ public class ApiBusinessCard {
 
     @PostMapping("/joinQun")
     @ApiOperation("加入群")
+    @Transactional
     Result<?> joinQun(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
             , String suijishu, String iv, String encryptedData, String code) throws Exception {
         System.out.println("***************************************");
-        System.out.println(iv);
-        System.out.println(encryptedData);
-        System.out.println(suijishu);
+        System.out.println("iv====="+iv);
+        System.out.println("encryptedData===="+encryptedData);
+        System.out.println("suijishu===="+suijishu);
+        System.out.println("code===="+code);
         System.out.println(token);
         System.out.println("***************************************");
         String userId = JWTUtil.getUserId(token);
         try {
             String str = userService.getToken(code, iv, encryptedData);
-            userId = str;
+            //userId = str;
         } catch (Exception e) {
             e.printStackTrace();
 //            return Result.fail();
         }
         ApiUserDO userDO = this.userService.selectById(userId);
         Map<String, String> userInfo = this.userService.getUserInfo(encryptedData, userDO.getSession_key(), iv);
-        for (String string : userInfo.keySet()) {
+        /*for (String string : userInfo.keySet()) {
             System.out.println(string);
-        }
+        }*/
         if (userInfo.keySet().contains("openGId")) {
             String openGId = userInfo.get("openGId");
             Wrapper<ApiSuijishuDO> wrapper = new EntityWrapper<>();
@@ -386,12 +388,17 @@ public class ApiBusinessCard {
             ApiSuijishuDO suijishuDO = this.apiSuijishuService.selectOne(wrapper);
             ApiQunDO qunDO = new ApiQunDO();
             qunDO.setOpenGId(openGId);
-            qunDO.setUserId(Long.getLong(userId));
+            qunDO.setUserId(Long.parseLong(userId));
             this.apiQunService.insert(qunDO);
-            qunDO = new ApiQunDO();
-            qunDO.setUserId(suijishuDO.getUserId());
-            qunDO.setOpenGId(openGId);
-            this.apiQunService.insert(qunDO);
+            Wrapper<ApiQunDO> qunDOWrapper = new EntityWrapper<>();
+            qunDOWrapper.eq("userId", Long.parseLong(String.valueOf(suijishuDO.getUserId())));
+            ApiQunDO qunzhu = this.apiQunService.selectOne(qunDOWrapper);
+            if (qunzhu == null) {
+                qunDO = new ApiQunDO();
+                qunDO.setUserId(Long.parseLong(String.valueOf(suijishuDO.getUserId())));
+                qunDO.setOpenGId(openGId);
+                this.apiQunService.insert(qunDO);
+            }
             return Result.ok();
         }
         return Result.fail();
