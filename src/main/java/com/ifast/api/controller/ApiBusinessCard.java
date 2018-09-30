@@ -133,15 +133,15 @@ public class ApiBusinessCard {
     public Result<?> detailProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
             , String id) {
         ProductDO productDO = this.productService.selectById(id);
-        if(productDO==null){
+        if (productDO == null) {
             return Result.ok("查询不到产品");
         }
         Wrapper<ImgDO> wrapper = new EntityWrapper<>();
         wrapper.eq("parentId", productDO.getId());
         List<ImgDO> list = this.imgService.selectList(wrapper);
-        List urlList=new ArrayList<String>(list.size());
-        for (ImgDO img:list
-             ) {
+        List urlList = new ArrayList<String>(list.size());
+        for (ImgDO img : list
+                ) {
             urlList.add(img.getUrl());
         }
         productDO.setImgs(urlList);
@@ -155,6 +155,15 @@ public class ApiBusinessCard {
         String userId = JWTUtil.getUserId(token);
         apiUserDO.setId(Long.parseLong(userId));
         userService.insertOrUpdate(apiUserDO);
+        ApiUserDO userDO = userService.getUserByToken(token);
+        UnitDO unitDO = apiUserDO.getUnitDO();
+        if (unitDO != null) {
+            unitDO.setUserId(userDO.getId());
+            if (userDO.getUnitDO() != null) {
+                unitDO.setId(userDO.getUnitDO().getId());
+            }
+            unitService.insertOrUpdate(unitDO);
+        }
         return Result.ok();
     }
 
@@ -223,11 +232,11 @@ public class ApiBusinessCard {
     public Result<?> updateProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, ProductDO productDO) {
         productService.updateById(productDO);
         Long parentId = productDO.getId();
-        List<String > imgids = productDO.getImgIds();
+        List<String> imgids = productDO.getImgIds();
         List<ImgDO> imgs = Lists.newArrayList();
-        imgService.delete(new EntityWrapper<>(new ImgDO()).eq("parentId",parentId));
+        imgService.delete(new EntityWrapper<>(new ImgDO()).eq("parentId", parentId));
         if (imgids != null && imgids.size() > 0) {
-            for (String  url : imgids) {
+            for (String url : imgids) {
                 ImgDO imgDO = new ImgDO();
                 imgDO.setParentId(parentId);
                 imgDO.setUrl(url);
@@ -294,9 +303,9 @@ public class ApiBusinessCard {
     @RequestMapping("/queryCardHolder")
     @ApiOperation("查询名片夹信息")
     public Result<?> queryCardHolder(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
-            , String attention,String name) {
+            , String attention, String name) {
         String userId = JWTUtil.getUserId(token);
-        return Result.ok(userService.queryByIds(userId, attention,name));
+        return Result.ok(userService.queryByIds(userId, attention, name));
     }
 
     @GetMapping("/queryAbout")
@@ -310,7 +319,7 @@ public class ApiBusinessCard {
     @ApiOperation("签名")
     Result<?> sign() {
         try {
-            return Result.ok(SignUtil.appSign(null,null,null,null,111111111));
+            return Result.ok(SignUtil.appSign(null, null, null, null, 111111111));
         } catch (Exception e) {
             e.printStackTrace();
             return Result.fail();
@@ -350,7 +359,7 @@ public class ApiBusinessCard {
     @PostMapping("/joinQun")
     @ApiOperation("加入群")
     Result<?> joinQun(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
-            , String suijishu, String iv, String encryptedData,String code) throws Exception {
+            , String suijishu, String iv, String encryptedData, String code) throws Exception {
         System.out.println("***************************************");
         System.out.println(iv);
         System.out.println(encryptedData);
@@ -360,7 +369,7 @@ public class ApiBusinessCard {
         String userId = JWTUtil.getUserId(token);
         try {
             String str = userService.getToken(code, iv, encryptedData);
-            userId= str;
+            userId = str;
         } catch (Exception e) {
             e.printStackTrace();
 //            return Result.fail();
@@ -370,7 +379,7 @@ public class ApiBusinessCard {
         for (String string : userInfo.keySet()) {
             System.out.println(string);
         }
-        if(userInfo.keySet().contains("openGId")){
+        if (userInfo.keySet().contains("openGId")) {
             String openGId = userInfo.get("openGId");
             Wrapper<ApiSuijishuDO> wrapper = new EntityWrapper<>();
             wrapper.eq("suijishu", suijishu);
@@ -391,14 +400,14 @@ public class ApiBusinessCard {
     @PostMapping("/queryQun")
     @ApiOperation("查询群成员")
     Result<?> queryQun(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
-            ,String openGId ,String limit ){
-        return Result.ok(this.apiQunService.queryRenyuan(openGId,limit));
+            , String openGId, String limit) {
+        return Result.ok(this.apiQunService.queryRenyuan(openGId, limit));
     }
 
     @PostMapping("/qun")
     @ApiOperation("查询群")
     Result<?> qun(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
-            ){
+    ) {
         String userId = String.valueOf(this.userService.getUserByToken(token).getId());
         Wrapper<ApiQunDO> wrapper = new EntityWrapper<>();
         wrapper.eq("userId", userId);
@@ -416,22 +425,22 @@ public class ApiBusinessCard {
      */
     @RequestMapping("/getCode")
     @ApiOperation("图片")
-    public  Result getCodeM(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
-            ,String scene ) throws Exception {
+    public Result getCodeM(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
+            , String scene) throws Exception {
 
         String userId = String.valueOf(this.userService.getUserByToken(token).getId());
-        String imei ="867186032552993";
-        String page="page/msg_waist/msg_waist";
+        String imei = "867186032552993";
+        String page = "page/msg_waist/msg_waist";
         String access_token = getToken();   // 得到token
 
         Map<String, Object> params = new HashMap<>();
         params.put("scene", scene);  //参数
-      //  params.put("page", "pages/carddetails/carddetails?uid="+userId); //位置
+        //  params.put("page", "pages/carddetails/carddetails?uid="+userId); //位置
         params.put("width", 430);
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
-        HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token="+access_token);  // 接口
+        HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=" + access_token);  // 接口
         httpPost.addHeader(HTTP.CONTENT_TYPE, "application/json");
         String body = JSON.toJSONString(params);           //必须是json模式的 post
         StringEntity entity;
@@ -444,22 +453,22 @@ public class ApiBusinessCard {
         response = httpClient.execute(httpPost);
         InputStream inputStream = response.getEntity().getContent();
         System.out.println(inputStream.available());
-        String name = UUID.randomUUID().toString().trim().replaceAll("-", "")+".png";
+        String name = UUID.randomUUID().toString().trim().replaceAll("-", "") + ".png";
         Configuration conf = GenUtils.getConfigFile();
-        saveToImgByInputStream(inputStream,conf.getString("file"),name);  //保存图片
-        return Result.ok("/common/"+name);
+        saveToImgByInputStream(inputStream, conf.getString("file"), name);  //保存图片
+        return Result.ok("/common/" + name);
     }
 
     /*
      * 获取 token
      * 普通的 get 可获 token
      */
-    public  String getToken() {
+    public String getToken() {
         try {
             HttpGet httpGet = new HttpGet(
                     "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="
                             + "wxb38247846e8fda09" + "&secret="
-                            + "7057ec8449d6c9eaad85c11fb01e18d1" );
+                            + "7057ec8449d6c9eaad85c11fb01e18d1");
             HttpClient httpClient = HttpClients.createDefault();
             HttpResponse res = httpClient.execute(httpGet);
             HttpEntity entity = res.getEntity();
@@ -492,19 +501,19 @@ public class ApiBusinessCard {
 
     /**
      * 将二进制转换成文件保存
+     *
      * @param instreams 二进制流
-     * @param imgPath 图片的保存路径
-     * @param imgName 图片的名称
-     * @return
-     *      1：保存正常
-     *      0：保存失败
+     * @param imgPath   图片的保存路径
+     * @param imgName   图片的名称
+     * @return 1：保存正常
+     * 0：保存失败
      */
-    public static int saveToImgByInputStream(InputStream instreams,String imgPath,String imgName){
+    public static int saveToImgByInputStream(InputStream instreams, String imgPath, String imgName) {
         int stateInt = 1;
-        if(instreams != null){
+        if (instreams != null) {
             try {
-                File file=new File(imgPath,imgName);//可以是任何图片格式.jpg,.png等
-                FileOutputStream fos=new FileOutputStream(file);
+                File file = new File(imgPath, imgName);//可以是任何图片格式.jpg,.png等
+                FileOutputStream fos = new FileOutputStream(file);
                 byte[] b = new byte[1024];
                 int nRead = 0;
                 while ((nRead = instreams.read(b)) != -1) {
