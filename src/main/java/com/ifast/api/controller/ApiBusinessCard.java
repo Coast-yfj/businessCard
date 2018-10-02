@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.ifast.api.pojo.domain.ApiQunDO;
 import com.ifast.api.pojo.domain.ApiSuijishuDO;
 import com.ifast.api.pojo.domain.ImgDO;
@@ -319,7 +320,7 @@ public class ApiBusinessCard {
     @ApiOperation("签名")
     Result<?> sign() {
         try {
-            return Result.ok(SignUtil.appSign(null, null, null, null, 111111111));
+            return Result.ok(SignUtil.appSign(111, null, null, null, 111111111));
         } catch (Exception e) {
             e.printStackTrace();
             return Result.fail();
@@ -339,7 +340,7 @@ public class ApiBusinessCard {
         String userId = JWTUtil.getUserId(token);
         ApiSuijishuDO suijishuDO = new ApiSuijishuDO();
         suijishuDO.setSuijishu(suijishu);
-        suijishuDO.setUserId(Long.getLong(userId));
+        suijishuDO.setUserId(Long.parseLong(userId));
         this.apiSuijishuService.insert(suijishuDO);
         return Result.ok();
     }
@@ -386,16 +387,17 @@ public class ApiBusinessCard {
             Wrapper<ApiSuijishuDO> wrapper = new EntityWrapper<>();
             wrapper.eq("suijishu", suijishu);
             ApiSuijishuDO suijishuDO = this.apiSuijishuService.selectOne(wrapper);
+            System.out.println(suijishuDO==null);
             ApiQunDO qunDO = new ApiQunDO();
             qunDO.setOpenGId(openGId);
-            qunDO.setUserId(Long.parseLong(userId));
+            qunDO.setUserId(userId);
             this.apiQunService.insert(qunDO);
             Wrapper<ApiQunDO> qunDOWrapper = new EntityWrapper<>();
-            qunDOWrapper.eq("userId", Long.parseLong(String.valueOf(suijishuDO.getUserId())));
+            qunDOWrapper.eq("userId", suijishuDO.getUserId()).eq("openGId", openGId);
             ApiQunDO qunzhu = this.apiQunService.selectOne(qunDOWrapper);
             if (qunzhu == null) {
                 qunDO = new ApiQunDO();
-                qunDO.setUserId(Long.parseLong(String.valueOf(suijishuDO.getUserId())));
+                qunDO.setUserId(String.valueOf(suijishuDO.getUserId()));
                 qunDO.setOpenGId(openGId);
                 this.apiQunService.insert(qunDO);
             }
@@ -419,11 +421,28 @@ public class ApiBusinessCard {
         Wrapper<ApiQunDO> wrapper = new EntityWrapper<>();
         wrapper.eq("userId", userId);
         List<ApiQunDO> apiQunDOList = this.apiQunService.selectList(wrapper);
-        List<String> list = new ArrayList<>();
+//        List<String> list = new ArrayList<>();
+        Map<String, List<ApiQunDO>> map = Maps.newHashMap();
         for (ApiQunDO qunDO : apiQunDOList) {
-            list.add(qunDO.getOpenGId());
+//            list.add(qunDO.getOpenGId());
+            List<ApiQunDO> list1 = this.apiQunService.queryRenyuan(qunDO.getOpenGId(), null);
+            map.put(qunDO.getOpenGId(), list1);
         }
-        return Result.ok(list);
+        return Result.ok(map);
+    }
+
+    @PostMapping("/tuiqun")
+    @ApiOperation("退出群")
+    Result<?> tuiqun(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
+    ,String openGId){
+        String userId = String.valueOf(this.userService.getUserByToken(token).getId());
+        Wrapper<ApiQunDO> wrapper = new EntityWrapper<>();
+        wrapper.eq("userId", userId).eq("openGId", openGId);
+        ApiQunDO qunDO = this.apiQunService.selectOne(wrapper);
+        if (qunDO != null) {
+            this.apiQunService.delete(wrapper);
+        }
+        return Result.ok();
     }
 
     /*

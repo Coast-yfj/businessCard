@@ -20,7 +20,7 @@ public class ApiQunDO implements Serializable {
     @TableId
     private Long id;
     private String openGId;
-    private Long userId;
+    private String userId;
     /**
      * 姓名
      */
@@ -118,13 +118,6 @@ public class ApiQunDO implements Serializable {
         this.openGId = openGId;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
     public String getName() {
         return name;
@@ -236,5 +229,13 @@ public class ApiQunDO implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

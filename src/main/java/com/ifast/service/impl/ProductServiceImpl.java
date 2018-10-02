@@ -77,16 +77,19 @@ public class ProductServiceImpl extends CoreServiceImpl<ProductDao, ProductDO> i
         UnitDO unitDO=new UnitDO();
         unitDO.setUserId(Long.parseLong(userId));
         unitDO= unitService.selectOne(new EntityWrapper<>(unitDO));
-        ProductDO productDO = new ProductDO();
-        productDO.setUnitId(unitDO.getId());
-        List<ProductDO> list = this.selectList(new EntityWrapper<>(productDO));
-        for (ProductDO productDO1 : list) {
-            Wrapper<ImgDO> wrapper = new EntityWrapper<>();
-            wrapper.eq("parentId", productDO1.getId());
-            List<ImgDO> imgs = this.imgService.selectList(wrapper);
-            productDO1.setImgs(imgs);
-        }
-        return list;
+      if (unitDO!=null){
+          ProductDO productDO = new ProductDO();
+          productDO.setUnitId(unitDO.getId());
+          List<ProductDO> list = this.selectList(new EntityWrapper<>(productDO));
+          for (ProductDO productDO1 : list) {
+              Wrapper<ImgDO> wrapper = new EntityWrapper<>();
+              wrapper.eq("parentId", productDO1.getId());
+              List<ImgDO> imgs = this.imgService.selectList(wrapper);
+              productDO1.setImgs(imgs);
+          }
+          return list;
+      }
+        return null;
     }
 
     /**
