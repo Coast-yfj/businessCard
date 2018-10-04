@@ -22,13 +22,13 @@ public class SignUtil {
      */
     public static String appSign(long  appId, String secretId, String secretKey, String bucketName,
                                  long expired) throws Exception {
-        appId =1257475262;
+        appId =10150822;
         secretId = "AKIDmbM1YykfNORM7lKtOYbXIJFGBUn0tzX2";
         secretKey = "xssjVA0mW8Vq9IHBvft9OTCHC3skhYNK";
         expired = 2592000;
         long now = System.currentTimeMillis() / 1000;
         int rdm = Math.abs(new Random().nextInt());
-        String plainText = String.format("a=%d&b=%s&k=%s&t=%d&e=%d&r=%d", appId, bucketName,
+        String plainText = String.format("a=%d&b=%s&k=%s&t=%d&e=%d&r=%d", appId, "",
                 secretId, now, now + expired, rdm);
 //        byte[] hmacDigest = HmacSha1(plainText, secretKey);
         byte[] hmacDigest = HmacSha1(plainText, secretKey);

@@ -6,10 +6,11 @@
 
     <select id="queryRenyuan" resultType="com.ifast.api.pojo.domain.ApiQunDO">
         SELECT
-            t.*, a.*
+            t.*, a.*,b.`name` as dname
         FROM
             `tb_qun` t
         LEFT JOIN tb_user a ON a.id = t.userId
+        left join tb_unit b on b.userId = t.userId
         where t.openGId =#{openGId}
         ORDER BY
             t.id ASC

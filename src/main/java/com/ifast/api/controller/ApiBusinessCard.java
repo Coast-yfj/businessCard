@@ -421,14 +421,16 @@ public class ApiBusinessCard {
         Wrapper<ApiQunDO> wrapper = new EntityWrapper<>();
         wrapper.eq("userId", userId);
         List<ApiQunDO> apiQunDOList = this.apiQunService.selectList(wrapper);
-//        List<String> list = new ArrayList<>();
-        Map<String, List<ApiQunDO>> map = Maps.newHashMap();
+       List list = new ArrayList<>();
+        Map<String, Object> map = Maps.newHashMap();
         for (ApiQunDO qunDO : apiQunDOList) {
 //            list.add(qunDO.getOpenGId());
             List<ApiQunDO> list1 = this.apiQunService.queryRenyuan(qunDO.getOpenGId(), null);
-            map.put(qunDO.getOpenGId(), list1);
+            map.put("qunList", list1);
+            map.put("openGId", qunDO.getOpenGId());
+            list.add(map);
         }
-        return Result.ok(map);
+        return Result.ok(list);
     }
 
     @PostMapping("/tuiqun")

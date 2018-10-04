@@ -102,6 +102,9 @@ public class ApiQunDO implements Serializable {
     @TableField(exist = false)
     private String address;
 
+    @TableField(exist = false)
+    private String dName;
+
     public Long getId() {
         return id;
     }
@@ -237,5 +240,13 @@ public class ApiQunDO implements Serializable {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getdName() {
+        return dName;
+    }
+
+    public void setdName(String dName) {
+        this.dName = dName;
     }
 }
