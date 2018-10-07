@@ -7,18 +7,18 @@ import com.google.common.collect.Lists;
 import com.ifast.api.pojo.domain.ActiveDO;
 import com.ifast.api.pojo.domain.ActiveUserDO;
 import com.ifast.api.pojo.domain.ImgDO;
-import com.ifast.api.service.ApiActiveService;
 import com.ifast.api.service.ActiveUserService;
+import com.ifast.api.service.ApiActiveService;
 import com.ifast.api.service.ImgService;
 import com.ifast.api.util.JWTUtil;
+import com.ifast.common.domain.DictDO;
+import com.ifast.common.service.DictService;
 import com.ifast.common.utils.Result;
 import com.ifast.domain.ApiUserDO;
 import com.ifast.service.ProductService;
 import com.ifast.service.UserService;
-import io.jsonwebtoken.Jwt;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +50,32 @@ public class ApiActiveController {
     @Resource(name = "apiService")
     private UserService userService;
 
+    @Autowired
+    private DictService dictService;
+
+    @GetMapping("/getActiveType")
+    @ApiOperation("查询活动类别")
+    public Result<?> getActiveType(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token) {
+        DictDO dictDO = new DictDO();
+        dictDO.setType("active");
+        List<DictDO> list = dictService.selectList(new EntityWrapper<>(dictDO));
+        List reList = new ArrayList<>();
+        for (DictDO dictDO1 : list
+                ) {
+            reList.add(dictDO1.getValue());
+        }
+        return Result.ok(reList);
+    }
+
+    @GetMapping("/getConsumerHotline")
+    @ApiOperation("查询客服电话")
+    public Result<?> getConsumerHotline(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token) {
+        DictDO dictDO = new DictDO();
+        dictDO.setType("consumerHotline");
+        dictDO = dictService.selectOne(new EntityWrapper<>(dictDO));
+        return Result.ok(dictDO.getValue());
+    }
+
     @PostMapping("/activeListPage")
     @ApiOperation("查询活动信息")
     public Result<?> updateUser(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
@@ -64,9 +90,9 @@ public class ApiActiveController {
     @ApiOperation("加入活动")
     public Result<?> joinActive(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
             , Long activeId) {
-        String userId=JWTUtil.getUserId(token);
-        ActiveDO activeDO= this.apiActiveService.selectById(activeId);
-        if(userId.equals(activeDO.getCreateUserId().toString())){
+        String userId = JWTUtil.getUserId(token);
+        ActiveDO activeDO = this.apiActiveService.selectById(activeId);
+        if (userId.equals(activeDO.getCreateUserId().toString())) {
             return Result.build(1, "无法加入自己创建的活动");
         }
         Wrapper<ActiveUserDO> wrapper = new EntityWrapper<>();
@@ -75,7 +101,7 @@ public class ApiActiveController {
         if (old != null) {
             return Result.build(1, "已经加入活动");
         }
-        ActiveUserDO  activeUserDO = new ActiveUserDO();
+        ActiveUserDO activeUserDO = new ActiveUserDO();
         activeUserDO.setUserId(Long.parseLong(userId));
         activeUserDO.setActiveId(activeId);
         this.activeUserService.insert(activeUserDO);
@@ -107,18 +133,18 @@ public class ApiActiveController {
             , ActiveDO activeDO) {
         activeDO.setStop("0");
         activeDO.setCreateUserId(Long.parseLong(JWTUtil.getUserId(token)));
-        if(activeDO.getId()!=null){
+        if (activeDO.getId() != null) {
             this.apiActiveService.updateById(activeDO);
-        }else{
+        } else {
             this.apiActiveService.insert(activeDO);
         }
         Long parentId = activeDO.getId();
         activeDO.setStop("0");
         List<Long> imgids = activeDO.getImgIds();
         List<ImgDO> imgs = Lists.newArrayList();
-        if(imgids!=null&&imgids.size()>0){
+        if (imgids != null && imgids.size() > 0) {
             for (Long id : imgids) {
-                ImgDO imgDO= new ImgDO();
+                ImgDO imgDO = new ImgDO();
                 imgDO.setId(id);
                 imgDO.setParentId(parentId);
                 imgs.add(imgDO);
@@ -132,8 +158,8 @@ public class ApiActiveController {
     @PostMapping("/uploadFile")
     @ApiOperation("上传图片")
     public Result<?> uploadFile(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
-            , @RequestParam ("poster") MultipartFile file) {
-        String url=productService.upload(file);
+            , @RequestParam("poster") MultipartFile file) {
+        String url = productService.upload(file);
         ImgDO imgDO = new ImgDO();
         imgDO.setUrl(url);
 //        imgService.addImg(imgDO);
@@ -155,7 +181,7 @@ public class ApiActiveController {
 
     @PostMapping("/activeDetail")
     @ApiOperation("活动详情")
-    public Result<?> aciveDetail(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,Long activeId){
+    public Result<?> aciveDetail(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, Long activeId) {
         ActiveDO activeDO = this.apiActiveService.selectById(activeId);
         if (activeDO != null) {
             List<ImgDO> imgs = new ArrayList<>();
@@ -165,7 +191,7 @@ public class ApiActiveController {
             activeDO.setImgs(imgs);
             Wrapper<ActiveUserDO> activeUserDOWrapper = new EntityWrapper<>();
             activeUserDOWrapper.eq("activeId", activeDO.getId());
-            int total =this.activeUserService.selectCount(activeUserDOWrapper);
+            int total = this.activeUserService.selectCount(activeUserDOWrapper);
             activeDO.setUserTotal(total);
             return Result.ok(activeDO);
         }
@@ -178,7 +204,7 @@ public class ApiActiveController {
     @PostMapping("/delDetail")
     @ApiOperation("删除活动")
     @Transactional
-    public Result<?> delDetail(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token,Long activeId){
+    public Result<?> delDetail(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, Long activeId) {
         ActiveDO activeDO = this.apiActiveService.selectById(activeId);
         if (activeDO != null) {
             this.apiActiveService.deleteById(activeId);
@@ -196,8 +222,6 @@ public class ApiActiveController {
 
         return Result.fail();
     }
-
-
 
 
 }
