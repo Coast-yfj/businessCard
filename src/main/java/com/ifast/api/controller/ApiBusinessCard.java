@@ -496,7 +496,7 @@ public class ApiBusinessCard {
             HttpGet httpGet = new HttpGet(
                     "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="
                             + "wxb38247846e8fda09" + "&secret="
-                            + "7057ec8449d6c9eaad85c11fb01e18d1");
+                            + "7d65885bd35a80f90ab9ee0edf07be49");
             HttpClient httpClient = HttpClients.createDefault();
             HttpResponse res = httpClient.execute(httpGet);
             HttpEntity entity = res.getEntity();
