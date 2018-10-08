@@ -13,9 +13,9 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/ifast?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
-    username: root
-    password: root
+    url: jdbc:mysql://39.106.106.76:3306/mingpian?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    username: mingpian
+    password: mingpian
     initialSize: 1
     minIdle: 3
     maxActive: 20

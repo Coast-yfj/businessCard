@@ -377,7 +377,7 @@ public class ApiBusinessCard {
             //userId = str;
         } catch (Exception e) {
             e.printStackTrace();
-//            return Result.fail();
+            return Result.fail();
         }
         ApiUserDO userDO = this.userService.selectById(userId);
         Map<String, String> userInfo = this.userService.getUserInfo(encryptedData, userDO.getSession_key(), iv);
@@ -390,10 +390,16 @@ public class ApiBusinessCard {
             wrapper.eq("suijishu", suijishu);
             ApiSuijishuDO suijishuDO = this.apiSuijishuService.selectOne(wrapper);
             System.out.println(suijishuDO==null);
+            Wrapper<ApiQunDO> has = new EntityWrapper<>();
+            has.eq("userId", userId).eq("openGId", openGId);
+            ApiQunDO hasQun = this.apiQunService.selectOne(has);
             ApiQunDO qunDO = new ApiQunDO();
-            qunDO.setOpenGId(openGId);
-            qunDO.setUserId(userId);
-            this.apiQunService.insert(qunDO);
+            if (hasQun == null) {
+                qunDO.setOpenGId(openGId);
+                qunDO.setUserId(userId);
+                this.apiQunService.insert(qunDO);
+            }
+
             Wrapper<ApiQunDO> qunDOWrapper = new EntityWrapper<>();
             qunDOWrapper.eq("userId", suijishuDO.getUserId()).eq("openGId", openGId);
             ApiQunDO qunzhu = this.apiQunService.selectOne(qunDOWrapper);
@@ -424,8 +430,9 @@ public class ApiBusinessCard {
         wrapper.eq("userId", userId);
         List<ApiQunDO> apiQunDOList = this.apiQunService.selectList(wrapper);
        List list = new ArrayList<>();
-        Map<String, Object> map = Maps.newHashMap();
+
         for (ApiQunDO qunDO : apiQunDOList) {
+            Map<String, Object> map = Maps.newHashMap();
 //            list.add(qunDO.getOpenGId());
             List<ApiQunDO> list1 = this.apiQunService.queryRenyuan(qunDO.getOpenGId(), null);
             map.put("qunList", list1);
