@@ -107,6 +107,9 @@ public class ApiUserDO implements Serializable {
      */
     private String type;
 
+    @TableField(exist = false)
+    private String firstName;
+
     /**
      * 创建时间
      */
@@ -365,5 +368,13 @@ public class ApiUserDO implements Serializable {
 
     public void setInCard(String inCard) {
         this.inCard = inCard;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 }

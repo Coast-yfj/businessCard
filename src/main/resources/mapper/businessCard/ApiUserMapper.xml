@@ -115,6 +115,7 @@
                     WHERE EXISTS(
                     SELECT * FROM tb_attention a WHERE a.`tid`=t.`id` AND a.`mid`=#{id}
                     )
+            and t.id !=#{id}
             <if test="attention!=null and attention!=''">
                 and  b.attention = #{attention}
             </if>

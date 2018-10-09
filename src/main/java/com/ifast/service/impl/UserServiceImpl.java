@@ -10,6 +10,7 @@ import com.ifast.api.util.JWTUtil;
 import com.ifast.common.config.CacheConfiguration;
 import com.ifast.common.config.IFastConfig;
 import com.ifast.common.type.EnumErrorCode;
+import com.ifast.common.utils.GetPinyin;
 import com.ifast.common.utils.SpringContextHolder;
 import com.ifast.dao.ApiUserDao;
 import com.ifast.domain.ApiUserDO;
@@ -217,6 +218,12 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
      */
     @Override
     public List<ApiUserDO> queryByIds(String id,String attention,String name) {
-        return baseMapper.queryByIds(id,attention,name);
+        List<ApiUserDO> list = baseMapper.queryByIds(id,attention,name);
+        for (ApiUserDO userDO : list) {
+            if (StringUtils.isNotBlank(userDO.getName())) {
+                userDO.setFirstName(GetPinyin.getFirstLetter(userDO.getName().substring(0,1)));
+            }
+        }
+        return list;
     }
 }
