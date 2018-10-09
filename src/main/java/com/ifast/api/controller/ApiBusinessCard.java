@@ -130,7 +130,6 @@ public class ApiBusinessCard {
     }
 
 
-
     @PostMapping("/productDetail")
     @ApiOperation("查询产品详情")
     public Result<?> detailProduct(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
@@ -150,6 +149,23 @@ public class ApiBusinessCard {
         productDO.setImgs(urlList);
         return Result.ok(productDO);
 
+    }
+
+    @PostMapping("saveUserByCard")
+    @ApiOperation("保存个人信息到名片夹")
+    public Result<?> saveUserByCard(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, ApiUserDO apiUserDO) {
+        userService.insertOrUpdate(apiUserDO);
+        ApiUserDO userDO = userService.getUserByToken(token);
+        UnitDO unitDO = apiUserDO.getUnitDO();
+        if (unitDO != null) {
+            unitDO.setUserId(apiUserDO.getId());
+            if (userDO.getUnitDO() != null) {
+                unitDO.setId(userDO.getUnitDO().getId());
+            }
+            unitService.insertOrUpdate(unitDO);
+        }
+        this.joinCard(token, apiUserDO.getId().toString());
+        return Result.ok();
     }
 
     @PostMapping("saveUser")
@@ -365,10 +381,10 @@ public class ApiBusinessCard {
     Result<?> joinQun(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
             , String suijishu, String iv, String encryptedData, String code) throws Exception {
         System.out.println("***************************************");
-        System.out.println("iv====="+iv);
-        System.out.println("encryptedData===="+encryptedData);
-        System.out.println("suijishu===="+suijishu);
-        System.out.println("code===="+code);
+        System.out.println("iv=====" + iv);
+        System.out.println("encryptedData====" + encryptedData);
+        System.out.println("suijishu====" + suijishu);
+        System.out.println("code====" + code);
         System.out.println(token);
         System.out.println("***************************************");
         String userId = JWTUtil.getUserId(token);
@@ -389,7 +405,7 @@ public class ApiBusinessCard {
             Wrapper<ApiSuijishuDO> wrapper = new EntityWrapper<>();
             wrapper.eq("suijishu", suijishu);
             ApiSuijishuDO suijishuDO = this.apiSuijishuService.selectOne(wrapper);
-            System.out.println(suijishuDO==null);
+            System.out.println(suijishuDO == null);
             Wrapper<ApiQunDO> has = new EntityWrapper<>();
             has.eq("userId", userId).eq("openGId", openGId);
             ApiQunDO hasQun = this.apiQunService.selectOne(has);
@@ -429,7 +445,7 @@ public class ApiBusinessCard {
         Wrapper<ApiQunDO> wrapper = new EntityWrapper<>();
         wrapper.eq("userId", userId);
         List<ApiQunDO> apiQunDOList = this.apiQunService.selectList(wrapper);
-       List list = new ArrayList<>();
+        List list = new ArrayList<>();
 
         for (ApiQunDO qunDO : apiQunDOList) {
             Map<String, Object> map = Maps.newHashMap();
@@ -445,7 +461,7 @@ public class ApiBusinessCard {
     @PostMapping("/tuiqun")
     @ApiOperation("退出群")
     Result<?> tuiqun(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token
-    ,String openGId){
+            , String openGId) {
         String userId = String.valueOf(this.userService.getUserByToken(token).getId());
         Wrapper<ApiQunDO> wrapper = new EntityWrapper<>();
         wrapper.eq("userId", userId).eq("openGId", openGId);
