@@ -222,6 +222,8 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
         for (ApiUserDO userDO : list) {
             if (StringUtils.isNotBlank(userDO.getName())) {
                 userDO.setFirstName(GetPinyin.getFirstLetter(userDO.getName().substring(0,1)));
+            }else {
+                userDO.setFirstName("");
             }
         }
         return list;
