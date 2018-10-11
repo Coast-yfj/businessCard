@@ -155,13 +155,9 @@ public class ApiBusinessCard {
     @ApiOperation("保存个人信息到名片夹")
     public Result<?> saveUserByCard(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token, ApiUserDO apiUserDO) {
         userService.insertOrUpdate(apiUserDO);
-        ApiUserDO userDO = userService.getUserByToken(token);
         UnitDO unitDO = apiUserDO.getUnitDO();
         if (unitDO != null) {
             unitDO.setUserId(apiUserDO.getId());
-            if (userDO.getUnitDO() != null) {
-                unitDO.setId(userDO.getUnitDO().getId());
-            }
             unitService.insertOrUpdate(unitDO);
         }
         this.joinCard(token, apiUserDO.getId().toString());
