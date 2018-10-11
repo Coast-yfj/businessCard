@@ -102,6 +102,11 @@ public class ApiUserDO implements Serializable {
      * 用户在开放平台的唯一标识符
      */
     private String unionid;
+
+    //经度
+    private String longitude;
+    //纬度
+    private String latitude;
     /**
      * 类型
      */
@@ -376,5 +381,21 @@ public class ApiUserDO implements Serializable {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 }

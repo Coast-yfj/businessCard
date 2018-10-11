@@ -106,6 +106,8 @@
         <result property="nickName" column="nickName" />
         <result property="gender" column="gender" />
         <result property="attention" column="attention" />
+        <result property="longitude" column="longitude" />
+        <result property="latitude" column="latitude" />
         <collection property="unitDO" ofType="com.ifast.domain.UnitDO" resultMap="com.ifast.dao.UnitDao.unitResult" />
     </resultMap>
     <select id="queryByIds" parameterType="string" resultMap="userByUnit1">

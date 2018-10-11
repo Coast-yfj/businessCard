@@ -6,7 +6,7 @@
 
     <select id="queryRenyuan" resultType="com.ifast.api.pojo.domain.ApiQunDO">
         SELECT
-            t.*, a.*,b.`name` as dname
+          DISTINCT  t.*, a.*,b.`name` as dname
         FROM
             `tb_qun` t
         LEFT JOIN tb_user a ON a.id = t.userId
