@@ -5,15 +5,18 @@
 
 
     <select id="queryRenyuan" resultType="com.ifast.api.pojo.domain.ApiQunDO">
+
         SELECT
-          DISTINCT  t.*, a.*,b.`name` as dname
+        DISTINCT t.openGId,t.userId, a.address,a.avatarUrl,a.city , a.country ,a.CreateTime ,a.email,a.gender
+        ,a.`language`,a.latitude,a.longitude,a.`name`,a.nickName,a.openid,a.phone,a.position,a.province,a.qq,a.WeChat,
+        a.unionid,a.type,b.`name` as dname
         FROM
-            `tb_qun` t
+        `tb_qun` t
         LEFT JOIN tb_user a ON a.id = t.userId
         left join tb_unit b on b.userId = t.userId
         where t.openGId =#{openGId}
         ORDER BY
-            t.id ASC
+        t.id ASC
             <if test="limit!=null and limit !=''">
                 LIMIT ${limit}
             </if>
