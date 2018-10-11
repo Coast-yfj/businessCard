@@ -12,6 +12,9 @@
         <result property="county" column="county" />
         <result property="type" column="type" />
         <result property="userTotal" column="userTotal" />
+        <result property="longitude" column="longitude" />
+        <result property="latitude" column="latitude" />
+        <result property="address" column="address" />
         <collection property="imgs" javaType="ArrayList" column="id" ofType="com.ifast.api.pojo.domain.ImgDO" select="queryImgs"/>
     </resultMap>
 
@@ -28,7 +31,10 @@
             t.endTime,
             t.province,
             t.county,
-            t.type
+            t.type,
+        t.longitude,
+        t.latitude,
+        t.address
             FROM
             app_active t
             WHERE
@@ -48,7 +54,10 @@
             t.endTime,
             t.province,
             t.county,
-            t.type
+            t.type,
+        t.longitude,
+        t.latitude,
+        t.address
             FROM
             app_active t
             WHERE
