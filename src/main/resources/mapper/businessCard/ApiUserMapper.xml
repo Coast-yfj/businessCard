@@ -18,6 +18,8 @@
         <result property="language" column="language" />
         <result property="nickName" column="nickName" />
         <result property="gender" column="gender" />
+        <result property="longitude" column="longitude" />
+        <result property="latitude" column="latitude" />
         <collection property="unitDO" ofType="com.ifast.domain.UnitDO"  >
             <result property="id" column="unitId" />
             <result property="introduction" column="Introduction" />
@@ -48,6 +50,8 @@
   t.`position`,
   t.`qq`,
   t.`WeChat`,
+        t.longitude,
+        t.latitude,
   a.`id` AS unitId,
   a.`Introduction`,
   a.`scale`,
