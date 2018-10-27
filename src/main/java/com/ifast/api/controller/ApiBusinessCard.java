@@ -38,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -587,10 +588,8 @@ public class ApiBusinessCard {
     @GetMapping("/getHelp")
     @ApiOperation("使用帮助")
     public Result<?> getHelp(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token) throws Exception{
-        HelpDO helpDO=new HelpDO();
-         helpDO.setId(Long.parseLong("1"));
-      helpDO=   helpService.selectOne(new EntityWrapper<>(helpDO));
-        return Result.ok(helpDO.getContext());
+       List<HelpDO> helpDOList=   helpService.selectList(new EntityWrapper<>());
+        return Result.ok(helpDOList);
     }
 
 

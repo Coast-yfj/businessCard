@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 /**
  * 
  * <pre>
- * 
+ * @author
  * </pre>
  * <small> 2018-10-27 13:39:31 | Aron</small>
  */
@@ -21,11 +21,15 @@ public class HelpDO implements Serializable {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
     
-    /**  */
+    /** 主键 */
     @TableId
     private Long id;
-    /**  */
+    /**  内容*/
     private String context;
+    /**
+     * 标题
+     */
+    private String title;
 
     /**
      * 设置：
@@ -50,5 +54,22 @@ public class HelpDO implements Serializable {
      */
     public String getContext() {
         return context;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public String toString() {
+        return "HelpDO{" +
+                "id=" + id +
+                ", context='" + context + '\'' +
+                ", title='" + title + '\'' +
+                '}';
     }
 }
