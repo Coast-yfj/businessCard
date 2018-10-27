@@ -21,6 +21,7 @@ public class ApiQunDO implements Serializable {
     private Long id;
     private String openGId;
     private String userId;
+    private Integer sort;
     /**
      * 姓名
      */
@@ -248,5 +249,13 @@ public class ApiQunDO implements Serializable {
 
     public void setdName(String dName) {
         this.dName = dName;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 }

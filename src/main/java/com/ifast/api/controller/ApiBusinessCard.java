@@ -407,6 +407,8 @@ public class ApiBusinessCard {
             ApiQunDO hasQun = this.apiQunService.selectOne(has);
             ApiQunDO qunDO = new ApiQunDO();
             if (hasQun == null) {
+                int max = this.apiQunService.maxSort(openGId);
+                qunDO.setSort(max+1);
                 qunDO.setOpenGId(openGId);
                 qunDO.setUserId(userId);
                 this.apiQunService.insert(qunDO);
@@ -417,6 +419,7 @@ public class ApiBusinessCard {
             ApiQunDO qunzhu = this.apiQunService.selectOne(qunDOWrapper);
             if (qunzhu == null) {
                 qunDO = new ApiQunDO();
+                qunDO.setSort(0);//群主排序永远是0
                 qunDO.setUserId(String.valueOf(suijishuDO.getUserId()));
                 qunDO.setOpenGId(openGId);
                 this.apiQunService.insert(qunDO);

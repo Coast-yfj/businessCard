@@ -23,4 +23,9 @@ public class ApiQunServiceImpl extends CoreServiceImpl<ApiQunDao, ApiQunDO> impl
     public List<ApiQunDO> queryRenyuan(String openGId,String limit) {
         return this.baseMapper.queryRenyuan(openGId,limit);
     }
+
+    @Override
+    public int maxSort(String openGId) {
+        return this.baseMapper.maxSort(openGId);
+    }
 }

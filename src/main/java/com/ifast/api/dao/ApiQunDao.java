@@ -14,4 +14,5 @@ import java.util.List;
  */
 public interface ApiQunDao extends BaseDao<ApiQunDO> {
     List<ApiQunDO> queryRenyuan(@Param("openGId") String openGId,@Param("limit")String limit);
+    int maxSort(String openGId);
 }

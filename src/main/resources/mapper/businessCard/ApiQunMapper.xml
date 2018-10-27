@@ -16,13 +16,16 @@
         left join tb_unit b on b.userId = t.userId
         where t.openGId =#{openGId}
         ORDER BY
-        t.id ASC
+        t.sort ASC
             <if test="limit!=null and limit !=''">
                 LIMIT ${limit}
             </if>
 
     </select>
 
+    <select id="maxSort" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT   COALESCE(max(sort),0)  FROM `tb_qun` where openGId =#{openGId}
+    </select>
 
 
 
