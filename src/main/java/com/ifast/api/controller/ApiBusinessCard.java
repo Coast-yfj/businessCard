@@ -70,6 +70,8 @@ public class ApiBusinessCard {
     private AboutService aboutService;
     @Autowired
     private ApiQunService apiQunService;
+    @Autowired
+    private HelpService helpService;
 
 
     @PostMapping("login")
@@ -161,7 +163,7 @@ public class ApiBusinessCard {
             unitService.insertOrUpdate(unitDO);
         }
         this.joinCard(token, apiUserDO.getId().toString());
-        return Result.ok();
+        return Result.ok(apiUserDO.getId());
     }
 
     @PostMapping("saveUser")
@@ -580,6 +582,15 @@ public class ApiBusinessCard {
             }
         }
         return stateInt;
+    }
+
+    @GetMapping("/getHelp")
+    @ApiOperation("使用帮助")
+    public Result<?> getHelp(@ApiParam(name = "Authorization", required = true, value = "token") @RequestHeader("Authorization") String token) throws Exception{
+        HelpDO helpDO=new HelpDO();
+         helpDO.setId(Long.parseLong("1"));
+      helpDO=   helpService.selectOne(new EntityWrapper<>(helpDO));
+        return Result.ok(helpDO.getContext());
     }
 
 
