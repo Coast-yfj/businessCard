@@ -56,7 +56,10 @@ function load() {
 								},
 																{
 									field : 'id', 
-									title : '编码'
+									title : '编码',
+									formatter:function(value, row, index){
+                                     return index+1;
+                                       }
 								},{
                                 field : 'title',
                                 title : '标题'

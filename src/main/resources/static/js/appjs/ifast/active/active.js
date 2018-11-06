@@ -62,11 +62,11 @@ function load() {
 									title : '' 
 								},*/
 																{
-									field : 'startttime', 
+									field : 'startTtime',
 									title : '开始时间'
 								},
 																{
-									field : 'endtime', 
+									field : 'endTime',
 									title : '结束时间'
 								},
 								/*								{

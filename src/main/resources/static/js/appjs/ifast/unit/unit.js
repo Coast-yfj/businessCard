@@ -32,8 +32,8 @@ function load() {
 							return {
 								//说明：传入后台的参数包括offset开始索引，limit步长，sort排序列，order：desc或者,以及所有列的键值对
 							     pageNumber : params.pageNumber,
-                                  pageSize : params.pageSize  
-					           // name:$('#searchName').val(),
+								 pageSize : params.pageSize,
+					             name:$('#searchName').val(),
 					           // username:$('#searchName').val()
 							};
 						},
@@ -56,7 +56,10 @@ function load() {
 								},
 																{
 									field : 'id', 
-									title : '主键' 
+									title : '主键' ,
+									formatter:function(value, row, index){
+										return index+1;
+																	}
 								},
 																{
 									field : 'name', 
@@ -87,7 +90,7 @@ function load() {
 												+ '\')"><i class="fa fa-key"></i></a> ';
                                         var h = '<a class="btn btn-success btn-sm" href="#" title="产品"  mce_href="#" onclick="productList(\''
                                             + row.id
-                                            + '\')"><i class="fa fa-key"></i></a> ';
+                                            + '\')"><i class="fa fa-bars"></i></a> ';
 										return e + d+f +h;
 									}
 								} ]

@@ -4,6 +4,7 @@ package com.ifast.controller;
 import java.util.Arrays;
 
 import com.ifast.domain.ApiUserDO;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,7 +49,14 @@ public class UnitController extends AdminBaseController {
 	public Result<Page<UnitDO>> list(UnitDO unitDTO){
         Wrapper<UnitDO> wrapper = new EntityWrapper<UnitDO>(unitDTO);
 		unitDTO.setType("0");
-        Page<UnitDO> page = unitService.selectPage(getPage(UnitDO.class), wrapper);
+		String name;
+		if(StringUtils.isEmpty(unitDTO.getName())){
+         unitDTO.setName(null);
+		}{
+			 name=unitDTO.getName();
+			 unitDTO.setName(null);
+		}
+        Page<UnitDO> page = unitService.selectPage(getPage(UnitDO.class), wrapper.like("name",name));
         return Result.ok(page);
 	}
 	@GetMapping("/black")
@@ -63,7 +71,14 @@ public class UnitController extends AdminBaseController {
 	public Result<Page<UnitDO>> blacklist(UnitDO unitDTO){
 		unitDTO.setType("1");
 		Wrapper<UnitDO> wrapper = new EntityWrapper<UnitDO>(unitDTO);
-		Page<UnitDO> page = unitService.selectPage(getPage(UnitDO.class), wrapper.orderBy("CreateTime"));
+		String name;
+		if(StringUtils.isEmpty(unitDTO.getName())){
+			unitDTO.setName(null);
+		}{
+			name=unitDTO.getName();
+			unitDTO.setName(null);
+		}
+		Page<UnitDO> page = unitService.selectPage(getPage(UnitDO.class), wrapper.like("name",name).orderBy("CreateTime"));
 		return Result.ok(page);
 	}
 	

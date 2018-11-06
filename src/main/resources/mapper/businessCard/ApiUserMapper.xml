@@ -85,8 +85,11 @@
            <if test="id!=null and id!=''">
                and t.`id`=#{id}
            </if>
+            <if test="type!=null and type!=''">
+                and t.`type`=#{type}
+            </if>
             <if test="name!=null and name!=''">
-              and  t.`name`=#{name}
+              and  t.`name` like CONCAT('%',#{name},'%')
             </if>
 
         </where>

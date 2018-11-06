@@ -69,17 +69,13 @@ function load() {
                     {
                         field: 'path',
                         title: '图片路径',
+                        align : 'center',
                         formatter: function (value, row, index) {
-                            var s;
-                            if (row.path != null) {
-                                var url = row.path;
-                                s = '<a class = "view"  href="javascript:void(0)"><img style="width:300px;height:40px;"  src="' + url + '" /></a>';
-                            }
-                            return s;
-
-                        },
-                        //定义点击之后放大图片的事件
-                        events: 'operateEvents'
+                            var a = '<a class="btn btn-success btn-sm" href="#" title="图片"  mce_href="#" onclick="getImage(\''
+                                + row.id
+                                + '\')"><i class="fa fa-bars"></i></a> ';
+                            return a;
+                        }
                     }]
             });
 }
@@ -167,6 +163,16 @@ function batchRemove() {
         });
     }, function () {
 
+    });
+}
+function getImage(id){
+    parent.layer.open({
+        type : 2,
+        title : '编辑',
+        maxmin : true,
+        shadeClose : false, // 点击遮罩关闭层
+        area : [ '800px', '520px' ],
+        content : '/ifast/product/Image?id=' + id // iframe的url
     });
 }
 

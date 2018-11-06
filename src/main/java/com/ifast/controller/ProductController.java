@@ -4,6 +4,10 @@ package com.ifast.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.ifast.api.pojo.domain.ImgDO;
+import com.ifast.api.service.ImgService;
+import com.ifast.common.annotation.Log;
+import com.ifast.oss.domain.FileDO;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +38,9 @@ import com.ifast.common.utils.Result;
 public class ProductController extends AdminBaseController {
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ImgService imgService;
 
     @GetMapping()
     @RequiresPermissions("ifast:unit:unit")
@@ -107,6 +114,24 @@ public class ProductController extends AdminBaseController {
     public Result<String> remove(@RequestParam("ids[]") Integer[] ids) {
         productService.deleteBatchIds(Arrays.asList(ids));
         return Result.ok();
+    }
+
+    @GetMapping("/Image")
+    public String  Image(Long id, Map<String, Object> model){
+        model.put("id",id.toString());
+    return "ifast/product/file";
+    }
+
+    @ResponseBody
+    @GetMapping("/ImgList")
+    public Result<Page<ImgDO>> list(Integer pageNumber, Integer pageSize, String id) {
+        // 查询列表数据
+        ImgDO imgDO=new ImgDO();
+        imgDO.setParentId(Long.parseLong(id));
+        Page<ImgDO> page = new Page<>(pageNumber, pageSize);
+        Wrapper wrapper = new EntityWrapper(imgDO);
+        page = imgService.selectPage(page, wrapper);
+        return Result.ok(page);
     }
 
 }

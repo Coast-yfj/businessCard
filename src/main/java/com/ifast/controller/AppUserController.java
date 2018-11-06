@@ -4,6 +4,7 @@ package com.ifast.controller;
 import java.util.Arrays;
 
 import com.ifast.domain.ApiUserDO;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -63,7 +64,14 @@ public class AppUserController extends AdminBaseController {
 	public Result<Page<ApiUserDO>> blacklist(ApiUserDO userDTO){
 		userDTO.setType("1");
 		Wrapper<ApiUserDO> wrapper = new EntityWrapper<>(userDTO);
-		Page<ApiUserDO> page = userService.selectPage(getPage(ApiUserDO.class), wrapper.orderBy("CreateTime"));
+		String name;
+		if(StringUtils.isEmpty(userDTO.getName())){
+			userDTO.setName(null);
+		}{
+			name=userDTO.getName();
+			userDTO.setName(null);
+		}
+		Page<ApiUserDO> page = userService.selectPage(getPage(ApiUserDO.class), wrapper.orderBy("CreateTime").like("name",name));
 		return Result.ok(page);
 	}
 	

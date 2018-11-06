@@ -32,8 +32,8 @@ function load() {
                     return {
                         //说明：传入后台的参数包括offset开始索引，limit步长，sort排序列，order：desc或者,以及所有列的键值对
                         pageNumber : params.pageNumber,
-                        pageSize : params.pageSize
-                        // name:$('#searchName').val(),
+                        pageSize : params.pageSize,
+                        name:$('#searchName').val(),
                         // username:$('#searchName').val()
                     };
                 },
@@ -56,7 +56,10 @@ function load() {
                     },
                     {
                         field : 'id',
-                        title : '主键'
+                        title : '主键',
+                        formatter:function(value, row, index){
+                            return index+1;
+                        }
                     },
                     {
                         field : 'name',
@@ -85,7 +88,7 @@ function load() {
                             var d = '<a class="btn btn-warning btn-sm '+s_remove_h+'" href="#" title="删除"  mce_href="#" onclick="remove(\''
                                 + row.id
                                 + '\')"><i class="fa fa-remove"></i></a> ';
-                            var f = '<a class="btn btn-success btn-sm" href="#" title="备用"  mce_href="#" onclick="removeBlackList(\''
+                            var f = '<a class="btn btn-success btn-sm" href="#" title="移除黑名单"  mce_href="#" onclick="removeBlackList(\''
                                 + row.id
                                 + '\')"><i class="fa fa-key"></i></a> ';
                             return e + d+f ;
