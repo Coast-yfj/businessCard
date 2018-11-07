@@ -130,8 +130,11 @@ public class ActiveController extends AdminBaseController {
 	@PostMapping( "/remove")
 	@ResponseBody
 	@RequiresPermissions("ifast:active:remove")
-	public Result<String>  remove( Integer id){
-		activeService.deleteById(id);
+	public Result<String>  remove( String id){
+		Wrapper<ActiveDO> activeDOWrapper = new EntityWrapper<>();
+		activeDOWrapper.eq("id", id);
+		activeService.delete(activeDOWrapper);
+
         return Result.ok();
 	}
 	
