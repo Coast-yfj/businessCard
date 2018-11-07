@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ifast.dao.ActiveDao">
+
+
+<select id="queryByPage" resultType="com.ifast.api.pojo.domain.ActiveDO">
+        SELECT t.*,a.num FROM app_active  t LEFT JOIN (SELECT COUNT(id) num,activeId FROM app_active_user GROUP BY activeId) a ON a.activeId=t.`id`
+</select>
+
+</mapper>

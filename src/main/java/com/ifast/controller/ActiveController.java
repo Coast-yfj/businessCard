@@ -67,8 +67,9 @@ public class ActiveController extends AdminBaseController {
 		if (StringUtils.isBlank(activeDTO.getCounty())){
         	activeDTO.setCounty(null);
 		}
-        Page<ActiveDO> page = activeService.selectPage(getPage(ActiveDO.class), wrapper);
-        return Result.ok(page);
+        //Page<ActiveDO> page = activeService.selectPage(getPage(ActiveDO.class), wrapper);
+		Page<ActiveDO> page =activeService.queryByPage(getPage(ActiveDO.class),activeDTO);
+		return Result.ok(page);
 	}
 	
 	@GetMapping("/add")

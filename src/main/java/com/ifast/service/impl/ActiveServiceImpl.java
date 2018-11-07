@@ -1,5 +1,6 @@
 package com.ifast.service.impl;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.ifast.api.pojo.domain.ActiveDO;
 import com.ifast.common.base.CoreServiceImpl;
 import com.ifast.dao.ActiveDao;
@@ -31,5 +32,17 @@ public class ActiveServiceImpl extends CoreServiceImpl<ActiveDao, ActiveDO> impl
     @Override
     public List<String> qu( ) {
         return baseMapper.qu();
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param page
+     * @param activeDO
+     * @return
+     */
+    @Override
+    public Page<ActiveDO> queryByPage(Page page, ActiveDO activeDO) {
+        return page.setRecords(baseMapper.queryByPage(page,activeDO));
     }
 }

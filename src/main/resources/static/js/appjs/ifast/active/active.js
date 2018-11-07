@@ -77,6 +77,7 @@ function load() {
 									field : 'title', 
 									title : '标题'
 								},
+
 																{
 									field : 'province', 
 									title : '省'
@@ -88,7 +89,10 @@ function load() {
 																{
 									field : 'county', 
 									title : '区'
-								},
+								}, {
+                                field : 'num',
+                                title : '参与人数'
+                                },
 																{
 									field : 'type', 
 									title : '类型'

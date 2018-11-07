@@ -44,6 +44,12 @@ public class ActiveDO implements Serializable {
     //0：未暂停，1：已暂停
     private String stop;
 
+    /**
+     * 参加人数
+     */
+    @TableField(exist = false)
+    private String num;
+
     @TableField(exist = false)
     private List<Long> imgIds;
 
@@ -64,6 +70,15 @@ public class ActiveDO implements Serializable {
     //当前时间
     @TableField(exist = false)
     private String day;
+
+
+    public String getNum() {
+        return num;
+    }
+
+    public void setNum(String num) {
+        this.num = num;
+    }
 
     public Long getId() {
         return id;

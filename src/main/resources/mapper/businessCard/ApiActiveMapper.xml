@@ -94,6 +94,8 @@
               from app_image p where p.parentId = #{id}
     </select>
 
-
+<select id="queryByPage" resultType="com.ifast.api.pojo.domain.ActiveDO">
+        SELECT t.*,a.num FROM app_active  t LEFT JOIN (SELECT COUNT(id) num,activeId FROM app_active_user GROUP BY activeId) a ON a.activeId=t.`id`
+</select>
 
 </mapper>
