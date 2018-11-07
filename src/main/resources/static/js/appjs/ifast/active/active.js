@@ -36,7 +36,8 @@ function load() {
 					            title:$('#searchName').val(),
 								province:$("#province").val(),
 								city:$("#city").val(),
-                                county:$("#county").val()
+                                county:$("#county").val(),
+								type:$("#type").val()
 					           // username:$('#searchName').val()
 							};
 						},

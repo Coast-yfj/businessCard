@@ -4,8 +4,21 @@
 <mapper namespace="com.ifast.dao.ActiveDao">
 
 
-<select id="queryByPage" resultType="com.ifast.api.pojo.domain.ActiveDO">
+<select id="queryByPage" parameterType="com.ifast.api.pojo.domain.ActiveDO" resultType="com.ifast.api.pojo.domain.ActiveDO">
         SELECT t.*,a.num FROM app_active  t LEFT JOIN (SELECT COUNT(id) num,activeId FROM app_active_user GROUP BY activeId) a ON a.activeId=t.`id`
+where 1=1
+        <if test="type!=null and type !=''">
+        and t.type  = #{type}
+        </if>
+        <if test="province!=null and province !=''">
+                and t.province  = #{province}
+        </if>
+        <if test="city!=null and city !=''">
+                and t.city  = #{city}
+        </if>
+        <if test="county!=null and county !=''">
+                and t.county  = #{county}
+        </if>
 </select>
 
 </mapper>

@@ -48,6 +48,14 @@
 								</th:block>
 							</select>
 						</div>
+						<div class="columns pull-right col-md-2 nopadding">
+							<select id="type" name=""  class="form-control">
+								<option value="">类型</option>
+								<th:block th:each="item:${type}">
+									<option th:value="${item.value}" th:text="${item.value}"></option>
+								</th:block>
+							</select>
+						</div>
 					</div>
 					<table id="exampleTable" data-mobile-responsive="true">
 					</table>

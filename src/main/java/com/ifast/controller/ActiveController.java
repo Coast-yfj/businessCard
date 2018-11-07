@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ifast.api.pojo.domain.ActiveDO;
 import com.ifast.common.base.AdminBaseController;
+import com.ifast.common.domain.DictDO;
+import com.ifast.common.service.DictService;
 import com.ifast.common.utils.Result;
 import com.ifast.service.ActiveService;
 import org.apache.commons.lang3.StringUtils;
@@ -21,9 +23,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * 
+ *
  * <pre>
- * 
+ *
  * </pre>
  * <small> 2018-08-29 22:44:49 | Aron</small>
  */
@@ -32,7 +34,9 @@ import java.util.Objects;
 public class ActiveController extends AdminBaseController {
 	@Autowired
 	private ActiveService activeService;
-	
+	@Autowired
+	private DictService dictService;
+
 	@GetMapping()
 	@RequiresPermissions("ifast:active:active")
 	ModelAndView Active(){
@@ -44,9 +48,13 @@ public class ActiveController extends AdminBaseController {
 		modelAndView.addObject("sheng", sheng);
 		modelAndView.addObject("shi", shi);
 		modelAndView.addObject("qu", qu);
+		Wrapper<DictDO> wrapper = new EntityWrapper<>();
+		wrapper.eq("type", "active");
+		List<DictDO> types = this.dictService.selectList(wrapper);
+		modelAndView.addObject("type", types);
 		return modelAndView;
 	}
-	
+
 	@ResponseBody
 	@GetMapping("/list")
 	@RequiresPermissions("ifast:active:active")
@@ -66,6 +74,9 @@ public class ActiveController extends AdminBaseController {
 		}
 		if (StringUtils.isBlank(activeDTO.getCounty())){
         	activeDTO.setCounty(null);
+		}
+		if (StringUtils.isBlank(activeDTO.getType())){
+			activeDTO.setType(null);
 		}
         //Page<ActiveDO> page = activeService.selectPage(getPage(ActiveDO.class), wrapper);
 		Page<ActiveDO> page =activeService.queryByPage(getPage(ActiveDO.class),activeDTO);

@@ -68,7 +68,7 @@ function load() {
                                       var s;
                                        if (row.path != null) {
                                           var url = row.path;
-                                              s = '<a class = "view"  href="javascript:void(0)"><img style="width:300px;height:40px;"  src="' + url + '" /></a>';
+                                              s = '<a class = "view"  href="javascript:void(0)"><img style="width:80px;height:40px;"  src="' + url + '" /></a>';
                                             }
                                              return s;
                               },

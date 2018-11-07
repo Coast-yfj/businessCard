@@ -7,7 +7,7 @@ server:
   tomcat:
     max-threads: 1000
     min-spare-threads: 30
-  port: 443
+  port: 8443
   uri-encoding: utf-8
   ssl:
     key-store: classpath:mingpian.jks
@@ -26,7 +26,7 @@ spring:
     generator:
       WRITE_NUMBERS_AS_STRINGS: true    
   profiles:
-    active: prod
+    active: dev
   http:
     multipart:
       max-file-size: 30Mb
