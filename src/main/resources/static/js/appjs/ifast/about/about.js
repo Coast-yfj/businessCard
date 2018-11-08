@@ -68,7 +68,7 @@ function load() {
                                       var s;
                                        if (row.path != null) {
                                           var url = row.path;
-                                              s = '<a class = "view"  href="javascript:void(0)"><img style="width:80px;height:40px;"  src="' + url + '" /></a>';
+                                              s = '<a class = "view"  href="javascript:void(0)"><img style="width:40px;height:40px;"  src="' + url + '" /></a>';
                                             }
                                              return s;
                               },
@@ -185,10 +185,10 @@ window.operateEvents = {
         layer.open({
             type: 1,
             title: false,
-            area: ['700px', '600px'],
+            area: ['600px', '500px'],
             skin: 'layui-layer-nobg', //没有背景色
             shadeClose: true,
-            content: '<img  src="' + url + '"/>'
+            content: '<img  style="top:40%;left: 40%; position: absolute;margin-top: -25px;margin-left: -25px;" src="' + url + '"/>'
         });
     }
 }

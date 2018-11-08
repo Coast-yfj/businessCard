@@ -145,10 +145,10 @@ function load() {
 										var d = '<a class="btn btn-warning btn-sm '+s_remove_h+'" href="#" title="删除"  mce_href="#" onclick="remove(\''
 												+ row.id
 												+ '\')"><i class="fa fa-remove"></i></a> ';
-										var f = '<a class="btn btn-success btn-sm" href="#" title="备用"  mce_href="#" onclick="resetPwd(\''
+										var f = '<a class="btn btn-success btn-sm" href="#" title="活动图片"  mce_href="#" onclick="getImage(\''
 												+ row.id
-												+ '\')"><i class="fa fa-key"></i></a> ';
-										return e+d  ;
+												+ '\')"><i class="fa fa-bars"></i></a> ';
+										return e+d+f  ;
 									}
 								} ]
 					});
@@ -156,6 +156,18 @@ function load() {
 function reLoad() {
 	$('#exampleTable').bootstrapTable('refresh');
 }
+
+function getImage(id){
+    parent.layer.open({
+        type : 2,
+        title : '编辑',
+        maxmin : true,
+        shadeClose : false, // 点击遮罩关闭层
+        area : [ '800px', '520px' ],
+        content : '/ifast/product/Image?id=' + id // iframe的url
+    });
+}
+
 function add() {
 	layer.open({
 		type : 2,

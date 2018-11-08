@@ -64,7 +64,20 @@ function load() {
 																{
 									field : 'name', 
 									title : '姓名' 
-								},
+								},{
+							field:'avatarUrl',
+							title:'头像', formatter: function (value, row, index) {
+                                    var s;
+                                    debugger
+                                    if (row.avatarUrl != null) {
+                                        var url = row.avatarUrl;
+                                        s = '<a class = "view"  href="javascript:void(0)"><img style="width:40px;height:40px;"  src="' + url + '" /></a>';
+                                    }
+                                    return s;
+                                },
+                                //定义点击之后放大图片的事件
+                                events: 'operateEvents'
+							},
 																{
 									field : 'unionid', 
 									title : '公司名称' ,
@@ -75,7 +88,27 @@ function load() {
 											return "";
 										}
                                       }
-								},
+								},{
+                                field : 'scale',
+                                title : '公司规模' ,
+                                formatter: function (value, row, index) {
+                                    if(row.unitDO!=null){
+                                        return row.unitDO.scale;
+                                    }else {
+                                        return "";
+                                    }
+                                }
+							},{
+                               field:'introduction' ,
+								title:'简介',
+                                formatter: function (value, row, index) {
+                                    if(row.unitDO!=null){
+                                        return row.unitDO.introduction;
+                                    }else {
+                                        return "";
+                                    }
+                                }
+							},
 																{
 									field : 'position', 
 									title : '职位' 
@@ -106,16 +139,19 @@ function load() {
 									field : 'id',
 									align : 'center',
 									formatter : function(value, row, index) {
-										var e = '<a class="btn btn-primary btn-sm '+s_edit_h+'" href="#" mce_href="#" title="编辑" onclick="edit(\''
-												+ row.id
-												+ '\')"><i class="fa fa-edit"></i></a> ';
+                                        var e="";
+                                        if(row.unitDO!=null){
+                                             e = '<a class="btn btn-primary btn-sm '+s_edit_h+'" href="#" mce_href="#" title="产品信息" onclick="productList(\''
+                                                + row.unitDO.id
+                                                + '\')"><i class="fa fa-bars"></i></a> ';
+                                        }
 										var d = '<a class="btn btn-warning btn-sm '+s_remove_h+'" href="#" title="删除"  mce_href="#" onclick="remove(\''
 												+ row.id
 												+ '\')"><i class="fa fa-remove"></i></a> ';
 										var f = '<a class="btn btn-success btn-sm" href="#" title="加入黑名单"  mce_href="#" onclick="addBlackList(\''
 												+ row.id
 												+ '\')"><i class="fa fa-key"></i></a> ';
-										return f;
+										return e+f;
 									}
 								} ]
 					});
@@ -123,6 +159,18 @@ function load() {
 function reLoad() {
 	$('#exampleTable').bootstrapTable('refresh');
 }
+
+function productList(id) {
+    layer.open({
+        type : 2,
+        title : '编辑',
+        maxmin : true,
+        shadeClose : false, // 点击遮罩关闭层
+        area : [ '800px', '520px' ],
+        content : '/ifast/product?id=' + id // iframe的url
+    });
+}
+
 function add() {
 	layer.open({
 		type : 2,
@@ -219,4 +267,18 @@ function batchRemove() {
 	}, function() {
 
 	});
+}
+
+window.operateEvents = {
+    'click .view': function (e, value, row, index) {
+        var url = row.avatarUrl;
+        layer.open({
+            type: 1,
+            title: false,
+            area: ['600px', '500px'],
+            skin: 'layui-layer-nobg', //没有背景色
+            shadeClose: true,
+            content: '<img  style="top:40%;left: 40%; position: absolute;margin-top: -25px;margin-left: -25px;" src="' + url + '"/>'
+        });
+    }
 }

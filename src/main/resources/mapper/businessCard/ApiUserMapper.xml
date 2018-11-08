@@ -72,6 +72,7 @@
   t.`email`,
   t.`name`,
   t.`phone`,
+  t.`avatarUrl`,
   t.`position`,
   t.`qq`,
   t.`WeChat`,

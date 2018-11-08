@@ -68,7 +68,7 @@ function load() {
                     },
                     {
                         field: 'path',
-                        title: '图片路径',
+                        title: '图片',
                         align : 'center',
                         formatter: function (value, row, index) {
                             var a = '<a class="btn btn-success btn-sm" href="#" title="图片"  mce_href="#" onclick="getImage(\''
