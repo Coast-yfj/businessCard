@@ -1,5 +1,5 @@
 
-var prefix = "/ifast/active"
+var prefix = "/ifast/user"
 $(function() {
 	load();
 });
@@ -9,7 +9,7 @@ function load() {
 			.bootstrapTable(
 					{
 						method : 'get', // 服务器数据的请求方式 get or post
-						url : prefix + "/list", // 服务器数据的加载地址
+						url :   "/ifast/active/user/list", // 服务器数据的加载地址
 					//	showRefresh : true,
 					//	showToggle : true,
 					//	showColumns : true,
@@ -32,12 +32,8 @@ function load() {
 							return {
 								//说明：传入后台的参数包括offset开始索引，limit步长，sort排序列，order：desc或者,以及所有列的键值对
 							     pageNumber : params.pageNumber,
-                                  pageSize : params.pageSize  ,
-					            title:$('#searchName').val(),
-								province:$("#province").val(),
-								city:$("#city").val(),
-                                county:$("#county").val(),
-								type:$("#type").val()
+								 pageSize : params.pageSize  ,
+					             activeId:$('#activeId').val()
 					           // username:$('#searchName').val()
 							};
 						},
@@ -58,101 +54,104 @@ function load() {
 								{
 									checkbox : true
 								},
-										/*						{
+																{
 									field : 'id', 
-									title : '' 
-								},*/
-																{
-									field : 'startTtime',
-									title : '开始时间'
+									title : '主键' ,
+                                    formatter:function(value,row,index){
+										return index+1;
+                                                                    }
 								},
 																{
-									field : 'endTime',
-									title : '结束时间'
-								},
-								/*								{
-									field : 'createuserid', 
-									title : '' 
-								},*/
-																{
-									field : 'title', 
-									title : '标题'
-								},
-
-																{
-									field : 'province', 
-									title : '省'
-								},
-																{
-									field : 'city', 
-									title : '市'
-								},
-																{
-									field : 'county', 
-									title : '区'
-								}, {
-                                field : 'num',
-                                title : '参与人数',
-                                formatter:function (value, row, index) {
-                                    var a = "<a href='javascript:;' onclick='seerenyuan(\""+row.id+"\")'>"+value+"</a>";
-                                    return a;
-                                }
+									field : 'name', 
+									title : '姓名' 
+								},{
+							field:'avatarUrl',
+							title:'头像', formatter: function (value, row, index) {
+                                    var s;
+                                    debugger
+                                    if (row.avatarUrl != null) {
+                                        var url = row.avatarUrl;
+                                        s = '<a class = "view"  href="javascript:void(0)"><img style="width:40px;height:40px;"  src="' + url + '" /></a>';
+                                    }
+                                    return s;
                                 },
+                                //定义点击之后放大图片的事件
+                                events: 'operateEvents'
+							},
 																{
-									field : 'type', 
-									title : '类型'
+									field : 'unionid', 
+									title : '公司名称' ,
+                                     formatter: function (value, row, index) {
+										if(row.unitDO!=null){
+                                            return row.unitDO.name;
+                                        }else {
+											return "";
+										}
+                                      }
+								},{
+                                field : 'scale',
+                                title : '公司规模' ,
+                                formatter: function (value, row, index) {
+                                    if(row.unitDO!=null){
+                                        return row.unitDO.scale;
+                                    }else {
+                                        return "";
+                                    }
+                                }
+							},{
+                               field:'introduction' ,
+								title:'简介',
+                                formatter: function (value, row, index) {
+                                    if(row.unitDO!=null){
+                                        return row.unitDO.introduction;
+                                    }else {
+                                        return "";
+                                    }
+                                }
+							},
+																{
+									field : 'position', 
+									title : '职位' 
 								},
 																{
-									field : 'content', 
-									title : '内容'
+									field : 'phone', 
+									title : '电话' 
 								},
 																{
-									field : 'createtime', 
-									title : '创建时间'
+									field : 'wechat', 
+									title : '微信' 
 								},
 																{
-									field : 'longitude', 
-									title : '经度'
+									field : 'qq', 
+									title : 'QQ' 
 								},
 																{
-									field : 'latitude', 
-									title : '纬度'
+									field : 'email', 
+									title : '邮箱' 
 								},
 																{
 									field : 'address', 
-									title : '详细地址'
+									title : '地址' 
 								},
-																{
-									field : 'stop', 
-									title : '状态',
-									formatter:function (value, row, index) {
-                                        if(row.stop==0){
-                                            return  "开启";
-                                        }else{
-                                           return  "关闭";
-                                        }
-                                    }
-								},
+
 																{
 									title : '操作',
 									field : 'id',
 									align : 'center',
 									formatter : function(value, row, index) {
-                                        if(row.stop==0){
-                                        	vtitle = "关闭";
-										}else{
-                                        	vtitle = "开启";
-										}
-										var e = '<a class="btn btn-primary btn-sm '+s_edit_h+'" href="#" mce_href="#" title="'+vtitle+'" onclick="update(\''
-												+ row.id
-												+ '\')"><i class="fa fa-edit"></i></a> ';
+                                        var e="";
+                                        if(row.unitDO!=null){
+                                             e = '<a class="btn btn-primary btn-sm '+s_edit_h+'" href="#" mce_href="#" title="产品信息" onclick="productList(\''
+                                                + row.unitDO.id
+                                                + '\')"><i class="fa fa-bars"></i></a> ';
+                                        }
 										var d = '<a class="btn btn-warning btn-sm '+s_remove_h+'" href="#" title="删除"  mce_href="#" onclick="remove(\''
 												+ row.id
 												+ '\')"><i class="fa fa-remove"></i></a> ';
-										var f = '<a class="btn btn-success btn-sm" href="#" title="活动图片"  mce_href="#" onclick="getImage(\''
+										var f = '<a class="btn btn-success btn-sm" href="#" title="加入黑名单"  mce_href="#" onclick="addBlackList(\''
 												+ row.id
-												+ '\')"><i class="fa fa-bars"></i></a> ';
-										return e+d+f  ;
+												+ '\')"><i class="fa fa-key"></i></a> ';
+										return e;
 									}
 								} ]
 					});
@@ -161,14 +160,14 @@ function reLoad() {
 	$('#exampleTable').bootstrapTable('refresh');
 }
 
-function getImage(id){
-    parent.layer.open({
+function productList(id) {
+    layer.open({
         type : 2,
         title : '编辑',
         maxmin : true,
         shadeClose : false, // 点击遮罩关闭层
         area : [ '800px', '520px' ],
-        content : '/ifast/product/Image?id=' + id // iframe的url
+        content : '/ifast/product?id=' + id // iframe的url
     });
 }
 
@@ -182,30 +181,7 @@ function add() {
 		content : prefix + '/add' // iframe的url
 	});
 }
-function update(id) {
-    $.ajax({
-        cache : true,
-        type : "POST",
-        url : "/ifast/active/update",
-        data : {id,id},// 你的formid
-        async : false,
-        error : function(request) {
-            layer.alert("Connection error");
-        },
-        success : function(data) {
-            if (data.code == 0) {
-                layer.msg("操作成功");
-                reLoad();
-
-            } else {
-                layer.alert(data.msg)
-            }
-
-        }
-    });
-
-}
-/*function edit(id) {
+function edit(id) {
 	layer.open({
 		type : 2,
 		title : '编辑',
@@ -214,7 +190,7 @@ function update(id) {
 		area : [ '800px', '520px' ],
 		content : prefix + '/edit/' + id // iframe的url
 	});
-}*/
+}
 function remove(id) {
 	layer.confirm('确定要删除选中的记录？', {
 		btn : [ '确定', '取消' ]
@@ -237,7 +213,26 @@ function remove(id) {
 	})
 }
 
-function resetPwd(id) {
+function addBlackList(id) {
+    layer.confirm('确定加入黑名单？', {
+        btn : [ '确定', '取消' ]
+    }, function() {
+        $.ajax({
+            url : prefix+"/addBlackList",
+            type : "post",
+            data : {
+                'id' : id
+            },
+            success : function(r) {
+                if (r.code==0) {
+                    layer.msg(r.msg);
+                    reLoad();
+                }else{
+                    layer.msg(r.msg);
+                }
+            }
+        });
+    })
 }
 function batchRemove() {
 	var rows = $('#exampleTable').bootstrapTable('getSelections'); // 返回所有选择的行，当没有选择的记录时，返回一个空数组
@@ -274,15 +269,16 @@ function batchRemove() {
 	});
 }
 
-
-
-function seerenyuan(id) {
-    layer.open({
-        type : 2,
-        title : '增加',
-        maxmin : true,
-        shadeClose : false, // 点击遮罩关闭层
-        area : [ '800px', '520px' ],
-        content : prefix + '/renyuan?activeId='+id // iframe的url
-    });
+window.operateEvents = {
+    'click .view': function (e, value, row, index) {
+        var url = row.avatarUrl;
+        layer.open({
+            type: 1,
+            title: false,
+            area: ['600px', '500px'],
+            skin: 'layui-layer-nobg', //没有背景色
+            shadeClose: true,
+            content: '<img  style="top:40%;left: 40%; position: absolute;margin-top: -25px;margin-left: -25px;" src="' + url + '"/>'
+        });
+    }
 }

@@ -9,7 +9,10 @@ import com.ifast.common.base.AdminBaseController;
 import com.ifast.common.domain.DictDO;
 import com.ifast.common.service.DictService;
 import com.ifast.common.utils.Result;
+import com.ifast.domain.ApiUserDO;
 import com.ifast.service.ActiveService;
+import com.ifast.service.UnitService;
+import com.ifast.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +40,8 @@ public class ActiveController extends AdminBaseController {
 	private ActiveService activeService;
 	@Autowired
 	private DictService dictService;
+	@Resource(name="apiService")
+	private UserService userService;
 
 	@GetMapping()
 	@RequiresPermissions("ifast:active:active")
@@ -147,6 +153,23 @@ public class ActiveController extends AdminBaseController {
 	public Result<String>  remove(@RequestParam("ids[]") Integer[] ids){
 		activeService.deleteBatchIds(Arrays.asList(ids));
 		return Result.ok();
+	}
+
+	@RequestMapping("/renyuan")
+	@ResponseBody
+	public ModelAndView   user(String activeId){
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("ifast/active/user");
+		modelAndView.addObject("activeId", activeId);return modelAndView;
+	}
+
+	@ResponseBody
+	@GetMapping("/user/list")
+	@RequiresPermissions("ifast:user:user")
+	public Result<Page<ApiUserDO>> list(ApiUserDO userDTO){
+		userDTO.setType("0");
+		Page<ApiUserDO> page = userService.queryUserPage(getPage(ApiUserDO.class),userDTO);
+		return Result.ok(page);
 	}
 	
 }

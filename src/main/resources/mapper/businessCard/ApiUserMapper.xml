@@ -92,7 +92,9 @@
             <if test="name!=null and name!=''">
               and  t.`name` like CONCAT('%',#{name},'%')
             </if>
-
+            <if test="activeId!=null and activeId !=''">
+                and t.id in (select userId from app_active_user t  where t.activeId = #{activeId})
+            </if>
         </where>
     </select>
 
@@ -132,6 +134,7 @@
         <if test="name!=null and name !=''">
             and t.name like concat('%',concat(#{name},'%'))
         </if>
+
                     order by b.attention desc , t.`name` asc
     </select>
 </mapper>

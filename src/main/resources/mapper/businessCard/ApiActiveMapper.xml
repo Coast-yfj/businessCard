@@ -95,7 +95,7 @@
     </select>
 
 <select id="queryByPage" resultType="com.ifast.api.pojo.domain.ActiveDO">
-        SELECT t.*,a.num FROM app_active  t LEFT JOIN (SELECT COUNT(id) num,activeId FROM app_active_user GROUP BY activeId) a ON a.activeId=t.`id`
+        SELECT t.*,  COALESCE(a.num,0) FROM app_active  t LEFT JOIN (SELECT COUNT(id) num,activeId FROM app_active_user GROUP BY activeId) a ON a.activeId=t.`id`
 </select>
 
 </mapper>

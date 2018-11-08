@@ -134,6 +134,9 @@ public class ApiUserDO implements Serializable {
     @TableField(exist = false)
     private UnitDO unitDO;
 
+    @TableField(exist = false)
+    private String activeId;
+
     public String getType() {
         return type;
     }
@@ -397,5 +400,13 @@ public class ApiUserDO implements Serializable {
 
     public void setLatitude(String latitude) {
         this.latitude = latitude;
+    }
+
+    public String getActiveId() {
+        return activeId;
+    }
+
+    public void setActiveId(String activeId) {
+        this.activeId = activeId;
     }
 }
