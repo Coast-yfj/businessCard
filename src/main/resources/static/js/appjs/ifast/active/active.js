@@ -94,6 +94,7 @@ function load() {
                                 field : 'num',
                                 title : '参与人数',
                                 formatter:function (value, row, index) {
+                                	if(value==null) value=0;
                                     var a = "<a href='javascript:;' onclick='seerenyuan(\""+row.id+"\")'>"+value+"</a>";
                                     return a;
                                 }
