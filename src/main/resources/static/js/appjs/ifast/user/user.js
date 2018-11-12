@@ -145,13 +145,16 @@ function load() {
                                                 + row.unitDO.id
                                                 + '\')"><i class="fa fa-bars"></i></a> ';
                                         }
+                                        var a='<a class="btn btn-primary btn-sm '+s_edit_h+'" href="#" mce_href="#" title="编辑" onclick="edit(\''
+                                            + row.id
+                                            + '\')"><i class="fa fa-edit"></i></a> ';
 										var d = '<a class="btn btn-warning btn-sm '+s_remove_h+'" href="#" title="删除"  mce_href="#" onclick="remove(\''
 												+ row.id
 												+ '\')"><i class="fa fa-remove"></i></a> ';
 										var f = '<a class="btn btn-success btn-sm" href="#" title="加入黑名单"  mce_href="#" onclick="addBlackList(\''
 												+ row.id
 												+ '\')"><i class="fa fa-key"></i></a> ';
-										return e+f;
+										return e+a+d+f;
 									}
 								} ]
 					});

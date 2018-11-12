@@ -4,6 +4,7 @@ package com.ifast.controller;
 import java.util.Arrays;
 
 import com.ifast.domain.ApiUserDO;
+import com.ifast.service.UnitService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ import javax.annotation.Resource;
 public class AppUserController extends AdminBaseController {
 	@Resource(name="apiService")
 	private UserService userService;
+
+	@Autowired
+	private UnitService unitService;
 	
 	@GetMapping()
 	@RequiresPermissions("ifast:user:user")
@@ -84,7 +88,7 @@ public class AppUserController extends AdminBaseController {
 	@GetMapping("/edit/{id}")
 	@RequiresPermissions("ifast:user:edit")
 	String edit(@PathVariable("id") Long id,Model model){
-		ApiUserDO user = userService.selectById(id);
+		ApiUserDO user = userService.queryById(String.valueOf(id));
 		model.addAttribute("user", user);
 	    return "ifast/user/edit";
 	}
@@ -107,6 +111,7 @@ public class AppUserController extends AdminBaseController {
 	@RequiresPermissions("ifast:user:edit")
 	public Result<String>  update( ApiUserDO user){
 		userService.updateById(user);
+		unitService.updateById(user.getUnitDO());
 		return Result.ok();
 	}
 	
