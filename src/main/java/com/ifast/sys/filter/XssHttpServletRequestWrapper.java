@@ -30,14 +30,17 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     */  
     @Override  
     public String getParameter(String name) {
+        SensitiveService  sensitiveService= new SensitiveService();
         Boolean flag = ("content".equals(name) || name.endsWith("WithHtml"));
         if( flag && !isIncludeRichText){
             return super.getParameter(name);
         }
         name = JsoupUtil.clean(name);
+        name= sensitiveService.filter(name);
         String value = super.getParameter(name);  
         if (StringUtils.isNotBlank(value)) {
-            value = JsoupUtil.clean(value);  
+            value = JsoupUtil.clean(value);
+            value= sensitiveService.filter(value);
         }
         return value;  
     }  

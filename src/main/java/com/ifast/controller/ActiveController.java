@@ -70,9 +70,9 @@ public class ActiveController extends AdminBaseController {
 	@RequiresPermissions("ifast:active:active")
 	public Result<Page<ActiveDO>> list(ActiveDO activeDTO){
         Wrapper<ActiveDO> wrapper = new EntityWrapper<ActiveDO>(activeDTO);
-        if(StringUtils.isNotBlank(activeDTO.getTitle())){
+      /*  if(StringUtils.isNotBlank(activeDTO.getTitle())){
 			wrapper.like("title", activeDTO.getTitle());
-			activeDTO.setTitle(null);
+//			activeDTO.setTitle(null);
 		}else {
         	activeDTO.setTitle(null);
 		}
@@ -87,7 +87,7 @@ public class ActiveController extends AdminBaseController {
 		}
 		if (StringUtils.isBlank(activeDTO.getType())){
 			activeDTO.setType(null);
-		}
+		}*/
         //Page<ActiveDO> page = activeService.selectPage(getPage(ActiveDO.class), wrapper);
 		Page<ActiveDO> page =activeService.queryByPage(getPage(ActiveDO.class),activeDTO);
 		return Result.ok(page);

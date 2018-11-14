@@ -27,6 +27,11 @@ public class SensitiveService implements InitializingBean {
      */
     private static final String DEFAULT_REPLACEMENT = "*";
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+
+    }
+
     private class TrieNode {
 
         /**
@@ -71,7 +76,7 @@ public class SensitiveService implements InitializingBean {
     /**
      * 根节点
      */
-    private TrieNode rootNode = new TrieNode();
+    private  TrieNode rootNode = new TrieNode();
 
 
     /**
@@ -88,6 +93,22 @@ public class SensitiveService implements InitializingBean {
      * 过滤敏感词
      */
     public String filter(String text) {
+        rootNode = new TrieNode();
+
+        try {
+            InputStream is = Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("SensitiveWords.txt");
+            InputStreamReader read = new InputStreamReader(is);
+            BufferedReader bufferedReader = new BufferedReader(read);
+            String lineTxt;
+            while ((lineTxt = bufferedReader.readLine()) != null) {
+                lineTxt = lineTxt.trim();
+                addWord(lineTxt);
+            }
+            read.close();
+        } catch (Exception e) {
+            logger.error("读取敏感词文件失败" + e.getMessage());
+        }
         if (StringUtils.isBlank(text)) {
             return text;
         }
@@ -164,44 +185,26 @@ public class SensitiveService implements InitializingBean {
     }
 
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        rootNode = new TrieNode();
 
-        try {
-            InputStream is = Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream("SensitiveWords.txt");
-            InputStreamReader read = new InputStreamReader(is);
-            BufferedReader bufferedReader = new BufferedReader(read);
-            String lineTxt;
-            while ((lineTxt = bufferedReader.readLine()) != null) {
-                lineTxt = lineTxt.trim();
-                addWord(lineTxt);
-            }
-            read.close();
-        } catch (Exception e) {
-            logger.error("读取敏感词文件失败" + e.getMessage());
-        }
-    }
 
     public static void main(String[] argv) {
         SensitiveService s = new SensitiveService();
 //        s.addWord("色情");
 //        s.addWord("赌博");
-        try {
-            InputStream is = Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream("SensitiveWords.txt");
-            InputStreamReader read = new InputStreamReader(is);
-            BufferedReader bufferedReader = new BufferedReader(read);
-            String lineTxt;
-            while ((lineTxt = bufferedReader.readLine()) != null) {
-                lineTxt = lineTxt.trim();
-                s.addWord(lineTxt);
-            }
-            read.close();
-        } catch (Exception e) {
-            logger.error("读取敏感词文件失败" + e.getMessage());
-        }
+//        try {
+//            InputStream is = Thread.currentThread().getContextClassLoader()
+//                    .getResourceAsStream("SensitiveWords.txt");
+//            InputStreamReader read = new InputStreamReader(is);
+//            BufferedReader bufferedReader = new BufferedReader(read);
+//            String lineTxt;
+//            while ((lineTxt = bufferedReader.readLine()) != null) {
+//                lineTxt = lineTxt.trim();
+//                s.addWord(lineTxt);
+//            }
+//            read.close();
+//        } catch (Exception e) {
+//            logger.error("读取敏感词文件失败" + e.getMessage());
+//        }
         System.out.print(s.filter("你好色情赌博"));
 
     }
