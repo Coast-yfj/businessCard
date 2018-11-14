@@ -68,5 +68,10 @@ public interface UserService extends CoreService<ApiUserDO> {
 
      Map<String, String> getUserInfo(String encryptedData, String sessionKey, String iv) throws Exception;
 
+    /**
+     * 总人数
+     * @return
+     */
+     int getCount();
 
 }

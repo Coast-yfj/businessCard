@@ -44,7 +44,9 @@ public class AppUserController extends AdminBaseController {
 	
 	@GetMapping()
 	@RequiresPermissions("ifast:user:user")
-	String User(){
+	String User(Model model){
+		int count = userService.getCount();
+		model.addAttribute("count", count);
 	    return "ifast/user/user";
 	}
 

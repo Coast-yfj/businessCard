@@ -228,4 +228,9 @@ public class UserServiceImpl extends CoreServiceImpl<ApiUserDao, ApiUserDO> impl
         }
         return list;
     }
+
+    @Override
+    public int getCount() {
+        return this.baseMapper.getCount();
+    }
 }

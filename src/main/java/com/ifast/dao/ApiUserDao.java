@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.ifast.domain.ApiUserDO;
 import com.ifast.common.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
@@ -38,4 +39,7 @@ public interface ApiUserDao extends BaseDao<ApiUserDO> {
      * @return
      */
     List<ApiUserDO> queryByIds(@Param("id") String id,@Param("attention") String attention,@Param("name")String name);
+
+    @Select("SELECT count(1) FROM `tb_user`")
+    int getCount();
 }

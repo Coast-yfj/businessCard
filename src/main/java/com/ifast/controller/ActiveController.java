@@ -4,6 +4,7 @@ package com.ifast.controller;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.ifast.api.dao.ApiActiveDao;
 import com.ifast.api.pojo.domain.ActiveDO;
 import com.ifast.common.base.AdminBaseController;
 import com.ifast.common.domain.DictDO;
@@ -58,6 +59,9 @@ public class ActiveController extends AdminBaseController {
 		wrapper.eq("type", "active");
 		List<DictDO> types = this.dictService.selectList(wrapper);
 		modelAndView.addObject("type", types);
+		Wrapper<ActiveDO> wrapper1 = new EntityWrapper<>();
+		int count = this.activeService.selectCount(wrapper1);
+		modelAndView.addObject("count", count);
 		return modelAndView;
 	}
 
