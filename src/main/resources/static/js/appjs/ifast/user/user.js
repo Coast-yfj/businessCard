@@ -63,12 +63,15 @@ function load() {
 								},
 																{
 									field : 'name', 
-									title : '姓名' 
+									title : '姓名' ,
+									formatter:function (value, row, index) {
+                                        var s = "<p style='width: 80px;word-break:break-all'>"+value+"</p>";
+                                        return s;
+                                    }
 								},{
 							field:'avatarUrl',
 							title:'头像', formatter: function (value, row, index) {
                                     var s;
-                                    debugger
                                     if (row.avatarUrl != null) {
                                         var url = row.avatarUrl;
                                         s = '<a class = "view"  href="javascript:void(0)"><img style="width:40px;height:40px;"  src="' + url + '" /></a>';
@@ -82,8 +85,10 @@ function load() {
 									field : 'unionid', 
 									title : '公司名称' ,
                                      formatter: function (value, row, index) {
+									    var s
 										if(row.unitDO!=null){
-                                            return row.unitDO.name;
+                                             s = "<p style='width: 200px;word-break:break-all'>"+row.unitDO.name+"</p>";
+                                            return s;
                                         }else {
 											return "";
 										}
