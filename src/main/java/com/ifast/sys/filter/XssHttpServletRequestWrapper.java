@@ -45,9 +45,11 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public String[] getParameterValues(String name) {
     	String[] arr = super.getParameterValues(name);
+    	SensitiveService  sensitiveService= new SensitiveService();
     	if(arr != null){
     		for (int i=0;i<arr.length;i++) {
     			arr[i] = JsoupUtil.clean(arr[i]);
+                arr[i] = sensitiveService.filter(arr[i]);
     		}
     	}
     	return arr;

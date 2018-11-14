@@ -1,7 +1,9 @@
 package com.ifast.sys.config;
 
 import com.ifast.common.utils.GenUtils;
+import com.ifast.sys.filter.WebInterceptor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -23,5 +25,11 @@ public class MyWebAppConfiguration extends WebMvcConfigurerAdapter {
         org.apache.commons.configuration.Configuration conf= GenUtils.getConfigFile();
         registry.addResourceHandler("/common/**").addResourceLocations("file:"+conf.getString("file")+"/");
         super.addResourceHandlers(registry);
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        // 可添加多个
+        registry.addInterceptor(new WebInterceptor()).addPathPatterns("/**");
     }
 }
