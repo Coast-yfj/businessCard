@@ -128,6 +128,9 @@ public class ApiUserDO implements Serializable {
     @TableField(exist = false)
     private String inCard;
 
+    @TableField(exist = false)
+    private String introduction;
+
     /**
      * 公司信息
      */
@@ -408,5 +411,13 @@ public class ApiUserDO implements Serializable {
 
     public void setActiveId(String activeId) {
         this.activeId = activeId;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
     }
 }

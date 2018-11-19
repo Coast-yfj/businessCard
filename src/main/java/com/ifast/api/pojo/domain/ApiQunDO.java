@@ -105,6 +105,8 @@ public class ApiQunDO implements Serializable {
 
     @TableField(exist = false)
     private String dName;
+    @TableField(exist = false)
+    private String introduction;
 
     public Long getId() {
         return id;
@@ -257,5 +259,13 @@ public class ApiQunDO implements Serializable {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
     }
 }

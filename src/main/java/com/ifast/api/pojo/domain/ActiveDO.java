@@ -44,6 +44,9 @@ public class ActiveDO implements Serializable {
     //0：未暂停，1：已暂停
     private String stop;
 
+    @TableField(exist = false)
+    private String isJoinIn;
+
     /**
      * 参加人数
      */
@@ -257,5 +260,13 @@ public class ActiveDO implements Serializable {
 
     public void setStop(String stop) {
         this.stop = stop;
+    }
+
+    public String getIsJoinIn() {
+        return isJoinIn;
+    }
+
+    public void setIsJoinIn(String isJoinIn) {
+        this.isJoinIn = isJoinIn;
     }
 }

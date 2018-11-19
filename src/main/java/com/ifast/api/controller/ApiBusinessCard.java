@@ -489,8 +489,8 @@ public class ApiBusinessCard {
         String access_token = getToken();   // 得到token
 
         Map<String, Object> params = new HashMap<>();
-        params.put("scene", scene);  //参数
-        //  params.put("page", "pages/carddetails/carddetails?uid="+userId); //位置
+        params.put("scene", userId);  //参数
+          params.put("page", "pages/Mycard/Mycard"); //位置
         params.put("width", 430);
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();

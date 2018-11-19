@@ -118,13 +118,15 @@
         <result property="attention" column="attention" />
         <result property="longitude" column="longitude" />
         <result property="latitude" column="latitude" />
+        <result property="introduction" column="Introduction" />
         <collection property="unitDO" ofType="com.ifast.domain.UnitDO" resultMap="com.ifast.dao.UnitDao.unitResult" />
     </resultMap>
     <select id="queryByIds" parameterType="string" resultMap="userByUnit1">
-            SELECT l.name dName,t.*,b.attention FROM tb_user t
+            SELECT l.name dName,u.Introduction,t.*,b.attention FROM tb_user t
             left join tb_unit l on l.userId = t.id
               left join tb_attention b on t.id = b.tid AND b.`mid`=#{id}
-                    WHERE EXISTS(
+        left join tb_unit u on u.userId = t.id
+        WHERE EXISTS(
                     SELECT * FROM tb_attention a WHERE a.`tid`=t.`id` AND a.`mid`=#{id}
                     )
             and t.id !=#{id}

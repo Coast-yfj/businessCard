@@ -7,7 +7,7 @@
     <select id="queryRenyuan" resultType="com.ifast.api.pojo.domain.ApiQunDO">
 
         SELECT
-        DISTINCT t.openGId,t.userId, a.address,a.avatarUrl,a.city , a.country ,a.CreateTime ,a.email,a.gender
+        DISTINCT b.introduction ,t.openGId,t.userId, a.address,a.avatarUrl,a.city , a.country ,a.CreateTime ,a.email,a.gender
         ,a.`language`,a.latitude,a.longitude,a.`name`,a.nickName,a.openid,a.phone,a.position,a.province,a.qq,a.WeChat,
         a.unionid,a.type,b.`name` as dname
         FROM
