@@ -41,7 +41,7 @@
         app_active t
         WHERE
         t.stop = '0'
-        ORDER BY    t.startTtime)
+        ORDER BY    t.startTtime
             ) m
             LEFT JOIN ( SELECT n.activeId, count( 1 ) userTotal FROM app_active_user n GROUP BY n.activeId ) x ON m.id = x.activeId
         LEFT JOIN (select us.activeId,us.userId from app_active_user us where us.userId = #{createUserId} ) ccc on ccc.activeId = m.id

@@ -12,7 +12,9 @@ import com.ifast.api.pojo.domain.ImgDO;
 import com.ifast.api.service.ApiQunService;
 import com.ifast.api.service.ApiSuijishuService;
 import com.ifast.api.service.ImgService;
+import com.ifast.api.util.Downimage;
 import com.ifast.api.util.JWTUtil;
+import com.ifast.api.util.NewImageUtils;
 import com.ifast.api.util.SignUtil;
 import com.ifast.common.utils.GenUtils;
 import com.ifast.common.utils.Result;
@@ -39,10 +41,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.swing.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+
+import static com.ifast.api.util.NewImageUtils.zoomImage;
 
 /**
  * @author yfj
@@ -510,7 +516,7 @@ public class ApiBusinessCard {
         System.out.println(inputStream.available());
         String name = UUID.randomUUID().toString().trim().replaceAll("-", "") + ".png";
         Configuration conf = GenUtils.getConfigFile();
-        saveToImgByInputStream(inputStream, conf.getString("file"), name);  //保存图片
+        saveToImgByInputStream(inputStream, conf.getString("file"), name,userId);  //保存图片
         return Result.ok("/common/" + name);
     }
 
@@ -563,7 +569,51 @@ public class ApiBusinessCard {
      * @return 1：保存正常
      * 0：保存失败
      */
-    public static int saveToImgByInputStream(InputStream instreams, String imgPath, String imgName) {
+    public  int saveToImgByInputStream(InputStream instreams, String imgPath, String imgName,String userId) {
+        int stateInt = 0;
+        stateInt =saveImg(instreams,  imgPath,  imgName);
+         /*   stateInt = 1;
+            //img 1
+            String imgTmpName1 = UUID.randomUUID().toString().trim().replaceAll("-", "")+"tmp" + ".png";
+            saveImg( instreams,  imgPath,  imgTmpName1);
+
+            ApiUserDO userDO = userService.queryById(userId);
+            String nameTmp2 =UUID.randomUUID().toString().trim().replaceAll("-", "")+"tmp" + ".png";
+//            String srctouxiang = imgPath +"/"+nameTmp2;
+            Downimage.downloadImg( userDO.getAvatarUrl(), imgPath,nameTmp2);
+            //亚索后的图片
+            String nameTmp3 =UUID.randomUUID().toString().trim().replaceAll("-", "")+"tmp" + ".png";
+
+            try {
+                zoomImage(imgPath,nameTmp2,imgPath,nameTmp3,142,147);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            String sourceFilePath = imgPath+"/"+imgTmpName1;
+            String waterFilePath = "/imgs/2.png";
+            String tm4 = UUID.randomUUID().toString().trim().replaceAll("-", "")+"tmp" + ".png";
+            String saveFilePath = "/imgs/"+tm4;
+            NewImageUtils newImageUtils = new NewImageUtils();
+            // 构建叠加层
+            BufferedImage buffImg = NewImageUtils.watermark(new File(imgPath,imgTmpName1), new File(imgPath,"2.png"), 125, 170, 1.0f);
+            // 输出水印图片
+            newImageUtils.generateWaterFile(buffImg, imgPath,tm4);
+
+            String sourceFilePath1 = imgPath+"/"+imgTmpName1;
+            String waterFilePath1 = "/imgs/2.png";
+            String tm41 = imgName;
+            String saveFilePath1 = "/imgs/"+tm41;
+            newImageUtils = new NewImageUtils();
+            // 构建叠加层
+            buffImg = NewImageUtils.watermark(new File(imgPath,tm4), new File(imgPath,nameTmp3), 145, 142, 1.0f);
+            // 输出水印图片
+            newImageUtils.generateWaterFile(buffImg, imgPath,imgName);*/
+
+
+        return stateInt;
+    }
+
+    private int saveImg(InputStream instreams, String imgPath, String imgName){
         int stateInt = 1;
         if (instreams != null) {
             try {

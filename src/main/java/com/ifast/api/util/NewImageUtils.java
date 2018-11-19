@@ -1,21 +1,12 @@
 package com.ifast.api.util;
 
-import com.alibaba.fastjson.JSONObject;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
   public class NewImageUtils {
      /**
         *
@@ -59,10 +50,10 @@ import javax.imageio.ImageIO;
        * @param savePath
        *            图像加水印之后的保存路径
        */
-             private void generateWaterFile(BufferedImage buffImg, String savePath) {
+             public void generateWaterFile(BufferedImage buffImg, String savePath,String name) {
                  int temp = savePath.lastIndexOf(".") + 1;
                  try {
-                         ImageIO.write(buffImg, savePath.substring(temp), new File(savePath));
+                         ImageIO.write(buffImg, savePath.substring(temp), new File(savePath,name));
                      } catch (IOException e1) {
                          e1.printStackTrace();
                      }
@@ -77,7 +68,7 @@ import javax.imageio.ImageIO;
        */
              public static void main(String[] args) throws IOException {
                  try {
-                     zoomImage("D://imgs//2.jpg","D://imgs//4.jpg",142,147);
+//                     zoomImage("D://imgs//2.jpg","D://imgs//4.jpg",142,147);
                  } catch (Exception e) {
                      e.printStackTrace();
                  }
@@ -89,7 +80,7 @@ import javax.imageio.ImageIO;
 //                 BufferedImage buffImg = NewImageUtils.watermark(new File(sourceFilePath), new File(waterFilePath), 125, 170, 1.0f);
                  BufferedImage buffImg = NewImageUtils.watermark(new File(sourceFilePath), new File(waterFilePath), 145, 142, 1.0f);
                  // 输出水印图片
-                 newImageUtils.generateWaterFile(buffImg, saveFilePath);
+//                 newImageUtils.generateWaterFile(buffImg, saveFilePath);
              }
 
 
@@ -97,11 +88,11 @@ import javax.imageio.ImageIO;
        * 图片缩放,w，h为缩放的目标宽度和高度
        * src为源文件目录，dest为缩放后保存目录
        */
-      public static void zoomImage(String src,String dest,int w,int h) throws Exception {
+      public static void zoomImage(String src,String srcName,String dest, String destName,int w,int h) throws Exception {
 
           double wr=0,hr=0;
-          File srcFile = new File(src);
-          File destFile = new File(dest);
+          File srcFile = new File(src,srcName);
+          File destFile = new File(dest,destName);
 
           BufferedImage bufImg = ImageIO.read(srcFile); //读取图片
           Image Itemp = bufImg.getScaledInstance(w, h, bufImg.SCALE_SMOOTH);//设置缩放目标图片模板
