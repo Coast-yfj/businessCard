@@ -24,54 +24,28 @@
         m.*,x.userTotal,case when ISNULL(ccc.userId ) then  0 ELSE 1 end isJoinIn
         FROM
         (
-        ( SELECT
-            t.id,
-            t.city,
-            t.title,
-            t.startTtime,
-            t.endTime,
-            t.province,
-            t.county,
-            t.type,
+        SELECT
+        case when  t.createUserId = #{createUserId} then 1 else 0 end isCreate ,
+        t.id,
+        t.city,
+        t.title,
+        t.startTtime,
+        t.endTime,
+        t.province,
+        t.county,
+        t.type,
         t.longitude,
         t.latitude,
         t.address
-            FROM
-            app_active t
-            WHERE
-            t.stop = '0'
-        <if test="day!=null and day !=''">
-              and
-            t.startTtime &lt;= #{day} AND t.endTime &gt;= #{day}
-        </if>
-            AND t.createUserId = #{createUserId}
-        ORDER BY    t.startTtime)
-        UNION
-        (SELECT
-            t.id,
-            t.city,
-            t.title,
-            t.startTtime,
-            t.endTime,
-            t.province,
-            t.county,
-            t.type,
-        t.longitude,
-        t.latitude,
-        t.address
-            FROM
-            app_active t
-            WHERE
+        FROM
+        app_active t
+        WHERE
         t.stop = '0'
-        <if test="day!=null and day !=''">
-            and
-            t.startTtime &lt;= #{day} AND t.endTime &gt;= #{day}
-        </if>
-            AND t.createUserId != #{createUserId}
         ORDER BY    t.startTtime)
             ) m
             LEFT JOIN ( SELECT n.activeId, count( 1 ) userTotal FROM app_active_user n GROUP BY n.activeId ) x ON m.id = x.activeId
-            WHERE
+        LEFT JOIN (select us.activeId,us.userId from app_active_user us where us.userId = #{createUserId} ) ccc on ccc.activeId = m.id
+        WHERE
               1=1
         <if test="title!=null and title !=''">
             and m.title LIKE CONCAT( '%',#{title}, '%' )
@@ -88,7 +62,7 @@
         <if test="type!=null and type !=''">
             and  m.type = #{type}
         </if>
-        order by (case when ISNULL(ccc.userId ) then  0 ELSE 1 end) desc
+        order by (case when ISNULL(ccc.userId ) then  0 ELSE 1 end) desc ,m.isCreate desc , m.startTtime desc
     </select>
 
     <select id="queryImgs" resultType="com.ifast.api.pojo.domain.ImgDO">
