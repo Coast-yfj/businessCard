@@ -101,7 +101,7 @@ public class ActiveController extends AdminBaseController {
 
 	@GetMapping("/edit/{id}")
 	@RequiresPermissions("ifast:active:edit")
-	String edit(@PathVariable("id") Integer id,Model model){
+	String edit(@PathVariable("id") String id,Model model){
 		ActiveDO active = activeService.selectById(id);
 		model.addAttribute("active", active);
 	    return "ifast/active/edit";
@@ -118,7 +118,7 @@ public class ActiveController extends AdminBaseController {
         return Result.ok();
 	}
 	/**
-	 * 修改
+	 * 开启关闭
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
@@ -130,6 +130,17 @@ public class ActiveController extends AdminBaseController {
 		}else {
 			activeDO.setStop("0");
 		}
+		activeService.updateById(activeDO );
+		return Result.ok();
+	}
+
+	/**
+	 * 开启关闭
+	 */
+	@ResponseBody
+	@RequestMapping("/updateData")
+	@RequiresPermissions("ifast:active:edit")
+	public Result<String>  updateData( ActiveDO activeDO){
 		activeService.updateById(activeDO );
 		return Result.ok();
 	}

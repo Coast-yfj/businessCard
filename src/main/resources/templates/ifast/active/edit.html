@@ -11,87 +11,88 @@
 						<form class="form-horizontal m-t" id="signupForm">
 						<input id="id" name="id" th:value="${active.id}"  type="hidden">
 							<div class="form-group">	
-								<label class="col-sm-3 control-label">：</label>
+								<label class="col-sm-3 control-label">开始时间：</label>
 								<div class="col-sm-8">
-									<input id="startttime" name="startttime" th:value="${active.startttime}" class="form-control" type="text">
+									<input id="startttime" name="startTtime" th:value="${active.startTtime}" class="form-control" type="text">
 								</div>
 							</div>
 														<div class="form-group">	
-								<label class="col-sm-3 control-label">：</label>
+								<label class="col-sm-3 control-label">结束时间：</label>
 								<div class="col-sm-8">
-									<input id="endtime" name="endtime" th:value="${active.endtime}" class="form-control" type="text">
+									<input id="endtime" name="endTime" th:value="${active.endTime}" class="form-control" type="text">
 								</div>
-							</div>
+							</div><!--
 														<div class="form-group">	
 								<label class="col-sm-3 control-label">：</label>
 								<div class="col-sm-8">
-									<input id="createuserid" name="createuserid" th:value="${active.createuserid}" class="form-control" type="text">
+									<input id="createuserid" name="createuserid" th:value="${active.createUserId}" class="form-control" type="text">
 								</div>
-							</div>
+							</div>-->
 														<div class="form-group">	
-								<label class="col-sm-3 control-label">：</label>
+								<label class="col-sm-3 control-label">标题：</label>
 								<div class="col-sm-8">
 									<input id="title" name="title" th:value="${active.title}" class="form-control" type="text">
 								</div>
 							</div>
 														<div class="form-group">	
-								<label class="col-sm-3 control-label">：</label>
+								<label class="col-sm-3 control-label">省：</label>
 								<div class="col-sm-8">
 									<input id="province" name="province" th:value="${active.province}" class="form-control" type="text">
 								</div>
 							</div>
 														<div class="form-group">	
-								<label class="col-sm-3 control-label">：</label>
+								<label class="col-sm-3 control-label">市：</label>
 								<div class="col-sm-8">
 									<input id="city" name="city" th:value="${active.city}" class="form-control" type="text">
 								</div>
 							</div>
 														<div class="form-group">	
-								<label class="col-sm-3 control-label">：</label>
+								<label class="col-sm-3 control-label">县：</label>
 								<div class="col-sm-8">
 									<input id="county" name="county" th:value="${active.county}" class="form-control" type="text">
 								</div>
 							</div>
 														<div class="form-group">	
-								<label class="col-sm-3 control-label">：</label>
+								<label class="col-sm-3 control-label">类型：</label>
 								<div class="col-sm-8">
-									<input id="type" name="type" th:value="${active.type}" class="form-control" type="text">
+									<input id="type" readonly="readonly" name="type" th:value="${active.type}" class="form-control" type="text">
 								</div>
 							</div>
 														<div class="form-group">	
-								<label class="col-sm-3 control-label">：</label>
+								<label class="col-sm-3 control-label">活动内容：</label>
 								<div class="col-sm-8">
-									<input id="content" name="content" th:value="${active.content}" class="form-control" type="text">
+									<textarea id="content" name="content" th:value="${active.content}" class="form-control" type="text"></textarea>
 								</div>
 							</div>
 														<div class="form-group">	
-								<label class="col-sm-3 control-label">：</label>
+								<label class="col-sm-3 control-label">创建时间：</label>
 								<div class="col-sm-8">
-									<input id="createtime" name="createtime" th:value="${active.createtime}" class="form-control" type="text">
+									<input id="createtime" readonly="readonly" name="createtime" th:value="${active.createTime}" class="form-control" type="text">
 								</div>
 							</div>
 														<div class="form-group">	
-								<label class="col-sm-3 control-label">：</label>
+								<label class="col-sm-3 control-label">经度：</label>
 								<div class="col-sm-8">
 									<input id="longitude" name="longitude" th:value="${active.longitude}" class="form-control" type="text">
 								</div>
 							</div>
 														<div class="form-group">	
-								<label class="col-sm-3 control-label">：</label>
+								<label class="col-sm-3 control-label">纬度：</label>
 								<div class="col-sm-8">
 									<input id="latitude" name="latitude" th:value="${active.latitude}" class="form-control" type="text">
 								</div>
 							</div>
 														<div class="form-group">	
-								<label class="col-sm-3 control-label">：</label>
+								<label class="col-sm-3 control-label">详细地址：</label>
 								<div class="col-sm-8">
 									<input id="address" name="address" th:value="${active.address}" class="form-control" type="text">
 								</div>
 							</div>
 														<div class="form-group">	
-								<label class="col-sm-3 control-label">：</label>
+								<label class="col-sm-3 control-label">状态：</label>
 								<div class="col-sm-8">
-									<input id="stop" name="stop" th:value="${active.stop}" class="form-control" type="text">
+									<input  name="stop" th:checked="${active.stop eq '0'}" value="0" class="" type="radio">开启
+									<input  name="stop" th:checked="${active.stop eq '1'}" value="1" class="" type="radio">关闭
 								</div>
 							</div>
 																					<div class="form-group">
@@ -107,6 +108,8 @@
 	</div>
 	<div th:include="include::footer"></div>
 	<script type="text/javascript" src="/js/appjs/ifast/active/edit.js">
+	</script>
+	<script type="text/javascript" src="/js/layui.js">
 	</script>
 </body>
 </html>

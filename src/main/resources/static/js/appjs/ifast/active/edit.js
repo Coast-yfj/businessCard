@@ -1,5 +1,18 @@
 $().ready(function() {
 	validateRule();
+	layui.use('laydate',function () {
+		var laydate = layui.laydate;
+		laydate.render({
+			elem:"#startttime",
+			type:'datetime',
+			format:"yyyy-MM-dd HH:mm"
+		});
+		laydate.render({
+			elem:"#endtime",
+			type:'datetime',
+			format:"yyyy-MM-dd HH:mm"
+		});
+    })
 });
 
 $.validator.setDefaults({
@@ -11,7 +24,7 @@ function update() {
 	$.ajax({
 		cache : true,
 		type : "POST",
-		url : "/ifast/active/update",
+		url : "/ifast/active/updateData",
 		data : $('#signupForm').serialize(),// 你的formid
 		async : false,
 		error : function(request) {
