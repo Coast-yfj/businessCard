@@ -50,10 +50,10 @@ import java.io.IOException;
        * @param savePath
        *            图像加水印之后的保存路径
        */
-             public void generateWaterFile(BufferedImage buffImg, String savePath,String name) {
+             public void generateWaterFile(BufferedImage buffImg, String savePath) {
                  int temp = savePath.lastIndexOf(".") + 1;
                  try {
-                         ImageIO.write(buffImg, savePath.substring(temp), new File(savePath,name));
+                         ImageIO.write(buffImg, savePath.substring(temp), new File(savePath));
                      } catch (IOException e1) {
                          e1.printStackTrace();
                      }
@@ -88,11 +88,11 @@ import java.io.IOException;
        * 图片缩放,w，h为缩放的目标宽度和高度
        * src为源文件目录，dest为缩放后保存目录
        */
-      public static void zoomImage(String src,String srcName,String dest, String destName,int w,int h) throws Exception {
+      public static void zoomImage(String src,String dest,int w,int h) throws Exception {
 
           double wr=0,hr=0;
-          File srcFile = new File(src,srcName);
-          File destFile = new File(dest,destName);
+          File srcFile = new File(src);
+          File destFile = new File(dest);
 
           BufferedImage bufImg = ImageIO.read(srcFile); //读取图片
           Image Itemp = bufImg.getScaledInstance(w, h, bufImg.SCALE_SMOOTH);//设置缩放目标图片模板
