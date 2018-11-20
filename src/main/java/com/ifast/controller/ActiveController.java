@@ -95,7 +95,11 @@ public class ActiveController extends AdminBaseController {
 	
 	@GetMapping("/add")
 	@RequiresPermissions("ifast:active:add")
-	String add(){
+	String add(Model model){
+		Wrapper<DictDO> wrapper = new EntityWrapper<>();
+		wrapper.eq("type", "active");
+		List<DictDO> disc = this.dictService.selectList(wrapper);
+		model.addAttribute("dics", disc);
 	    return "ifast/active/add";
 	}
 

@@ -1,5 +1,18 @@
 $().ready(function() {
 	validateRule();
+    layui.use('laydate',function () {
+        var laydate = layui.laydate;
+        laydate.render({
+            elem:"#startttime",
+            type:'datetime',
+            format:"yyyy-MM-dd HH:mm"
+        });
+        laydate.render({
+            elem:"#endtime",
+            type:'datetime',
+            format:"yyyy-MM-dd HH:mm"
+        });
+    })
 });
 
 $.validator.setDefaults({
