@@ -9,7 +9,7 @@
 				<div class="ibox-body">
 					<div class="fixed-table-toolbar">
 						<div class="columns pull-left">
-							<span>总人数：</span><span th:text="${count}"></span>
+							<span>总人数：</span><span id="totalUser" ></span>
 							<button shiro:hasPermission="ifast:user:add" type="button" class="btn  btn-primary" onclick="add()">
 								<i class="fa fa-plus" aria-hidden="true"></i>添加
 							</button>

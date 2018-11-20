@@ -19,6 +19,7 @@ import com.ifast.service.ProductService;
 import com.ifast.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -92,7 +93,7 @@ public class ApiActiveController {
             , Long activeId) {
         String userId = JWTUtil.getUserId(token);
         ActiveDO activeDO = this.apiActiveService.selectById(activeId);
-        if (userId.equals(activeDO.getCreateUserId().toString())) {
+        if (activeDO.getCreateUserId()!=null&&userId.equals(activeDO.getCreateUserId().toString())) {
             return Result.build(1, "无法加入自己创建的活动");
         }
         Wrapper<ActiveUserDO> wrapper = new EntityWrapper<>();

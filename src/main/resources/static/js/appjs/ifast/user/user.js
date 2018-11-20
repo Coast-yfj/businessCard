@@ -45,7 +45,7 @@ function load() {
 						// sortOrder.
 						// 返回false将会终止请求
 						responseHandler : function(res){
-                            console.log(res);
+                            $("#totalUser").text(res.data.total);
                             return {
                                 "total": res.data.total,//总数
                                 "rows": res.data.records   //数据

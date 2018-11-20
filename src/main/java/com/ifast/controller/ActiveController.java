@@ -118,6 +118,7 @@ public class ActiveController extends AdminBaseController {
 	@PostMapping("/save")
 	@RequiresPermissions("ifast:active:add")
 	public Result<String> save( ActiveDO active){
+	    active.setCreateUserId(this.getUserId());
 		activeService.insert(active);
         return Result.ok();
 	}
