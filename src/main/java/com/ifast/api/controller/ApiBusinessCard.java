@@ -577,7 +577,6 @@ public class ApiBusinessCard {
         try {
             String imgTmpName1 = UUID.randomUUID().toString().trim().replaceAll("-", "")+"tmp" + ".png";
             saveImg( instreams,  imgPath,  imgTmpName1);
-
             ApiUserDO userDO = userService.queryById(userId);
             String nameTmp2 =UUID.randomUUID().toString().trim().replaceAll("-", "")+"tmp" + ".png";
             String srctouxiang = imgPath +"/"+nameTmp2;
@@ -585,30 +584,22 @@ public class ApiBusinessCard {
             Downimage.downloadImg( userDO.getAvatarUrl(), imgPath,nameTmp2);
             //亚索后的图片
             String nameTmp3 =imgPath+"/"+UUID.randomUUID().toString().trim().replaceAll("-", "")+"tmp" + ".png";
-
             try {
                 //压缩后的图像 nameTmp3
                 zoomImage(srctouxiang,nameTmp3,142,147);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-//            String sourceFilePath = imgPath+"/"+imgTmpName1;
-//            String waterFilePath = "/imgs/2.png";
             String tm4 = UUID.randomUUID().toString().trim().replaceAll("-", "")+"tmp" + ".png";
-//            String saveFilePath = "/imgs/"+tm4;
             NewImageUtils newImageUtils = new NewImageUtils();
             // 构建叠加层
             BufferedImage buffImg = NewImageUtils.watermark(new File(imgPath+"/"+imgTmpName1), new File(imgPath+"/2.png"), 125, 170, 1.0f);
             // 输出水印图片 去掉多多的图片
             newImageUtils.generateWaterFile(buffImg, imgPath+"/"+tm4);
 
-//            String sourceFilePath1 = imgPath+"/"+imgTmpName1;
-//            String waterFilePath1 = "/imgs/2.png";
-            String tm41 = imgName;
-//            String saveFilePath1 = "/imgs/"+tm41;
             newImageUtils = new NewImageUtils();
             // 构建叠加层
-            buffImg = NewImageUtils.watermark(new File(imgPath+"/"+tm4), new File(imgPath+"/"+nameTmp3), 145, 142, 1.0f);
+            buffImg = NewImageUtils.watermark(new File(imgPath+"/"+tm4), new File(nameTmp3), 145, 142, 1.0f);
             // 输出水印图片
             newImageUtils.generateWaterFile(buffImg, imgPath+"/"+imgName);
         } catch (IOException e) {

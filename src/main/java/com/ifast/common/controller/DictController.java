@@ -36,6 +36,13 @@ public class DictController extends AdminBaseController {
     String sysDict() {
         return "common/sysDict/sysDict";
     }
+
+    @Log("进入数据字典列表页面")
+    @GetMapping("/active")
+    @RequiresPermissions("common:sysDict:sysDict")
+    public String sysActive() {
+        return "common/sysDict/Active";
+    }
     
     @Log("查询数据字典列表")
     @ResponseBody
@@ -54,12 +61,26 @@ public class DictController extends AdminBaseController {
         return "common/sysDict/add";
     }
 
+    @Log("进入数据字典添加页面")
+    @GetMapping("/activeAdd")
+    @RequiresPermissions("common:sysDict:add")
+    String activeAdd() {
+        return "common/sysDict/activeAdd";
+    }
+
     @GetMapping("/edit/{id}")
     @RequiresPermissions("common:sysDict:edit")
-    String edit(@PathVariable("id") Long id, Model model) {
+    public String edit(@PathVariable("id") Long id, Model model) {
         DictDO sysDict = sysDictService.selectById(id);
         model.addAttribute("sysDict", sysDict);
         return "common/sysDict/edit";
+    }
+    @GetMapping("/activeEdit/{id}")
+    @RequiresPermissions("common:sysDict:edit")
+    public String activeEdit(@PathVariable("id") Long id, Model model) {
+        DictDO sysDict = sysDictService.selectById(id);
+        model.addAttribute("sysDict", sysDict);
+        return "common/sysDict/activeEdit";
     }
 
     /**
