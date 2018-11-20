@@ -38,6 +38,13 @@ public class DictController extends AdminBaseController {
     }
 
     @Log("进入数据字典列表页面")
+    @GetMapping("/dianhua")
+    @RequiresPermissions("common:sysDict:sysDict")
+    public String dianhua() {
+        return "common/sysDict/dianhua";
+    }
+
+    @Log("进入数据字典列表页面")
     @GetMapping("/active")
     @RequiresPermissions("common:sysDict:sysDict")
     public String sysActive() {
@@ -62,6 +69,13 @@ public class DictController extends AdminBaseController {
     }
 
     @Log("进入数据字典添加页面")
+    @GetMapping("/dianhuaAdd")
+    @RequiresPermissions("common:sysDict:add")
+    String dianhuaAdd() {
+        return "common/sysDict/dianhuaAdd";
+    }
+
+    @Log("进入数据字典添加页面")
     @GetMapping("/activeAdd")
     @RequiresPermissions("common:sysDict:add")
     String activeAdd() {
@@ -81,6 +95,13 @@ public class DictController extends AdminBaseController {
         DictDO sysDict = sysDictService.selectById(id);
         model.addAttribute("sysDict", sysDict);
         return "common/sysDict/activeEdit";
+    }
+    @GetMapping("/dianhuaEdit/{id}")
+    @RequiresPermissions("common:sysDict:edit")
+    public String dianhuaEdit(@PathVariable("id") Long id, Model model) {
+        DictDO sysDict = sysDictService.selectById(id);
+        model.addAttribute("sysDict", sysDict);
+        return "common/sysDict/dianhuaEdit";
     }
 
     /**
