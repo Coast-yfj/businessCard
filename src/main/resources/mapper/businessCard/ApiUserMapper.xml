@@ -95,6 +95,12 @@
             <if test="activeId!=null and activeId !=''">
                 and t.id in (select userId from app_active_user t  where t.activeId = #{activeId})
             </if>
+                <if test="zt==0">
+                   and ( t.position is null or a.id is null or t.phone is null)
+                </if>
+                <if test="zt==1">
+                 and   t.position is not  null and  a.id is not null and t.phone is not null
+                </if>
         </where>
     </select>
 

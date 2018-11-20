@@ -130,6 +130,9 @@ public class ApiUserDO implements Serializable {
 
     @TableField(exist = false)
     private String introduction;
+    //0 未完善，1：完善
+    @TableField(exist = false)
+    private String zt ;
 
     /**
      * 公司信息
@@ -419,5 +422,13 @@ public class ApiUserDO implements Serializable {
 
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
+    }
+
+    public String getZt() {
+        return zt;
+    }
+
+    public void setZt(String zt) {
+        this.zt = zt;
     }
 }

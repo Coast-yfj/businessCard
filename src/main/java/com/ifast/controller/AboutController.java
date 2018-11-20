@@ -75,7 +75,7 @@ public class AboutController extends AdminBaseController {
 	@PostMapping("/save")
 	@RequiresPermissions("ifast:about:add")
 	public Result<String> save( AboutDO about){
-		aboutService.insert(about);
+		aboutService.insertOrUpdate(about);
         return Result.ok();
 	}
 	/**
